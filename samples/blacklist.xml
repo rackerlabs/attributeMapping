@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+  This is an example of a blacklist...note that because we didn't mention
+  user, domain — then default values will be used for those.
+-->
+
+<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+    <rule>
+        <local>
+            <role names="{0}"/>
+        </local>
+        <remote>
+            <attributes name="roles" whitelist="lbaas:admin nova:admin"/>
+        </remote>
+    </rule>
+</rules>
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+   This shows of the regex example.  Note, that this is a conditional rule.
+   It's a bit risky, because if zero permissions match, then we simply do
+   a direct copy of the assertion — that is we don't map at all.
+-->
+
+<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+    <rule>
+        <local>
+            <user name="{0}" email="{1}" epireAfter="{3}"/>
+            <domain id="78334"/>
+            <role names="nova:admin lbaas:admin"/>
+        </local>
+        <remote>
+            <attribute name="UserName"/>
+            <attribute name="Email"/>
+            <!-- This is a duration rather than a timestamp -->
+            <attribute name="ExpireAfter"/>
+            <attributes name="cn=IBM_Canada_Lab" notAnyOf=".*@naww.com$" regex="true"/>
+            <attributes name="cn=IBM_Usa_Lab" anyOneOf=".*@yea.com$" regex="true"/>
+        </remote>
+    </rule>
+</rules>
