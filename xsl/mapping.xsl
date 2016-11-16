@@ -50,7 +50,7 @@
         <xsl:param name="remoteMappers" as="node()*"/>
         <xsl:copy>
             <xsl:apply-templates mode="genLocal" select="node() | @*">
-                <xsl:with-param name="remoteMappers" as="node()*"/>
+                <xsl:with-param name="remoteMappers" as="node()*" select="$remoteMappers"/>
             </xsl:apply-templates>
         </xsl:copy>
     </xsl:template>
@@ -94,6 +94,23 @@
         </xsl:analyze-string>
     </xsl:template>
     
+    <xsl:template match="mapping:attribute" mode="genLocal" priority="15">
+        <xslout:value-of select="{mapping:attribute(@name)}"/>
+    </xsl:template>
+    
+    <xsl:template match="mapping:attributes" mode="genLocal" priority="15">
+        <xslout:value-of select="{mapping:attributes(@name)}" separator=" "/>
+    </xsl:template>
+    
+    
+    <xsl:template match="mapping:assertion" mode="genLocal" priority="15">
+        <xslout:value-of select="{@path}"/>
+    </xsl:template>
+    
+    <xsl:template match="mapping:assertions" mode="genLocal" priority="15">
+        <xslout:value-of select="{@path}" separator=" "/>
+    </xsl:template>
+    
     <xsl:function name="mapping:mapAttribute" as="node()*">
         <xsl:param name="name" as="xs:string"/>
         <xsl:param name="part" as="xs:string"/>
@@ -107,10 +124,13 @@
             <xsl:when test="$part='{D}'">
                 <xsl:sequence select="mapping:defaultForName($name)"/>
             </xsl:when>
+            <xsl:when test="matches($part,'\{[0-9]*\}')">
+                <xsl:sequence select="mapping:attributeByNumber($name, $part, $remoteMappers)"/>
+            </xsl:when>
         </xsl:choose>
     </xsl:function>
     
-    <xsl:function name="mapping:defaultForName" as="node()">
+    <xsl:function name="mapping:defaultForName" as="node()*">
         <xsl:param name="name" as="xs:string"/>
         <xsl:choose>
             <xsl:when test="$name='name'"><xslout:value-of select="/saml2:Assertion/saml2:Subject/saml2:NameID"/></xsl:when>
@@ -119,6 +139,19 @@
             <xsl:when test="$name='id'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
             <xsl:when test="$name='names'"><xslout:value-of select="{mapping:attributes('names')}" separator=" "/></xsl:when>
         </xsl:choose>
+    </xsl:function>
+    
+    <xsl:function name="mapping:attributeByNumber" as="node()*">
+        <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="part" as="xs:string"/>
+        <xsl:param name="remoteMappers" as="node()*"/>
+        <xsl:analyze-string select="$part" regex="\{{([0-9]*)\}}">
+            <xsl:matching-substring>
+                <xsl:variable name="idx" as="xs:integer" select="xs:integer(regex-group(1))+1"/>
+                <xsl:variable name="mapper" as="element()" select="$remoteMappers[$idx]"/>
+                <xsl:apply-templates select="$mapper" mode="genLocal"/>
+            </xsl:matching-substring>
+        </xsl:analyze-string>
     </xsl:function>
     
     <xsl:function name="mapping:attribute" as="xs:string">
