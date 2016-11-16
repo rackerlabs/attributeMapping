@@ -46,7 +46,7 @@
     
     <!-- genLocal mode generate a local view of the current rule -->
 
-    <xsl:template match="node()" mode="genLocal">
+    <xsl:template match="node()" mode="genLocal" priority="10">
         <xsl:param name="remoteMappers" as="node()*"/>
         <xsl:copy>
             <xsl:apply-templates mode="genLocal" select="node() | @*">
@@ -61,10 +61,37 @@
     
     <xsl:template match="@*[contains(.,'{')]" mode="genLocal">
         <xsl:param name="remoteMappers" as="node()*"/>
-        <xsl:variable name="parts" as="xs:string*" select="tokenize(.,' ')"/>
         <xslout:attribute name="{name()}">
-            <xsl:sequence select="for $p in $parts return mapping:mapAttribute(name(),$p,$remoteMappers)"/>
+            <xsl:call-template name="mapping:handleAttribute">
+                <xsl:with-param name="name" select="name()"/>
+                <xsl:with-param name="in" select="."/>
+                <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
+            </xsl:call-template>
         </xslout:attribute>
+    </xsl:template>
+    
+    <xsl:template name="mapping:handleAttribute">
+        <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="in" as="xs:string"/>
+        <xsl:param name="remoteMappers" as="node()*"/>
+        <xsl:analyze-string select="$in" regex="(.*)??(\{{.*\}})(.*)?">
+            <xsl:matching-substring>
+                <xsl:if test="not(empty(regex-group(1)))">
+                    <xsl:sequence select="mapping:mapAttribute($name,regex-group(1),$remoteMappers)"/>
+                </xsl:if>
+                <xsl:sequence select="mapping:mapAttribute($name,regex-group(2),$remoteMappers)"/>
+                <xsl:if test="not(empty(regex-group(3)))">
+                    <xsl:call-template name="mapping:handleAttribute">
+                        <xsl:with-param name="name" select="$name"/>
+                        <xsl:with-param name="in" select="regex-group(3)"/>
+                        <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:sequence select="mapping:mapAttribute($name,$in,$remoteMappers)"/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
     </xsl:template>
     
     <xsl:function name="mapping:mapAttribute" as="node()*">
@@ -73,6 +100,7 @@
         <xsl:param name="remoteMappers" as="node()*"/>
         
         <xsl:choose>
+            <xsl:when test="$part=''"/>
             <xsl:when test="not(contains($part,'{'))">
                 <xslout:text><xsl:value-of select="$part"/></xslout:text>
             </xsl:when>
