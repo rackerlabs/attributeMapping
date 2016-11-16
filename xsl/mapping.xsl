@@ -37,11 +37,33 @@
     
     
     <xsl:template match="mapping:attributes[@notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
-        <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name={@name}]/saml2:AttributeValue satisfies $attr = tokenize(@notAnyOf,' ')"/>
+        <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies $attr = {mapping:quotedList(@notAnyOf)}"/>
     </xsl:template>
     
     <xsl:template match="mapping:attributes[@anyOneOf and not(xs:boolean(@regex))]" mode="fireConditions">
-        <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name={@name}]/saml2:AttributeValue satisfies not($attr = tokenize(@notAnyOf,' '))"/>
+        <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies not($attr = {mapping:quotedList(@anyOneOf)})"/>
     </xsl:template>
+    
+    <xsl:template match="mapping:attributes[@notAnyOf and xs:boolean(@regex)]" mode="fireConditions">
+        <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies matches($attr, {mapping:quote(@notAnyOf)})"/>
+    </xsl:template>
+    
+    <xsl:template match="mapping:attributes[@anyOneOf and xs:boolean(@regex)]" mode="fireConditions">
+        <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies not(matches($attr, {mapping:quote(@anyOneOf)}))"/>
+    </xsl:template>
+    
+    
+    <!-- Util Functions -->
+    <xsl:function name="mapping:quote" as="xs:string">
+        <xsl:param name="in" as="xs:string"/>
+        <xsl:variable name="sq" as="xs:string">'</xsl:variable>
+        <xsl:value-of select="concat($sq,$in,$sq)"/>
+    </xsl:function>
+    
+    <xsl:function name="mapping:quotedList" as="xs:string">
+        <xsl:param name="in" as="xs:string"/>
+        <xsl:variable name="list" as="xs:string"><xsl:value-of select="for $m in tokenize($in,' ') return mapping:quote($m)" separator=", "/></xsl:variable>
+        <xsl:value-of select="concat('(',$list,')')"/>
+    </xsl:function>
     
 </xsl:transform>
