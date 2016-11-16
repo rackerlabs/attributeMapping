@@ -4,7 +4,7 @@
     xmlns:xslout="http://www.rackspace.com/repose/wadl/checker/Transform"
     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    exclude-result-prefixes="xs mapping"
+    exclude-result-prefixes="xs"
     version="2.0">
     
     <xsl:namespace-alias stylesheet-prefix="xslout" result-prefix="xsl"/>
@@ -16,7 +16,7 @@
             -  THIS IS A GENERATED TRANSFORM  DON'T EDIT BY HAND    -
             -                                                       -
         </xsl:comment>
-        <xslout:transform version="2.0">
+        <xslout:transform version="2.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
             <xslout:variable name="assertion" as="node()" select="/"/>
             
             <xslout:template match="/">
@@ -30,11 +30,30 @@
         <xsl:variable name="remoteMappers" as="node()*" select="mapping:remote/element()"/>
         <xslout:template name="{generate-id(.)}">
             <xslout:choose>
+                <!-- Exit out of this template if conditions are not met -->
                 <xsl:apply-templates select="mapping:remote" mode="fireConditions" />
+                <xslout:otherwise>
+                   <xsl:apply-templates mode="genLocal" select="mapping:local">
+                      <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
+                   </xsl:apply-templates> 
+                </xslout:otherwise>
             </xslout:choose>
         </xslout:template>
     </xsl:template>
     
+    <xsl:template match="text()" mode="#all"/>
+    
+    <!-- genLocal mode generate a local view of the current rule -->
+    <xsl:template match="node()" mode="genLocal">
+        <xsl:param name="remoteMappers" as="node()*"/>
+        <xsl:copy>
+            <xsl:apply-templates mode="genLocal">
+                <xsl:with-param name="remoteMappers" as="node()*"/>
+            </xsl:apply-templates>
+        </xsl:copy>
+    </xsl:template>
+    
+    <!-- fireConditions mode these templates create conditions for notAnyOf and anyOneOf -->
     
     <xsl:template match="mapping:attributes[@notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
         <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies $attr = {mapping:quotedList(@notAnyOf)}"/>
