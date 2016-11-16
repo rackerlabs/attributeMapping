@@ -4,7 +4,7 @@
     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
     <rule>
         <local>
-            <user name="{0}" email="{1}" expireAfter="{3}"/>
+            <user name="{0}" email="{1}" expireAfter="{2}"/>
             <domain id="78334"/>
         </local>
         <remote>

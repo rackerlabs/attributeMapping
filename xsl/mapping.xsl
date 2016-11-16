@@ -17,8 +17,6 @@
             -                                                       -
         </xsl:comment>
         <xslout:transform version="2.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
-            <xslout:variable name="assertion" as="node()" select="/"/>
-            
             <xslout:template match="/">
                 <xsl:comment>Launch templates!</xsl:comment>
             </xslout:template>
