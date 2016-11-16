@@ -59,7 +59,49 @@
         <xsl:copy/>
     </xsl:template>
     
-    <xsl:template match="@*[contains(.,'{')]" mode="genLocal"/>
+    <xsl:template match="@*[contains(.,'{')]" mode="genLocal">
+        <xsl:param name="remoteMappers" as="node()*"/>
+        <xsl:variable name="parts" as="xs:string*" select="tokenize(.,' ')"/>
+        <xslout:attribute name="{name()}">
+            <xsl:sequence select="for $p in $parts return mapping:mapAttribute(name(),$p,$remoteMappers)"/>
+        </xslout:attribute>
+    </xsl:template>
+    
+    <xsl:function name="mapping:mapAttribute" as="node()*">
+        <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="part" as="xs:string"/>
+        <xsl:param name="remoteMappers" as="node()*"/>
+        
+        <xsl:choose>
+            <xsl:when test="not(contains($part,'{'))">
+                <xslout:text><xsl:value-of select="$part"/></xslout:text>
+            </xsl:when>
+            <xsl:when test="$part='{D}'">
+                <xsl:sequence select="mapping:defaultForName($name)"/>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:function>
+    
+    <xsl:function name="mapping:defaultForName" as="node()">
+        <xsl:param name="name" as="xs:string"/>
+        <xsl:choose>
+            <xsl:when test="$name='name'"><xslout:value-of select="/saml2:Assertion/saml2:Subject/saml2:NameID"/></xsl:when>
+            <xsl:when test="$name='expire'"><xslout:value-of select="/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/SubjectConfirmationData/@NotOnOrAfter"/></xsl:when>
+            <xsl:when test="$name='email'"><xslout:value-of select="{mapping:attribute('email')}"/></xsl:when>
+            <xsl:when test="$name='id'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
+            <xsl:when test="$name='names'"><xslout:value-of select="{mapping:attributes('names')}" separator=" "/></xsl:when>
+        </xsl:choose>
+    </xsl:function>
+    
+    <xsl:function name="mapping:attribute" as="xs:string">
+        <xsl:param name="name" as="xs:string"/>
+        <xsl:value-of select="concat('/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name=',mapping:quote($name),']/saml2:AttributeValue[1]')"/>
+    </xsl:function>
+    
+    <xsl:function name="mapping:attributes" as="xs:string">
+        <xsl:param name="name" as="xs:string"/>
+        <xsl:value-of select="concat('/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name=',mapping:quote($name),']/saml2:AttributeValue')"/>
+    </xsl:function>
     
     <!-- fireConditions mode these templates create conditions for notAnyOf and anyOneOf -->
     
