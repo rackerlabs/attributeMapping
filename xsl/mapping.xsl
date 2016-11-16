@@ -41,17 +41,25 @@
         </xslout:template>
     </xsl:template>
     
+    <!-- remove superfluous text in all modes -->
     <xsl:template match="text()" mode="#all"/>
     
     <!-- genLocal mode generate a local view of the current rule -->
+
     <xsl:template match="node()" mode="genLocal">
         <xsl:param name="remoteMappers" as="node()*"/>
         <xsl:copy>
-            <xsl:apply-templates mode="genLocal">
+            <xsl:apply-templates mode="genLocal" select="node() | @*">
                 <xsl:with-param name="remoteMappers" as="node()*"/>
             </xsl:apply-templates>
         </xsl:copy>
     </xsl:template>
+    
+    <xsl:template match="@*[not(contains(.,'{'))]" mode="genLocal">
+        <xsl:copy/>
+    </xsl:template>
+    
+    <xsl:template match="@*[contains(.,'{')]" mode="genLocal"/>
     
     <!-- fireConditions mode these templates create conditions for notAnyOf and anyOneOf -->
     
