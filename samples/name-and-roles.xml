@@ -19,7 +19,7 @@
             <role names="nova:admin lbaas:admin"/>
         </local>
         <remote>
-            <attribute name="orgPersonType" notAnyOf="Contractor SubContractor"/>
+            <attributes name="orgPersonType" notAnyOf="Contractor SubContractor"/>
         </remote>
     </rule>
     <rule>
@@ -27,7 +27,7 @@
             <role names="nova:observer lbaas:observer"/>
         </local>
         <remote>
-            <attribute name="orgPersonType" anyOneOf="Contractor SubContractor"/>
+            <attributes name="orgPersonType" anyOneOf="Contractor SubContractor"/>
         </remote>
     </rule>
 </rules>

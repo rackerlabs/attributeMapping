@@ -2,11 +2,22 @@
 
 <!--
     This is the default role : 
-    if you don't specify anything this is how the defaults assertions will be brought up.
+    if you specify {D} then the default value will be used.
+    The combination of rules must produce all attribute, otherwise
+    the attribute won't be set.
+    
+    You can specify expire as a point in time...or as expireAfter
+    which is a duration.
     
     So for example :
     
-    <rule> <local/> <remote/> </rule>
+    <rule>
+        <local>
+            <user name="{D}" email="{D}" expire="{D}"/>
+            <domain id="{D}"/>
+            <role names="{D}"/>
+        </local>
+    </rule>
     
     will expand to the following...
 -->
