@@ -18,6 +18,7 @@
     <modules>
         <module>util</module>
         <module>attribmap</module>
+        <module>attribmap2xsl</module>
     </modules>
 
     <properties>
