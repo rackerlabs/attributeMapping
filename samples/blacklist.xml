@@ -12,7 +12,7 @@
             <role names="{0}"/>
         </local>
         <remote>
-            <attributes name="roles" whitelist="lbaas:admin nova:admin"/>
+            <attributes name="roles" blacklist="lbaas:admin nova:admin"/>
         </remote>
     </rule>
 </rules>
