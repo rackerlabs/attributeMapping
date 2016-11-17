@@ -1,8 +1,9 @@
 * Mappings TODO
 ** DONE Wrap up CLI
 ** DONE Fix given saml:response stuff
-** TODO Work through examples
+** DONE Work through examples
 ** TODO Whitelist/Blacklist with regex
+** TODO OpenSAML 2.5.3 (ancient version)
 ** TODO Send out email
 ** TODO JSON Support
 ** TODO Better namespace handling
