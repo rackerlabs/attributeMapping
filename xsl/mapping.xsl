@@ -196,6 +196,21 @@
         <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies not(matches($attr, {mapping:quote(@anyOneOf)}))"/>
     </xsl:template>
     
+    <xsl:template match="mapping:assertions[@notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
+        <xslout:when test="some $attr in {@path} satisfies $attr = {mapping:quotedList(@notAnyOf)}"/>
+    </xsl:template>
+    
+    <xsl:template match="mapping:assertions[@anyOneOf and not(xs:boolean(@regex))]" mode="fireConditions">
+        <xslout:when test="every $attr in {@path} satisfies not($attr = {mapping:quotedList(@anyOneOf)})"/>
+    </xsl:template>
+    
+    <xsl:template match="mapping:assertions[@notAnyOf and xs:boolean(@regex)]" mode="fireConditions">
+        <xslout:when test="some $attr in {@path} satisfies matches($attr, {mapping:quote(@notAnyOf)})"/>
+    </xsl:template>
+    
+    <xsl:template match="mapping:assertions[@anyOneOf and xs:boolean(@regex)]" mode="fireConditions">
+        <xslout:when test="every $attr in {@path} satisfies not(matches($attr, {mapping:quote(@anyOneOf)}))"/>
+    </xsl:template>
     
     <!-- Util Functions -->
     <xsl:function name="mapping:quote" as="xs:string">
