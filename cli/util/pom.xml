@@ -8,26 +8,13 @@
     </parent>
 
     <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-    <artifactId>attribmap</artifactId>
+    <artifactId>utils</artifactId>
     <packaging>jar</packaging>
 
-    <name>Attribute Mapper CLI (attribmap)</name>
+    <name>Attribute Mapper CLI (utilities)</name>
     <description>
-        A command line utility to do SAML attribute conversions.
+        CLI Utilities
     </description>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.martiansoftware</groupId>
-            <artifactId>nailgun-server</artifactId>
-            <version>${nailgun.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>utils</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <sourceDirectory>src/main/scala</sourceDirectory>
@@ -51,41 +38,6 @@
                             <goal>compile</goal>
                             <goal>testCompile</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.1</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <minimizeJar>false</minimizeJar>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.rackspace.identity.components.cli.AttribMap</mainClass>
-                                </transformer>
-                            </transformers>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

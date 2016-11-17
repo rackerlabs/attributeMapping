@@ -16,6 +16,7 @@
     <description>Attribute Mapper Command Line Tools</description>
 
     <modules>
+        <module>util</module>
         <module>attribmap</module>
     </modules>
 

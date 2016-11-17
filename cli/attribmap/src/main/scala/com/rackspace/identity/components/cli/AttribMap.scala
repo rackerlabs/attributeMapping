@@ -35,21 +35,6 @@ import net.sf.saxon.s9api.Destination
 
 import com.rackspace.identity.components.AttributeMapper
 
-object URLResolver {
-  def toAbsoluteSystemId(systemId : String) : URI = {
-    toAbsoluteSystemId(systemId, (new File(System.getProperty("user.dir")).toURI().toString))
-  }
-
-  def toAbsoluteSystemId(systemId : String, base : String) : URI = {
-    val inURI = new URI(systemId)
-    if (!inURI.isAbsolute()) {
-      (new URI(base)).resolve(systemId)
-    } else {
-      inURI
-    }
-  }
-}
-
 object AttribMap {
   val title = getClass.getPackage.getImplementationTitle
   val version = getClass.getPackage.getImplementationVersion
