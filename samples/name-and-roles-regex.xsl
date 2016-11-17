@@ -10,7 +10,7 @@
     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
     version="2.0">
-    <xsl:param name="outputSAML" as="xs:boolean" select="false()"/>
+    <xsl:param name="outputSAML" as="xs:boolean" select="true()"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     <xsl:variable name="locals" as="node()*">
         <xsl:call-template name="d1e4"/>
@@ -53,7 +53,7 @@
             <xsl:apply-templates select="@* | node()"/>
         </xsl:copy>
     </xsl:template>
-    <xsl:template match="saml2:Subject">
+    <xsl:template match="saml2:Subject[not(empty($locals))]">
         <xsl:copy>
             <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">
                 <xsl:value-of select="$locals//mapping:user/@name[1]"/>
@@ -67,7 +67,7 @@
             </saml2:SubjectConfirmation>
         </xsl:copy>
     </xsl:template>
-    <xsl:template match="saml2:AttributeStatement">
+    <xsl:template match="saml2:AttributeStatement[not(empty($locals))]">
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <saml2:Attribute Name="domain">
@@ -96,7 +96,7 @@
             <xsl:apply-templates select="node()"/>
         </xsl:copy>
     </xsl:template>
-    <xsl:template match="saml2:Attribute[@Name=('domain','email','roles')]"/>
+    <xsl:template match="saml2:Attribute[@Name=('domain','email','roles') and not(empty($locals))]"/>
     <xsl:template name="mapping:outLocal">
         <local>
             <xsl:if test="not(empty($locals))">

@@ -42,7 +42,7 @@
                </xslout:copy>
             </xslout:template>
             
-            <xslout:template match="saml2:Subject">
+            <xslout:template match="saml2:Subject[not(empty($locals))]">
                 <xslout:copy>
                     <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"><xslout:value-of select="$locals//mapping:user/@name[1]"/></saml2:NameID>
                     <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
@@ -53,7 +53,7 @@
                 </xslout:copy>
             </xslout:template>
             
-            <xslout:template match="saml2:AttributeStatement">
+            <xslout:template match="saml2:AttributeStatement[not(empty($locals))]">
                 <xslout:copy>
                     <xslout:apply-templates select="@*"/>
                     <saml2:Attribute Name="domain">
@@ -76,7 +76,7 @@
                 </xslout:copy>
             </xslout:template>
             
-            <xslout:template match="saml2:Attribute[@Name=('domain','email','roles')]"/>
+            <xslout:template match="saml2:Attribute[@Name=('domain','email','roles') and not(empty($locals))]"/>
             
             <xslout:template name="mapping:outLocal">
                 <local>
