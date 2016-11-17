@@ -1,0 +1,199 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.rackspace.identity.components</groupId>
+    <artifactId>attribute-mapper</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Attribute Mapper</name>
+    <description>
+        Code to process attribute mapping polices.
+    </description>
+
+    <modules>
+        <module>core</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>public.maven.research.rackspace.com</id>
+            <name>Rackspace Research</name>
+            <url>https://maven.research.rackspacecloud.com/content/groups/aggregate</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>releases.maven.research.rackspace.com</id>
+            <name>Rackspace Research Releases</name>
+            <url>https://maven.research.rackspacecloud.com/content/repositories/releases</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>snapshots.maven.research.rackspace.com</id>
+            <name>Rackspace Research Snapshots</name>
+            <url>https://maven.research.rackspacecloud.com/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <properties>
+        <scala.major>2</scala.major>
+        <scala.minor>11</scala.minor>
+        <scala.patch>7</scala.patch>
+        <scala.MajDotMin>${scala.major}.${scala.minor}</scala.MajDotMin>
+        <saxon-ee.version>9.7.0-8</saxon-ee.version>
+        <scala.test.version>2.2.6</scala.test.version>
+        <wadl-tools.version>1.0.33</wadl-tools.version>
+        <xerces.version>2.12.1-rax</xerces.version>
+        <scala-logging.version>2.1.2</scala-logging.version>
+        <slf4j.version>1.7.7</slf4j.version>
+        <log4j.version>2.1</log4j.version>
+        <jackson-databind.version>2.8.1</jackson-databind.version>
+        <json-schema-validator.version>2.1.7</json-schema-validator.version>
+        <junit.version>4.10</junit.version>
+        <mockito.version>1.9.0</mockito.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.MajDotMin}.${scala.patch}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-EE</artifactId>
+            <version>${saxon-ee.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xerces-xsd11</artifactId>
+            <version>${xerces.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fge</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>${json-schema-validator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.MajDotMin}</artifactId>
+            <version>${scala.test.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.scala-logging</groupId>
+            <artifactId>scala-logging-slf4j_${scala.MajDotMin}</artifactId>
+            <version>${scala-logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <type>test-jar</type>
+            <version>${log4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rackspace.cloud.api</groupId>
+            <artifactId>wadl-tools_${scala.MajDotMin}</artifactId>
+            <version>${wadl-tools.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    <profiles>
+        <profile>
+            <id>Rackspace Research Repositories</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>rackspace-research</id>
+                    <name>Rackspace Research Repository</name>
+                    <url>https://maven.research.rackspacecloud.com/content/groups/public/</url>
+                </repository>
+                <repository>
+                    <id>scala-tools.org</id>
+                    <name>Scala-tools Maven2 Repository</name>
+                    <url>https://oss.sonatype.org/content/groups/scala-tools/</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>rackspace-research</id>
+                    <name>Rackspace Research Repository</name>
+                    <url>https://maven.research.rackspacecloud.com/content/groups/public/</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>scala-tools.org</id>
+                    <name>Scala-tools Maven2 Repository</name>
+                    <url>https://oss.sonatype.org/content/groups/scala-tools/</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>onejar-maven-plugin.googlecode.com</id>
+                    <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+</project>
