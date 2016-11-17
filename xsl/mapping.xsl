@@ -80,17 +80,19 @@
             
             <xslout:template name="mapping:outLocal">
                 <local>
-                    <user>
-                        <xslout:attribute name="name" select="$locals//mapping:user/@name[1]"/>
-                        <xslout:attribute name="email" select="$locals//mapping:user/@email[1]"/>
-                        <xslout:attribute name="expire" select="$locals//mapping:user/@expire[1]"/>
-                    </user>
-                    <domain>
-                        <xslout:attribute name="id" select="$locals//mapping:domain/@id[1]"/>
-                    </domain>
-                    <role>
-                       <xslout:attribute name="names" select="string-join($locals//mapping:role/@names,' ')"/>
-                    </role>
+                    <xslout:if test="not(empty($locals))">
+                        <user>
+                            <xslout:attribute name="name" select="$locals//mapping:user/@name[1]"/>
+                            <xslout:attribute name="email" select="$locals//mapping:user/@email[1]"/>
+                            <xslout:attribute name="expire" select="$locals//mapping:user/@expire[1]"/>
+                        </user>
+                        <domain>
+                            <xslout:attribute name="id" select="$locals//mapping:domain/@id[1]"/>
+                        </domain>
+                        <role>
+                            <xslout:attribute name="names" select="string-join($locals//mapping:role/@names,' ')"/>
+                        </role>
+                    </xslout:if>
                 </local>
             </xslout:template>
         </xslout:transform>
