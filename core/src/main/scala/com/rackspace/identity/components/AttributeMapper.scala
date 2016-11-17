@@ -33,7 +33,7 @@ import net.sf.saxon.s9api.XsltExecutable
 import net.sf.saxon.s9api.XdmValue
 
 object AttributeMapper {
-  private val processor = new Processor(true)
+  val processor = new Processor(true)
   private val compiler = processor.newXsltCompiler
 
   private val mapperXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/mapping.xsl").toString))
