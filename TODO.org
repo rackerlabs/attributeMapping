@@ -1,6 +1,6 @@
 * Mappings TODO
 ** DONE Wrap up CLI
-** TODO Fix given saml:response stuff
+** DONE Fix given saml:response stuff
 ** TODO Work through examples
 ** TODO Send out email
 ** TODO JSON Support

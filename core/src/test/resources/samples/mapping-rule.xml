@@ -31,9 +31,9 @@
             <role names="{4}"/>
         </local>
         <remote>
-            <assertion path="/saml2:Assertion/saml2:Subject/saml2:NameID"/>
+            <assertion path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/>
             <attribute name="email"/>
-            <assertion path="/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/>
+            <assertion path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/>
             <attribute name="domain"/>
             <attributes name="roles"/>
         </remote>

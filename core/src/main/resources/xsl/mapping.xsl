@@ -4,6 +4,7 @@
     xmlns:xslout="http://www.rackspace.com/repose/wadl/checker/Transform"
     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol"
     version="2.0">
     
     <xsl:namespace-alias stylesheet-prefix="xslout" result-prefix="xsl"/>
@@ -249,8 +250,8 @@
     <xsl:function name="mapping:defaultForName" as="node()*">
         <xsl:param name="name" as="xs:string"/>
         <xsl:choose>
-            <xsl:when test="$name='name'"><xslout:value-of select="/saml2:Assertion/saml2:Subject/saml2:NameID"/></xsl:when>
-            <xsl:when test="$name='expire'"><xslout:value-of select="/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/></xsl:when>
+            <xsl:when test="$name='name'"><xslout:value-of select="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/></xsl:when>
+            <xsl:when test="$name='expire'"><xslout:value-of select="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/></xsl:when>
             <xsl:when test="$name='email'"><xslout:value-of select="{mapping:attribute('email')}"/></xsl:when>
             <xsl:when test="$name='id'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
             <xsl:when test="$name='names'"><xslout:value-of select="{mapping:attributes('roles')}" separator=" "/></xsl:when>
@@ -272,30 +273,30 @@
     
     <xsl:function name="mapping:attribute" as="xs:string">
         <xsl:param name="name" as="xs:string"/>
-        <xsl:value-of select="concat('/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=',mapping:quote($name),']/saml2:AttributeValue[1]')"/>
+        <xsl:value-of select="concat('/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=',mapping:quote($name),']/saml2:AttributeValue[1]')"/>
     </xsl:function>
     
     <xsl:function name="mapping:attributes" as="xs:string">
         <xsl:param name="name" as="xs:string"/>
-        <xsl:value-of select="concat('/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=',mapping:quote($name),']/saml2:AttributeValue')"/>
+        <xsl:value-of select="concat('/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=',mapping:quote($name),']/saml2:AttributeValue')"/>
     </xsl:function>
     
     <!-- fireConditions mode these templates create conditions for notAnyOf and anyOneOf -->
     
     <xsl:template match="mapping:attributes[@notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
-        <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies $attr = {mapping:quotedList(@notAnyOf)}"/>
+        <xslout:when test="some $attr in /saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies $attr = {mapping:quotedList(@notAnyOf)}"/>
     </xsl:template>
     
     <xsl:template match="mapping:attributes[@anyOneOf and not(xs:boolean(@regex))]" mode="fireConditions">
-        <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies not($attr = {mapping:quotedList(@anyOneOf)})"/>
+        <xslout:when test="every $attr in /saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies not($attr = {mapping:quotedList(@anyOneOf)})"/>
     </xsl:template>
     
     <xsl:template match="mapping:attributes[@notAnyOf and xs:boolean(@regex)]" mode="fireConditions">
-        <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies matches($attr, {mapping:quote(@notAnyOf)})"/>
+        <xslout:when test="some $attr in /saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies matches($attr, {mapping:quote(@notAnyOf)})"/>
     </xsl:template>
     
     <xsl:template match="mapping:attributes[@anyOneOf and xs:boolean(@regex)]" mode="fireConditions">
-        <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies not(matches($attr, {mapping:quote(@anyOneOf)}))"/>
+        <xslout:when test="every $attr in /saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies not(matches($attr, {mapping:quote(@anyOneOf)}))"/>
     </xsl:template>
     
     <xsl:template match="mapping:assertions[@notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
