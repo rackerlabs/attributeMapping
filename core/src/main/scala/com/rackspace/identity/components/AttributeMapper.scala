@@ -16,10 +16,47 @@
 package com.rackspace.identity.compenents
 
 import javax.xml.transform.Source
+import javax.xml.transform.stream.StreamSource
 
+import com.rackspace.cloud.api.wadl.util.LogErrorListener
+import com.rackspace.cloud.api.wadl.util.XSLErrorDispatcher
+
+import net.sf.saxon.serialize.MessageWarner
+
+import net.sf.saxon.s9api.QName
+import net.sf.saxon.s9api.Processor
 import net.sf.saxon.s9api.Destination
+import net.sf.saxon.s9api.XsltTransformer
+import net.sf.saxon.s9api.XsltExecutable
+import net.sf.saxon.s9api.XdmValue
 
 object AttributeMapper {
-  def generateXSL (src : Source, dest : Destination) : Unit = {}
-  def convertAssertion (src : Source, dest : Destination, outputSaml : Boolean) : Unit = {}
+  private val processor = new Processor(true)
+  private val compiler = processor.newXsltCompiler
+
+  private val mapperXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/mapping.xsl").toString))
+
+  //
+  //  Given XSLTExec and an optional set of XSLT parameters, creates an XsltTransformer
+  //
+  private def getXsltTransformer (xsltExec : XsltExecutable, params : Map[QName, XdmValue]=Map[QName, XdmValue]()) : XsltTransformer = {
+    val t = xsltExec.load
+    t.setErrorListener (new LogErrorListener)
+    t.getUnderlyingController.setMessageEmitter(new MessageWarner)
+    for ((param, value) <- params) {
+      t.setParameter(param, value)
+    }
+    t
+  }
+
+  def generateXSL (src : Source, dest : Destination) : Unit = {
+    val mappingTrans = getXsltTransformer(mapperXsltExec)
+    mappingTrans.setSource(src)
+    mappingTrans.setDestination(dest)
+    mappingTrans.transform
+  }
+
+  def convertAssertion (src : Source, dest : Destination, outputSaml : Boolean) : Unit = {
+
+  }
 }
