@@ -110,4 +110,20 @@ object AttribMap {
                                              None
     }
   }
+
+  private def getBaseFromWorkingDir (workingDir : String) : String = {
+    (new File(workingDir)).toURI().toString
+  }
+
+  //
+  // Local run...
+  //
+  def main(args : Array[String]) = {
+    parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
+               System.in, System.out, System.err) match {
+      case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean)) =>
+        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML)
+      case None => /* Bad args, Ignore */
+    }
+  }
 }
