@@ -4,22 +4,16 @@
     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
     <rule>
         <local>
-            <user name="{0}" email="{1}" expireAfter="{2}"/>
+            <user name="{D}" email="{D}" expire="{D}"/>
             <domain id="78334"/>
         </local>
-        <remote>
-            <attribute name="UserName"/>
-            <attribute name="Email"/>
-            <!-- This is a duration rather than a timestamp -->
-            <attribute name="ExpireAfter"/>
-        </remote>
     </rule>
     <rule>
         <local>
             <role names="nova:admin lbaas:admin"/>
         </local>
         <remote>
-            <attributes name="orgPersonType" notAnyOf="Contractor SubContractor"/>
+            <attributes name="roles" notAnyOf="Contractor SubContractor"/>
         </remote>
     </rule>
     <rule>
@@ -27,7 +21,7 @@
             <role names="nova:observer lbaas:observer"/>
         </local>
         <remote>
-            <attributes name="orgPersonType" anyOneOf="Contractor SubContractor"/>
+            <attributes name="roles" anyOneOf="Contractor SubContractor"/>
         </remote>
     </rule>
 </rules>
