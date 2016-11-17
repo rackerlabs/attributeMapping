@@ -26,6 +26,8 @@ import net.sf.saxon.serialize.MessageWarner
 import net.sf.saxon.s9api.QName
 import net.sf.saxon.s9api.Processor
 import net.sf.saxon.s9api.Destination
+import net.sf.saxon.s9api.XdmDestination
+import net.sf.saxon.s9api.XdmAtomicValue
 import net.sf.saxon.s9api.XsltTransformer
 import net.sf.saxon.s9api.XsltExecutable
 import net.sf.saxon.s9api.XdmValue
@@ -49,14 +51,32 @@ object AttributeMapper {
     t
   }
 
-  def generateXSL (src : Source, dest : Destination) : Unit = {
+  def generateXSL (policy : Source, xsl : Destination) : Unit = {
     val mappingTrans = getXsltTransformer(mapperXsltExec)
-    mappingTrans.setSource(src)
-    mappingTrans.setDestination(dest)
+    mappingTrans.setSource(policy)
+    mappingTrans.setDestination(xsl)
     mappingTrans.transform
   }
 
-  def convertAssertion (src : Source, dest : Destination, outputSaml : Boolean) : Unit = {
+  def convertAssertion (policy : Source, assertion : Source, dest : Destination, outputSAML : Boolean) : Unit = {
+    val outXSL = new XdmDestination
+    
+    //
+    //  Genereate the XSLT.
+    //
+    generateXSL (policy, outXSL)
+ 
+    //
+    // Comple the resulting XSL
+    //
+    val mapExec = compiler.compile(outXSL.getXdmNode.asSource)
 
+    //
+    //  Run the generate XSL on the assertion
+    //
+    val mapTrans = getXsltTransformer (mapExec, Map(new QName("outputSAML") -> new XdmAtomicValue(outputSAML)))
+    mapTrans.setSource(assertion)
+    mapTrans.setDestination(dest)
+    mapTrans.transform
   }
 }
