@@ -10,7 +10,7 @@
     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
     version="2.0">
-    <xsl:param name="outputSAML" as="xs:boolean" select="true()"/>
+    <xsl:param name="outputSAML" as="xs:boolean" select="false()"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
     <xsl:variable name="locals" as="node()*">
         <xsl:call-template name="d1e3"/>
@@ -100,5 +100,19 @@
         </xsl:copy>
     </xsl:template>
     <xsl:template match="saml2:Attribute[@Name=('domain','email','roles')]"/>
-    <xsl:template name="mapping:outLocal"/>
+    <xsl:template name="mapping:outLocal">
+        <local>
+            <user>
+                <xsl:attribute name="name" select="$locals//mapping:user/@name[1]"/>
+                <xsl:attribute name="email" select="$locals//mapping:user/@email[1]"/>
+                <xsl:attribute name="expire" select="$locals//mapping:user/@expire[1]"/>
+            </user>
+            <domain>
+                <xsl:attribute name="id" select="$locals//mapping:domain/@id[1]"/>
+            </domain>
+            <role>
+                <xsl:attribute name="names" select="string-join($locals//mapping:role/@names,' ')"/>
+            </role>
+        </local>
+    </xsl:template>
 </xsl:transform>

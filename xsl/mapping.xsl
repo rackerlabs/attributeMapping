@@ -16,7 +16,7 @@
             -                                                       -
         </xsl:comment>
         <xslout:transform version="2.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
-            <xslout:param name="outputSAML" as="xs:boolean" select="true()"/>
+            <xslout:param name="outputSAML" as="xs:boolean" select="false()"/>
             <xslout:output method="xml" encoding="UTF-8" indent="yes"/>
             <xslout:variable name="locals" as="node()*">
                 <xsl:for-each select="/mapping:rules/mapping:rule">
@@ -78,7 +78,21 @@
             
             <xslout:template match="saml2:Attribute[@Name=('domain','email','roles')]"/>
             
-            <xslout:template name="mapping:outLocal"/>
+            <xslout:template name="mapping:outLocal">
+                <local>
+                    <user>
+                        <xslout:attribute name="name" select="$locals//mapping:user/@name[1]"/>
+                        <xslout:attribute name="email" select="$locals//mapping:user/@email[1]"/>
+                        <xslout:attribute name="expire" select="$locals//mapping:user/@expire[1]"/>
+                    </user>
+                    <domain>
+                        <xslout:attribute name="id" select="$locals//mapping:domain/@id[1]"/>
+                    </domain>
+                    <role>
+                       <xslout:attribute name="names" select="string-join($locals//mapping:role/@names,' ')"/>
+                    </role>
+                </local>
+            </xslout:template>
         </xslout:transform>
     </xsl:template>
     
