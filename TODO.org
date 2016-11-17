@@ -1,0 +1,7 @@
+* Mappings TODO
+** TODO Wrap up CLI
+** TODO Fix given saml:response stuff
+** TODO Work through examples
+** TODO Send out email
+** TODO JSON Support
+** TODO Better namespace handling
