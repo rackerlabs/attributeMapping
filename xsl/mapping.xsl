@@ -17,6 +17,8 @@
             -                                                       -
         </xsl:comment>
         <xslout:transform version="2.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+            <xslout:param name="outputSAML" as="xs:boolean"/>
+            <xslout:output method="xml" encoding="UTF-8" indent="yes"/>
             <xslout:template match="/">
                 <xslout:variable name="locals" as="node()*">
                     <xsl:for-each select="/mapping:rules/mapping:rule">
