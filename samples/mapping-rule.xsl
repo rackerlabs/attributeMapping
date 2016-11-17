@@ -59,12 +59,12 @@
     <xsl:template match="saml2:Subject">
         <xsl:copy>
             <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">
-                <xsl:value-of select="$locals/mapping:local/mapping:user/@name[1]"/>
+                <xsl:value-of select="$locals//mapping:user/@name[1]"/>
             </saml2:NameID>
             <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
                 <saml2:SubjectConfirmationData>
                     <xsl:attribute name="NotOnOrAfter">
-                        <xsl:value-of select="$locals/mapping:local/mapping:user/@expire[1]"/>
+                        <xsl:value-of select="$locals//mapping:user/@expire[1]"/>
                     </xsl:attribute>
                 </saml2:SubjectConfirmationData>
             </saml2:SubjectConfirmation>
@@ -75,22 +75,22 @@
             <xsl:apply-templates select="@*"/>
             <saml2:Attribute Name="domain">
                 <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">
-                    <xsl:value-of select="$locals/mapping:local/mapping:domain/@id[1]"/>
+                    <xsl:value-of select="$locals//mapping:domain/@id[1]"/>
                 </saml2:AttributeValue>
             </saml2:Attribute>
             <saml2:Attribute Name="email">
                 <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">
-                    <xsl:value-of select="$locals/mapping:local/mapping:user/@email[1]"/>
+                    <xsl:value-of select="$locals//mapping:user/@email[1]"/>
                 </saml2:AttributeValue>
             </saml2:Attribute>
             <saml2:Attribute Name="roles">
                 <xsl:variable name="allRolesJoin"
                     as="xs:string"
-                    select="string-join($locals/mapping:local/mapping:role/@names,' ')"/>
+                    select="string-join($locals//mapping:role/@names,' ')"/>
                 <xsl:variable name="allRoles"
                     as="xs:string*"
                     select="tokenize($allRolesJoin,' ')"/>
-                <xsl:for-each select="allRoles">
+                <xsl:for-each select="$allRoles">
                     <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">
                         <xsl:value-of select="."/>
                     </saml2:AttributeValue>

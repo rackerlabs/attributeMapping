@@ -44,10 +44,10 @@
             
             <xslout:template match="saml2:Subject">
                 <xslout:copy>
-                    <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"><xslout:value-of select="$locals/mapping:local/mapping:user/@name[1]"/></saml2:NameID>
+                    <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"><xslout:value-of select="$locals//mapping:user/@name[1]"/></saml2:NameID>
                     <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
                         <saml2:SubjectConfirmationData>
-                            <xslout:attribute name="NotOnOrAfter"><xslout:value-of select="$locals/mapping:local/mapping:user/@expire[1]"/></xslout:attribute>
+                            <xslout:attribute name="NotOnOrAfter"><xslout:value-of select="$locals//mapping:user/@expire[1]"/></xslout:attribute>
                         </saml2:SubjectConfirmationData>
                     </saml2:SubjectConfirmation>
                 </xslout:copy>
@@ -58,16 +58,16 @@
                     <xslout:apply-templates select="@*"/>
                     <saml2:Attribute Name="domain">
                         <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xsi:type="xs:string"><xslout:value-of select="$locals/mapping:local/mapping:domain/@id[1]"/></saml2:AttributeValue>
+                            xsi:type="xs:string"><xslout:value-of select="$locals//mapping:domain/@id[1]"/></saml2:AttributeValue>
                     </saml2:Attribute>
                     <saml2:Attribute Name="email">
                         <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xsi:type="xs:string"><xslout:value-of select="$locals/mapping:local/mapping:user/@email[1]"/></saml2:AttributeValue>
+                            xsi:type="xs:string"><xslout:value-of select="$locals//mapping:user/@email[1]"/></saml2:AttributeValue>
                     </saml2:Attribute>
                     <saml2:Attribute Name="roles">
-                        <xslout:variable name="allRolesJoin" as="xs:string" select="string-join($locals/mapping:local/mapping:role/@names,' ')"/>
+                        <xslout:variable name="allRolesJoin" as="xs:string" select="string-join($locals//mapping:role/@names,' ')"/>
                         <xslout:variable name="allRoles" as="xs:string*" select="tokenize($allRolesJoin,' ')"/>
-                        <xslout:for-each select="allRoles">
+                        <xslout:for-each select="$allRoles">
                             <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                                 xsi:type="xs:string"><xslout:value-of select="."/></saml2:AttributeValue>
                         </xslout:for-each>
