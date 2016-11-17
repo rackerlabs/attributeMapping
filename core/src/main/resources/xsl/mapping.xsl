@@ -166,7 +166,7 @@
                     <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
                 </xsl:call-template>
             </xslout:variable>
-            <xslout:variable name="duration" as="xs:duration" select="xs:duration($durationText)"/>
+            <xslout:variable name="duration" as="xs:duration" select="xs:dayTimeDuration($durationText)"/>
             <xslout:value-of select="current-dateTime()+$duration"/>
         </xslout:attribute>
     </xsl:template>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+    <rule>
+        <local>
+            <user name="{0}" email="{1}" expireAfter="PT2H"/>
+            <domain id="{2}"/>
+            <role names="{3}"/>
+        </local>
+        <remote>
+            <assertion path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/>
+            <attribute name="email"/>
+            <attribute name="domain"/>
+            <attributes name="roles"/>
+        </remote>
+    </rule>
+</rules>
