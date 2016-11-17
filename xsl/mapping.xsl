@@ -4,7 +4,6 @@
     xmlns:xslout="http://www.rackspace.com/repose/wadl/checker/Transform"
     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    exclude-result-prefixes="xs"
     version="2.0">
     
     <xsl:namespace-alias stylesheet-prefix="xslout" result-prefix="xsl"/>
@@ -17,31 +16,97 @@
             -                                                       -
         </xsl:comment>
         <xslout:transform version="2.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
-            <xslout:param name="outputSAML" as="xs:boolean"/>
+            <xslout:param name="outputSAML" as="xs:boolean" select="true()"/>
             <xslout:output method="xml" encoding="UTF-8" indent="yes"/>
+            <xslout:variable name="locals" as="node()*">
+                <xsl:for-each select="/mapping:rules/mapping:rule">
+                    <xslout:call-template name="{generate-id(.)}"/>
+                </xsl:for-each>
+            </xslout:variable>
             <xslout:template match="/">
-                <xslout:variable name="locals" as="node()*">
-                    <xsl:for-each select="/mapping:rules/mapping:rule">
-                        <xslout:call-template name="{generate-id(.)}"/>
-                    </xsl:for-each>
-                </xslout:variable>
+                <xslout:choose>
+                    <xslout:when test="$outputSAML">
+                        <xslout:apply-templates/>
+                    </xslout:when>
+                    <xslout:otherwise>
+                        <xslout:call-template name="mapping:outLocal"/>
+                    </xslout:otherwise>
+                </xslout:choose>
             </xslout:template>
             <xsl:apply-templates />
+            
+            <!-- output templates -->
+            <xslout:template match="node() | @*">
+               <xslout:copy>
+                   <xslout:apply-templates select="@* | node()"/>
+               </xslout:copy>
+            </xslout:template>
+            
+            <xslout:template match="saml2:Subject">
+                <xslout:copy>
+                    <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"><xslout:value-of select="$locals/mapping:local/mapping:user/@name[1]"/></saml2:NameID>
+                    <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+                        <saml2:SubjectConfirmationData>
+                            <xslout:attribute name="NotOnOrAfter"><xslout:value-of select="$locals/mapping:local/mapping:user/@expire[1]"/></xslout:attribute>
+                        </saml2:SubjectConfirmationData>
+                    </saml2:SubjectConfirmation>
+                </xslout:copy>
+            </xslout:template>
+            
+            <xslout:template match="saml2:AttributeStatement">
+                <xslout:copy>
+                    <xslout:apply-templates select="@*"/>
+                    <saml2:Attribute Name="domain">
+                        <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xsi:type="xs:string"><xslout:value-of select="$locals/mapping:local/mapping:domain/@id[1]"/></saml2:AttributeValue>
+                    </saml2:Attribute>
+                    <saml2:Attribute Name="email">
+                        <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xsi:type="xs:string"><xslout:value-of select="$locals/mapping:local/mapping:user/@email[1]"/></saml2:AttributeValue>
+                    </saml2:Attribute>
+                    <saml2:Attribute Name="roles">
+                        <xslout:variable name="allRolesJoin" as="xs:string" select="string-join($locals/mapping:local/mapping:role/@names,' ')"/>
+                        <xslout:variable name="allRoles" as="xs:string*" select="tokenize($allRolesJoin,' ')"/>
+                        <xslout:for-each select="allRoles">
+                            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                xsi:type="xs:string"><xslout:value-of select="."/></saml2:AttributeValue>
+                        </xslout:for-each>
+                    </saml2:Attribute>
+                    <xslout:apply-templates select="node()"/>
+                </xslout:copy>
+            </xslout:template>
+            
+            <xslout:template match="saml2:Attribute[@Name=('domain','email','roles')]"/>
+            
+            <xslout:template name="mapping:outLocal"/>
         </xslout:transform>
     </xsl:template>
     
     <xsl:template match="mapping:rule">
         <xsl:variable name="remoteMappers" as="node()*" select="mapping:remote/element()"/>
         <xslout:template name="{generate-id(.)}">
-            <xslout:choose>
+            <xsl:variable name="fireConditions" as="node()*">
                 <!-- Exit out of this template if conditions are not met -->
                 <xsl:apply-templates select="mapping:remote" mode="fireConditions" />
-                <xslout:otherwise>
-                   <xsl:apply-templates mode="genLocal" select="mapping:local">
-                      <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
-                   </xsl:apply-templates> 
-                </xslout:otherwise>
-            </xslout:choose>
+            </xsl:variable>
+            <xsl:variable name="genLocal" as="node()*">
+                <xsl:apply-templates mode="genLocal" select="mapping:local">
+                    <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
+                </xsl:apply-templates> 
+            </xsl:variable>
+            <xsl:choose>
+                <xsl:when test="empty($fireConditions)">
+                    <xsl:sequence select="$genLocal"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xslout:choose>
+                        <xsl:sequence select="$fireConditions"/>
+                        <xslout:otherwise>
+                            <xsl:sequence select="$genLocal"/>
+                        </xslout:otherwise>
+                    </xslout:choose>
+                </xsl:otherwise>
+            </xsl:choose>
         </xslout:template>
     </xsl:template>
     
@@ -169,7 +234,7 @@
         <xsl:param name="name" as="xs:string"/>
         <xsl:choose>
             <xsl:when test="$name='name'"><xslout:value-of select="/saml2:Assertion/saml2:Subject/saml2:NameID"/></xsl:when>
-            <xsl:when test="$name='expire'"><xslout:value-of select="/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/SubjectConfirmationData/@NotOnOrAfter"/></xsl:when>
+            <xsl:when test="$name='expire'"><xslout:value-of select="/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/></xsl:when>
             <xsl:when test="$name='email'"><xslout:value-of select="{mapping:attribute('email')}"/></xsl:when>
             <xsl:when test="$name='id'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
             <xsl:when test="$name='names'"><xslout:value-of select="{mapping:attributes('names')}" separator=" "/></xsl:when>
@@ -191,30 +256,30 @@
     
     <xsl:function name="mapping:attribute" as="xs:string">
         <xsl:param name="name" as="xs:string"/>
-        <xsl:value-of select="concat('/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name=',mapping:quote($name),']/saml2:AttributeValue[1]')"/>
+        <xsl:value-of select="concat('/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=',mapping:quote($name),']/saml2:AttributeValue[1]')"/>
     </xsl:function>
     
     <xsl:function name="mapping:attributes" as="xs:string">
         <xsl:param name="name" as="xs:string"/>
-        <xsl:value-of select="concat('/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name=',mapping:quote($name),']/saml2:AttributeValue')"/>
+        <xsl:value-of select="concat('/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=',mapping:quote($name),']/saml2:AttributeValue')"/>
     </xsl:function>
     
     <!-- fireConditions mode these templates create conditions for notAnyOf and anyOneOf -->
     
     <xsl:template match="mapping:attributes[@notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
-        <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies $attr = {mapping:quotedList(@notAnyOf)}"/>
+        <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies $attr = {mapping:quotedList(@notAnyOf)}"/>
     </xsl:template>
     
     <xsl:template match="mapping:attributes[@anyOneOf and not(xs:boolean(@regex))]" mode="fireConditions">
-        <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies not($attr = {mapping:quotedList(@anyOneOf)})"/>
+        <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies not($attr = {mapping:quotedList(@anyOneOf)})"/>
     </xsl:template>
     
     <xsl:template match="mapping:attributes[@notAnyOf and xs:boolean(@regex)]" mode="fireConditions">
-        <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies matches($attr, {mapping:quote(@notAnyOf)})"/>
+        <xslout:when test="some $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies matches($attr, {mapping:quote(@notAnyOf)})"/>
     </xsl:template>
     
     <xsl:template match="mapping:attributes[@anyOneOf and xs:boolean(@regex)]" mode="fireConditions">
-        <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@name='{@name}']/saml2:AttributeValue satisfies not(matches($attr, {mapping:quote(@anyOneOf)}))"/>
+        <xslout:when test="every $attr in /saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies not(matches($attr, {mapping:quote(@anyOneOf)}))"/>
     </xsl:template>
     
     <xsl:template match="mapping:assertions[@notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
