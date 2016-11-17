@@ -71,6 +71,11 @@
             <version>${xerces.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.rackspace.cloud.api</groupId>
+            <artifactId>wadl-tools_${scala.MajDotMin}</artifactId>
+            <version>${wadl-tools.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson-databind.version}</version>
