@@ -103,4 +103,16 @@ object AttribMap2XSL {
       case None => /* Bad args, Ignore */
     }
   }
+
+  //
+  // Nailgun run...
+  //
+  def nailMain(context : NGContext) = {
+    parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
+               context.in, context.out, context.err) match {
+      case Some((policy : Source,  dest : Destination)) =>
+        AttributeMapper.generateXSL (policy,  dest)
+      case None => /* Bad args, Ignore */
+    }
+  }
 }
