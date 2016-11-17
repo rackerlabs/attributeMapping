@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.rackspace.identity.compenents
+package com.rackspace.identity.components
 
 import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
