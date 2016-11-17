@@ -18,7 +18,11 @@
         </xsl:comment>
         <xslout:transform version="2.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
             <xslout:template match="/">
-                <xsl:comment>Launch templates!</xsl:comment>
+                <xslout:variable name="locals" as="node()*">
+                    <xsl:for-each select="/mapping:rules/mapping:rule">
+                        <xslout:call-template name="{generate-id(.)}"/>
+                    </xsl:for-each>
+                </xslout:variable>
             </xslout:template>
             <xsl:apply-templates />
         </xslout:transform>
