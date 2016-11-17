@@ -2,6 +2,7 @@
 ** DONE Wrap up CLI
 ** DONE Fix given saml:response stuff
 ** TODO Work through examples
+** TODO Whitelist/Blacklist with regex
 ** TODO Send out email
 ** TODO JSON Support
 ** TODO Better namespace handling

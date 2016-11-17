@@ -204,11 +204,11 @@
     </xsl:template>
     
     <xsl:template match="mapping:attributes[@whitelist]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {mapping:attributes(@name)} return if ($i = {mapping:quotedList(@whitelist)}) $i else ()" separator=" "/>
+        <xslout:value-of select="for $i in {mapping:attributes(@name)} return if ($i = {mapping:quotedList(@whitelist)}) then $i else ()" separator=" "/>
     </xsl:template>
     
     <xsl:template match="mapping:attributes[@blacklist]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {mapping:attributes(@name)} return if ($i = {mapping:quotedList(@blacklist)}) () else $i" separator=" "/>
+        <xslout:value-of select="for $i in {mapping:attributes(@name)} return if ($i = {mapping:quotedList(@blacklist)}) then () else $i" separator=" "/>
     </xsl:template>
     
     
@@ -221,11 +221,11 @@
     </xsl:template>
     
     <xsl:template match="mapping:assertions[@whitelist]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {@path} return if ($i = {mapping:quotedList(@whitelist)}) $i else ()" separator=" "/>
+        <xslout:value-of select="for $i in {@path} return if ($i = {mapping:quotedList(@whitelist)}) then $i else ()" separator=" "/>
     </xsl:template>
     
     <xsl:template match="mapping:assertions[@blacklist]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {@path} return if ($i = {mapping:quotedList(@blacklist)}) () else $i" separator=" "/>
+        <xslout:value-of select="for $i in {@path} return if ($i = {mapping:quotedList(@blacklist)}) () then else $i" separator=" "/>
     </xsl:template>
     
     <xsl:function name="mapping:mapAttribute" as="node()*">
