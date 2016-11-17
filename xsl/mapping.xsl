@@ -68,6 +68,21 @@
         </xslout:attribute>
     </xsl:template>
     
+    <xsl:template match="@expireAfter" priority="10" mode="genLocal">
+        <xsl:param name="remoteMappers" as="node()*"/>
+        <xslout:attribute name="expire">
+            <xslout:variable name="durationText" as="node()">
+                <xsl:call-template name="mapping:handleAttribute">
+                    <xsl:with-param name="name" select="name()"/>
+                    <xsl:with-param name="in" select="."/>
+                    <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
+                </xsl:call-template>
+            </xslout:variable>
+            <xslout:variable name="duration" as="xs:duration" select="xs:duration($durationText)"/>
+            <xslout:value-of select="current-dateTime()+$duration"/>
+        </xslout:attribute>
+    </xsl:template>
+    
     <xsl:template name="mapping:handleAttribute">
         <xsl:param name="name" as="xs:string"/>
         <xsl:param name="in" as="xs:string"/>
