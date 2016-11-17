@@ -237,7 +237,7 @@
             <xsl:when test="$name='expire'"><xslout:value-of select="/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/></xsl:when>
             <xsl:when test="$name='email'"><xslout:value-of select="{mapping:attribute('email')}"/></xsl:when>
             <xsl:when test="$name='id'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
-            <xsl:when test="$name='names'"><xslout:value-of select="{mapping:attributes('names')}" separator=" "/></xsl:when>
+            <xsl:when test="$name='names'"><xslout:value-of select="{mapping:attributes('roles')}" separator=" "/></xsl:when>
         </xsl:choose>
     </xsl:function>
     
