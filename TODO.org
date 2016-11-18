@@ -4,7 +4,7 @@
 ** DONE Work through examples
 ** DONE OpenSAML 2.5.3 (ancient version)
 ** DONE Interesting examples with XPath current-time etc.
-** TODO Whitelist/Blacklist with regex
+** DONE Whitelist/Blacklist with regex
 ** TODO mapping:attribute mapping:attributes
 ** TODO JSON Support
 ** TODO Validation
