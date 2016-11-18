@@ -24,6 +24,7 @@
                     <xslout:call-template name="{generate-id(.)}"/>
                 </xsl:for-each>
             </xslout:variable>
+            <xslout:variable name="assert" as="node()" select="/"/>
             <xslout:template match="/">
                 <xslout:choose>
                     <xslout:when test="$outputSAML">
@@ -96,6 +97,15 @@
                     </xslout:if>
                 </local>
             </xslout:template>
+            <xslout:function name="mapping:get-attributes" as="xs:string*">
+                <xslout:param name="name" as="xs:string"/>
+                <xslout:sequence
+                    select="$assert//saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=$name]/saml2:AttributeValue"/>
+            </xslout:function>
+            <xslout:function name="mapping:get-attribute" as="xs:string">
+                <xslout:param name="name" as="xs:string"/>
+                <xslout:sequence select="mapping:get-attributes($name)[1]"/>
+            </xslout:function>
         </xslout:transform>
     </xsl:template>
     
