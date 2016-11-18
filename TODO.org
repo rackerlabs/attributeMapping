@@ -2,8 +2,10 @@
 ** DONE Wrap up CLI
 ** DONE Fix given saml:response stuff
 ** DONE Work through examples
-** TODO Whitelist/Blacklist with regex
 ** TODO OpenSAML 2.5.3 (ancient version)
-** TODO Send out email
+** TODO Interesting examples with XPath current-time etc.
+** TODO Whitelist/Blacklist with regex
+** TODO mapping:attribute mapping:attributes
 ** TODO JSON Support
+** TODO Tests!
 ** TODO Better namespace handling
