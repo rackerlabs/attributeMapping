@@ -3,9 +3,10 @@
 ** DONE Fix given saml:response stuff
 ** DONE Work through examples
 ** DONE OpenSAML 2.5.3 (ancient version)
-** TODO Interesting examples with XPath current-time etc.
+** DONE Interesting examples with XPath current-time etc.
 ** TODO Whitelist/Blacklist with regex
 ** TODO mapping:attribute mapping:attributes
 ** TODO JSON Support
+** TODO Validation
 ** TODO Tests!
 ** TODO Better namespace handling

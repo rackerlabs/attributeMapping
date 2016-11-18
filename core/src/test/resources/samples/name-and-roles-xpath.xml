@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+    <rule>
+        <local>
+            <user name="{D}" email="{D}" expire="{D}"/>
+            <domain id="78334"/>
+            <role names="{0}"/>
+        </local>
+        <remote>
+            <assertions path="if ((xs:integer(seconds-from-time(current-time())) mod 2) = 0) then ('nova:admin', 'lbaas:admin') else ('nova:observer','lbaas:observer')"/>
+        </remote>
+    </rule>
+</rules>
