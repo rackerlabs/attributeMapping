@@ -6,7 +6,11 @@
 ** DONE Interesting examples with XPath current-time etc.
 ** DONE Whitelist/Blacklist with regex
 ** DONE mapping:attribute mapping:attributes
-** TODO JSON Support
+** TODO New Format -- with support for extensions
+** TODO New XSL for format
+** TODO All changes in assert
 ** TODO Validation
+** TODO JSON Support
+** TODO {D(name)}
 ** TODO Tests!
 ** TODO Better namespace handling
