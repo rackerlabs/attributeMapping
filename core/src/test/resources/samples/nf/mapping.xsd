@@ -50,10 +50,10 @@
                     xerces:message="A regex can only be true if a whitelist or blacklist is specificed"
                 />
                 <xs:assert 
-                    test="if (xs:boolean(@regex) and not(empty(@whitelist))) then count(@whitelist) = 1 else true()"
+                    test="if (xs:boolean(@regex) and not(empty(@whitelist))) then count(tokenize(@whitelist,' ')) = 1 else true()"
                     saxon:message="If a regex is specificed only 1 item is allowed on a whitelist"/>
                 <xs:assert 
-                    test="if (xs:boolean(@regex) and not(empty(@blacklist))) then count(@blacklisk) = 1 else true()"
+                    test="if (xs:boolean(@regex) and not(empty(@blacklist))) then count(tokenize(@blacklist,' ')) = 1 else true()"
                     saxon:message="If a regex is specificed only 1 item is allowed on a blacklist"/>
             </xs:extension>
         </xs:complexContent>
@@ -70,11 +70,11 @@
                     saxon:message="An attribute can't have both notAnyOf and anyOneOf"
                     xerces:message="An attribute can't have both notAnyOf and anyOneOf"/>
                 <xs:assert 
-                    test="if (xs:boolean(@regex) and not(empty(@notAnyOf))) then count(@notAnyOf) = 1 else true()"
+                    test="if (xs:boolean(@regex) and not(empty(@notAnyOf))) then count(tokenize(@notAnyOf,' ')) = 1 else true()"
                     saxon:message="If a regex is specificed only 1 item is allowed on a notAnyOf"
                     xerces:message="If a regex is specified only 1 item is allowed on a notAnyOf"/>
                 <xs:assert 
-                    test="if (xs:boolean(@regex) and not(empty(@anyOneOf))) then count(@anyOneOf) = 1 else true()"
+                    test="if (xs:boolean(@regex) and not(empty(@anyOneOf))) then count(tokenize(@anyOneOf,' ')) = 1 else true()"
                     saxon:message="If a regex is specificed only 1 item is allowed on a anyOneOf"
                     xerces:message="If a regex is specified only 1 item is allowed on a anyOneOf"/>
             </xs:extension>
