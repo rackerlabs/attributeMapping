@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <rule>
+        <local>
+            <user>
+                <name value="{0}"/>
+                <email value="{1}"/>
+                <expire value="{2}"/>
+                <domain value="{3}"/>
+                <roles  value="{4}"/>
+                <!--
+                    foo is not a standard role, the attribute will still be captured,
+                    The attribute name will be user/foo Because it's the attribute foo
+                    in the user group!
+                    
+                    It is an error to use {D} on an extended attribute, because it has no default!
+                    You can, however, do something like {D(name)} which gets the default for a standard
+                    attribute.
+                    
+                    The default is to have a type of xs:string and to not be multi-valued.
+                -->
+                <foo value="{5}"/>
+            </user>
+            <!-- 
+                faws is an extended attribute group
+                
+                Extended groups are there for organizational purposes. They hold
+                extended attributes like foo above.
+            -->
+            <faws>
+                <!--
+                    The policy attribute name in the SAML assertion will be faws/policy.
+                    Again, default type is xs:string!
+                -->
+                <policy value="{6}"/>
+            </faws>
+        </local>
+        <remote>
+            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/>
+            <attribute name="email"/>
+            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/>
+            <attribute name="domain"/>
+            <attribute name="roles" multiValue="true"/>
+            <attribute name="bar"/>
+            <attribute name="AWSPolicy"/>
+        </remote>
+    </rule>
+</rules>
+
