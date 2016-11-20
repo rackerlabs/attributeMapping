@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:saxon="http://saxon.sf.net/"
+    xmlns:xerces="http://xerces.apache.org"
+    targetNamespace="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    elementFormDefault="qualified" 
+    attributeFormDefault="unqualified">
+    <xs:element name="rules" type="mapping:Rules"/>
+    
+    <xs:complexType name="Rules">
+        <xs:sequence>
+            <xs:element name="rule" type="mapping:Rule" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Rule">
+        <xs:sequence>
+            <xs:element name="local" type="mapping:Local"/>
+            <xs:element name="remote" type="mapping:Remote" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Local"/>
+    <xs:complexType name="Remote">
+        <xs:sequence>
+            <xs:element name="attribute" type="mapping:Attribute" minOccurs="0" maxOccurs="unbounded">
+                <xs:alternative test="@path and (@notAnyOf or @anyOneOf)" type="mapping:PathConditionalAttribute"/>
+                <xs:alternative test="@name and (@notAnyOf or @anyOneOf)" type="mapping:NamedConditionalAttribute"/>
+                <xs:alternative test="@name" type="mapping:NamedValueAttribute"/>
+                <xs:alternative test="@path" type="mapping:PathValueAttribute"/>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Attribute" abstract="true"/>
+    <xs:complexType name="ValueAttribute" abstract="true">
+        <xs:complexContent>
+            <xs:extension base="mapping:Attribute">
+                <xs:attribute name="multiValue" type="xs:boolean" default="false" use="optional"/>
+                <xs:attribute name="blacklist" type="mapping:StringList" use="optional"/>
+                <xs:attribute name="whitelist" type="mapping:StringList" use="optional"/>
+                <xs:attribute name="regex" type="xs:boolean" default="false" use="optional"/>
+                <xs:assert 
+                    test="not(@blacklist and @whitelist)"
+                    saxon:message="An attribute can't have both a whitelist and a blacklist"
+                    xerces:message="An attribute can't have both a whitelist and a blacklist"/>
+                <xs:assert
+                    test="if (xs:boolean(@regex) and (empty(@blacklist) and empty(@whitelist))) then false() else true()"
+                    saxon:message="A regex can only be true if a whitelist or blacklist is specificed"
+                    xerces:message="A regex can only be true if a whitelist or blacklist is specificed"
+                />
+                <xs:assert 
+                    test="if (xs:boolean(@regex) and not(empty(@whitelist))) then count(@whitelist) = 1 else true()"
+                    saxon:message="If a regex is specificed only 1 item is allowed on a whitelist"/>
+                <xs:assert 
+                    test="if (xs:boolean(@regex) and not(empty(@blacklist))) then count(@blacklisk) = 1 else true()"
+                    saxon:message="If a regex is specificed only 1 item is allowed on a blacklist"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ConditionalAttribute" abstract="true">
+        <xs:complexContent>
+            <xs:extension base="mapping:Attribute">
+                <xs:attribute name="notAnyOf" type="mapping:StringList" use="optional"/>
+                <xs:attribute name="anyOneOf" type="mapping:StringList" use="optional"/>
+                <xs:attribute name="regex" type="xs:boolean" default="false"/>
+                <xs:assert 
+                    test="not(@notAnyOf and @anyOneOf)"
+                    saxon:message="An attribute can't have both notAnyOf and anyOneOf"
+                    xerces:message="An attribute can't have both notAnyOf and anyOneOf"/>
+                <xs:assert 
+                    test="if (xs:boolean(@regex) and not(empty(@notAnyOf))) then count(@notAnyOf) = 1 else true()"
+                    saxon:message="If a regex is specificed only 1 item is allowed on a notAnyOf"
+                    xerces:message="If a regex is specified only 1 item is allowed on a notAnyOf"/>
+                <xs:assert 
+                    test="if (xs:boolean(@regex) and not(empty(@anyOneOf))) then count(@anyOneOf) = 1 else true()"
+                    saxon:message="If a regex is specificed only 1 item is allowed on a anyOneOf"
+                    xerces:message="If a regex is specified only 1 item is allowed on a anyOneOf"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="NamedValueAttribute">
+        <xs:complexContent>
+            <xs:extension base="mapping:ValueAttribute">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="NamedConditionalAttribute">
+        <xs:complexContent>
+            <xs:extension base="mapping:ConditionalAttribute">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="PathValueAttribute">
+        <xs:complexContent>
+            <xs:extension base="mapping:ValueAttribute">
+                <xs:attribute name="path" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="PathConditionalAttribute">
+        <xs:complexContent>
+            <xs:extension base="mapping:ConditionalAttribute">
+                <xs:attribute name="path" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="StringList">
+        <xs:list itemType="xs:string"/>
+    </xs:simpleType>
+</xs:schema>
