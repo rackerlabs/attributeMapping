@@ -21,7 +21,76 @@
         </xs:sequence>
     </xs:complexType>
     
-    <xs:complexType name="Local"/>
+    <xs:complexType name="Local">
+        <xs:sequence>
+            <xs:element name="user" type="mapping:UserLocalAttributeGroup" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="UserLocalAttributeGroup">
+        <xs:all>
+            <xs:element name="name" type="mapping:DefaultSingleLocalString"/>
+            <xs:element name="email" type="mapping:DefaultSingleLocalString"/>
+            <xs:element name="domain" type="mapping:DefaultSingleLocalString"/>
+            <xs:element name="expire" type="mapping:DefaultSingleLocalDateTime"/>
+            <xs:element name="roles" type="mapping:DefaultSingleLocalStrings"/>
+        </xs:all>
+    </xs:complexType>
+    
+    <xs:complexType name="DefaultSingleLocalString">
+        <xs:complexContent>
+            <xs:extension base="mapping:LocalAttribute">
+                <xs:assert test="for $q in @type return 
+                    namespace-uri-from-QName($q) = 'http://www.w3.org/2001/XMLSchema' and
+                    local-name-from-QName($q) = 'string'"
+                    saxon:message="In this case the type should always be xs:string"
+                    xerces:message="In this case the type should always be xs:string"/>
+                <xs:assert test="if (exists(@multiValue)) then string(@multiValue)=('false','0') else true()"
+                  saxon:message="In this case multiValue should always be false"
+                  xerces:message="In this case multiValue should always be false"
+                />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="DefaultSingleLocalStrings">
+        <xs:complexContent>
+            <xs:extension base="mapping:LocalAttribute">
+                <xs:assert test="for $q in @type return 
+                    namespace-uri-from-QName($q) = 'http://www.w3.org/2001/XMLSchema' and
+                    local-name-from-QName($q) = 'string'"
+                    saxon:message="In this case the type should always be xs:string"
+                    xerces:message="In this case the type should always be xs:string"/>
+                <xs:assert test="if (exists(@multiValue)) then string(@multiValue)=('true','1') else true()"
+                    saxon:message="In this case multiValue should always be true"
+                    xerces:message="In this case multiValue should always be true"
+                />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="DefaultSingleLocalDateTime">
+        <xs:complexContent>
+            <xs:extension base="mapping:LocalAttribute">
+                <xs:assert test="for $q in @type return 
+                    namespace-uri-from-QName($q) = 'http://www.w3.org/2001/XMLSchema' and
+                    local-name-from-QName($q) = 'dateTime'"
+                    saxon:message="In this case the type should always be xs:dateTime"
+                    xerces:message="In this case the type should always be xs:dateTime"/>
+                <xs:assert test="if (exists(@multiValue)) then string(@multiValue)=('false','0') else true()"
+                    saxon:message="In this case multiValue should always be false"
+                    xerces:message="In this case multiValue should always be false"
+                />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="LocalAttribute">
+        <xs:attribute name="value" type="xs:string" use="required"/>
+        <xs:attribute name="type" type="xs:QName" use="optional" default="xs:string"/>
+        <xs:attribute name="multiValue" type="xs:boolean" use="optional" />
+    </xs:complexType>
+    
     <xs:complexType name="Remote">
         <xs:sequence>
             <xs:element name="attribute" type="mapping:Attribute" minOccurs="0" maxOccurs="unbounded">

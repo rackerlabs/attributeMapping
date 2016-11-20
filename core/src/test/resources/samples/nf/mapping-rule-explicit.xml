@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <rule>
         <local>
             <user>
