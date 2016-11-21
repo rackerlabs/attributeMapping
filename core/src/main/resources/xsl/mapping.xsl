@@ -308,35 +308,35 @@
     
     <!-- fireConditions mode these templates create conditions for notAnyOf and anyOneOf -->
     
-    <xsl:template match="mapping:attributes[@notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
+    <xsl:template match="mapping:attribute[@name and @notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
         <xslout:when test="some $attr in /saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies $attr = {mapping:quotedList(@notAnyOf)}"/>
     </xsl:template>
     
-    <xsl:template match="mapping:attributes[@anyOneOf and not(xs:boolean(@regex))]" mode="fireConditions">
+    <xsl:template match="mapping:attribute[@name and @anyOneOf and not(xs:boolean(@regex))]" mode="fireConditions">
         <xslout:when test="every $attr in /saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies not($attr = {mapping:quotedList(@anyOneOf)})"/>
     </xsl:template>
     
-    <xsl:template match="mapping:attributes[@notAnyOf and xs:boolean(@regex)]" mode="fireConditions">
+    <xsl:template match="mapping:attribute[@name and @notAnyOf and xs:boolean(@regex)]" mode="fireConditions">
         <xslout:when test="some $attr in /saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies matches($attr, {mapping:quote(@notAnyOf)})"/>
     </xsl:template>
     
-    <xsl:template match="mapping:attributes[@anyOneOf and xs:boolean(@regex)]" mode="fireConditions">
+    <xsl:template match="mapping:attribute[@name and @anyOneOf and xs:boolean(@regex)]" mode="fireConditions">
         <xslout:when test="every $attr in /saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name='{@name}']/saml2:AttributeValue satisfies not(matches($attr, {mapping:quote(@anyOneOf)}))"/>
     </xsl:template>
     
-    <xsl:template match="mapping:assertions[@notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
+    <xsl:template match="mapping:attribute[@path and @notAnyOf and not(xs:boolean(@regex))]" mode="fireConditions">
         <xslout:when test="some $attr in {@path} satisfies $attr = {mapping:quotedList(@notAnyOf)}"/>
     </xsl:template>
     
-    <xsl:template match="mapping:assertions[@anyOneOf and not(xs:boolean(@regex))]" mode="fireConditions">
+    <xsl:template match="mapping:attribute[@path and @anyOneOf and not(xs:boolean(@regex))]" mode="fireConditions">
         <xslout:when test="every $attr in {@path} satisfies not($attr = {mapping:quotedList(@anyOneOf)})"/>
     </xsl:template>
     
-    <xsl:template match="mapping:assertions[@notAnyOf and xs:boolean(@regex)]" mode="fireConditions">
+    <xsl:template match="mapping:attribute[@path and @notAnyOf and xs:boolean(@regex)]" mode="fireConditions">
         <xslout:when test="some $attr in {@path} satisfies matches($attr, {mapping:quote(@notAnyOf)})"/>
     </xsl:template>
     
-    <xsl:template match="mapping:assertions[@anyOneOf and xs:boolean(@regex)]" mode="fireConditions">
+    <xsl:template match="mapping:attribute[@path and @anyOneOf and xs:boolean(@regex)]" mode="fireConditions">
         <xslout:when test="every $attr in {@path} satisfies not(matches($attr, {mapping:quote(@anyOneOf)}))"/>
     </xsl:template>
     
