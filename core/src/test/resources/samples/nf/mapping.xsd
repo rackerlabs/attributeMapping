@@ -24,7 +24,14 @@
     <xs:complexType name="Local">
         <xs:sequence>
             <xs:element name="user" type="mapping:UserLocalAttributeGroup" minOccurs="0"/>
+            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" processContents="strict"/>
         </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="LocalAttributeGroup">
+        <xs:all>
+            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" notQName="##defined"/>
+        </xs:all>
     </xs:complexType>
     
     <xs:complexType name="UserLocalAttributeGroup">
@@ -34,13 +41,14 @@
             <xs:element name="domain" type="mapping:DefaultSingleLocalString"/>
             <xs:element name="expire" type="mapping:DefaultSingleLocalDateTime"/>
             <xs:element name="roles" type="mapping:DefaultSingleLocalStrings"/>
+            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" processContents="strict"/>
         </xs:all>
     </xs:complexType>
     
     <xs:complexType name="DefaultSingleLocalString">
         <xs:complexContent>
             <xs:extension base="mapping:LocalAttribute">
-                <xs:assert test="for $q in @type return 
+                <xs:assert test="if (empty(@type)) then true() else for $q in @type return 
                     namespace-uri-from-QName($q) = 'http://www.w3.org/2001/XMLSchema' and
                     local-name-from-QName($q) = 'string'"
                     saxon:message="In this case the type should always be xs:string"
@@ -56,7 +64,7 @@
     <xs:complexType name="DefaultSingleLocalStrings">
         <xs:complexContent>
             <xs:extension base="mapping:LocalAttribute">
-                <xs:assert test="for $q in @type return 
+                <xs:assert test="if (empty(@type)) then true() else for $q in @type return 
                     namespace-uri-from-QName($q) = 'http://www.w3.org/2001/XMLSchema' and
                     local-name-from-QName($q) = 'string'"
                     saxon:message="In this case the type should always be xs:string"
@@ -72,7 +80,7 @@
     <xs:complexType name="DefaultSingleLocalDateTime">
         <xs:complexContent>
             <xs:extension base="mapping:LocalAttribute">
-                <xs:assert test="for $q in @type return 
+                <xs:assert test="if (empty(@type)) then true() else for $q in @type return 
                     namespace-uri-from-QName($q) = 'http://www.w3.org/2001/XMLSchema' and
                     local-name-from-QName($q) = 'dateTime'"
                     saxon:message="In this case the type should always be xs:dateTime"
@@ -87,7 +95,7 @@
     
     <xs:complexType name="LocalAttribute">
         <xs:attribute name="value" type="xs:string" use="required"/>
-        <xs:attribute name="type" type="xs:QName" use="optional" default="xs:string"/>
+        <xs:attribute name="type" type="xs:QName" use="optional"/>
         <xs:attribute name="multiValue" type="xs:boolean" use="optional" />
     </xs:complexType>
     

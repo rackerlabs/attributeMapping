@@ -9,7 +9,7 @@
                 <email value="{1}"/>
                 <expire value="{2}"/>
                 <domain value="{3}"/>
-                <roles  value="{4}"/>
+                <roles  value="{4}"/> 
             </user>
         </local>
         <remote>

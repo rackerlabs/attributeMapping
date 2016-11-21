@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <rule>
         <local>
             <user>
-                <name value="{0}"/>
+                <name value="{0}"  type="xs:string" />
                 <email value="{1}"/>
                 <expire value="{2}"/>
                 <domain value="{3}"/>
@@ -20,7 +22,7 @@
                     
                     The default is to have a type of xs:string and to not be multi-valued.
                 -->
-                <foo value="{5}"/>
+                <foo value="{5}" xsi:type="LocalAttribute"/>
             </user>
             <!-- 
                 faws is an extended attribute group
@@ -28,12 +30,9 @@
                 Extended groups are there for organizational purposes. They hold
                 extended attributes like foo above.
             -->
-            <faws>
-                <!--
-                    The policy attribute name in the SAML assertion will be faws/policy.
-                    Again, default type is xs:string!
-                -->
-                <policy value="{6}"/>
+
+            <faws xsi:type="LocalAttributeGroup">
+                <policy value="{6}" xsi:type="LocalAttribute"/>
             </faws>
         </local>
         <remote>
