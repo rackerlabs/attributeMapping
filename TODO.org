@@ -6,14 +6,15 @@
 ** DONE Interesting examples with XPath current-time etc.
 ** DONE Whitelist/Blacklist with regex
 ** DONE mapping:attribute mapping:attributes
-** TODO New Format -- with support for extensions [2/4]
+** DONE New Format -- with support for extensions [3/4]
    1. [X] Build Design
    2. [X] Design Schema
-   3. [ ] Convert Examples
-   4. [ ] Support namespaces...
-** TODO New XSL for format
-** TODO All changes in first assert statement
+   3. [X] Convert Examples
+** TODO New XSL for format [0/4]
+   1. [ ] Support extension attributes
+   2. [ ] Better support for namespaces
+   3. [ ] Support {D(name)}
+   4. [ ] All Changes in first assert statement, leave others as is
 ** TODO Validation
 ** TODO JSON Support
-** TODO {D(name)}
 ** TODO Tests Framework
