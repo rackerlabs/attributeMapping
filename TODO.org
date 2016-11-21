@@ -6,9 +6,9 @@
 ** DONE Interesting examples with XPath current-time etc.
 ** DONE Whitelist/Blacklist with regex
 ** DONE mapping:attribute mapping:attributes
-** TODO New Format -- with support for extensions [1/4]
+** TODO New Format -- with support for extensions [2/4]
    1. [X] Build Design
-   2. [ ] Design Schema
+   2. [X] Design Schema
    3. [ ] Convert Examples
    4. [ ] Support namespaces...
 ** TODO New XSL for format

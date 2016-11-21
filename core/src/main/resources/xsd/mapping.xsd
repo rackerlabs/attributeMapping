@@ -44,11 +44,11 @@
         <xs:complexContent>
             <xs:extension base="mapping:LocalAttributeGroup">
                 <xs:all>
-                    <xs:element name="name" type="mapping:DefaultSingleLocalString"/>
-                    <xs:element name="email" type="mapping:DefaultSingleLocalString"/>
-                    <xs:element name="domain" type="mapping:DefaultSingleLocalString"/>
-                    <xs:element name="expire" type="mapping:DefaultSingleLocalDateTime"/>
-                    <xs:element name="roles" type="mapping:DefaultSingleLocalStrings"/>
+                    <xs:element name="name" type="mapping:DefaultSingleLocalString" minOccurs="0"/>
+                    <xs:element name="email" type="mapping:DefaultSingleLocalString" minOccurs="0"/>
+                    <xs:element name="domain" type="mapping:DefaultSingleLocalString" minOccurs="0"/>
+                    <xs:element name="expire" type="mapping:DefaultSingleLocalDateTime" minOccurs="0"/>
+                    <xs:element name="roles" type="mapping:DefaultSingleLocalStrings" minOccurs="0"/>
                 </xs:all>
             </xs:extension>
         </xs:complexContent>
