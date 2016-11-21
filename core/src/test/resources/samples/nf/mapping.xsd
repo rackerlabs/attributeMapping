@@ -22,27 +22,36 @@
     </xs:complexType>
     
     <xs:complexType name="Local">
-        <xs:sequence>
+        <xs:all>
             <xs:element name="user" type="mapping:UserLocalAttributeGroup" minOccurs="0"/>
-            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" processContents="strict"/>
-        </xs:sequence>
+            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" notQName="##defined" processContents="strict"/>
+        </xs:all>
+        <xs:assert test="every $elm in element() satisfies not(exists($elm/@value))"
+            saxon:message="Only attribute groups are allowed in a local"
+            xerces:message="Only attribute groups are allowed in a local"/>
     </xs:complexType>
     
     <xs:complexType name="LocalAttributeGroup">
         <xs:all>
-            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" notQName="##defined"/>
+            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" notQName="##defined" processContents="strict"/>
         </xs:all>
+        <xs:assert test="every $elm in element() satisfies $elm/@value"
+           saxon:message="Every element in an attribute group must be a local attribute"
+           xerces:message="Every element in an attribute group must be a local attribute"/>
     </xs:complexType>
     
     <xs:complexType name="UserLocalAttributeGroup">
-        <xs:all>
-            <xs:element name="name" type="mapping:DefaultSingleLocalString"/>
-            <xs:element name="email" type="mapping:DefaultSingleLocalString"/>
-            <xs:element name="domain" type="mapping:DefaultSingleLocalString"/>
-            <xs:element name="expire" type="mapping:DefaultSingleLocalDateTime"/>
-            <xs:element name="roles" type="mapping:DefaultSingleLocalStrings"/>
-            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" processContents="strict"/>
-        </xs:all>
+        <xs:complexContent>
+            <xs:extension base="mapping:LocalAttributeGroup">
+                <xs:all>
+                    <xs:element name="name" type="mapping:DefaultSingleLocalString"/>
+                    <xs:element name="email" type="mapping:DefaultSingleLocalString"/>
+                    <xs:element name="domain" type="mapping:DefaultSingleLocalString"/>
+                    <xs:element name="expire" type="mapping:DefaultSingleLocalDateTime"/>
+                    <xs:element name="roles" type="mapping:DefaultSingleLocalStrings"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     
     <xs:complexType name="DefaultSingleLocalString">
