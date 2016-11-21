@@ -151,15 +151,19 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="@*[not(contains(.,'{'))]" mode="genLocal">
+    <xsl:template match="@*[not(name() = 'value')]" mode="genLocal">
         <xsl:copy/>
     </xsl:template>
     
-    <xsl:template match="@*[contains(.,'{')]" mode="genLocal">
+    <xsl:template match="@value[not(contains(.,'{'))]" mode="genLocal">
+        <xsl:copy/>
+    </xsl:template>
+    
+    <xsl:template match="@value[contains(.,'{')]" mode="genLocal">
         <xsl:param name="remoteMappers" as="node()*"/>
-        <xslout:attribute name="{name()}">
+        <xslout:attribute name="value">
             <xsl:call-template name="mapping:handleAttribute">
-                <xsl:with-param name="name" select="name()"/>
+                <xsl:with-param name="name" select="../name()"/>
                 <xsl:with-param name="in" select="."/>
                 <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
             </xsl:call-template>
@@ -278,8 +282,8 @@
             <xsl:when test="$name='name'"><xslout:value-of select="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/></xsl:when>
             <xsl:when test="$name='expire'"><xslout:value-of select="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/></xsl:when>
             <xsl:when test="$name='email'"><xslout:value-of select="{mapping:attribute('email')}"/></xsl:when>
-            <xsl:when test="$name='id'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
-            <xsl:when test="$name='names'"><xslout:value-of select="{mapping:attributes('roles')}" separator=" "/></xsl:when>
+            <xsl:when test="$name='domain'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
+            <xsl:when test="$name='roles'"><xslout:value-of select="{mapping:attributes('roles')}" separator=" "/></xsl:when>
         </xsl:choose>
     </xsl:function>
     
