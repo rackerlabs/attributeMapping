@@ -46,10 +46,10 @@
             
             <xslout:template match="saml2:Subject[not(empty($locals))]">
                 <xslout:copy>
-                    <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"><xslout:value-of select="$locals//mapping:user/@name[1]"/></saml2:NameID>
+                    <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"><xslout:value-of select="$locals//mapping:user/mapping:name[1]/@value"/></saml2:NameID>
                     <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
                         <saml2:SubjectConfirmationData>
-                            <xslout:attribute name="NotOnOrAfter"><xslout:value-of select="$locals//mapping:user/@expire[1]"/></xslout:attribute>
+                            <xslout:attribute name="NotOnOrAfter"><xslout:value-of select="$locals//mapping:user/mapping:expire[1]/@value"/></xslout:attribute>
                         </saml2:SubjectConfirmationData>
                     </saml2:SubjectConfirmation>
                 </xslout:copy>
@@ -60,14 +60,14 @@
                     <xslout:apply-templates select="@*"/>
                     <saml2:Attribute Name="domain">
                         <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xsi:type="xs:string"><xslout:value-of select="$locals//mapping:domain/@id[1]"/></saml2:AttributeValue>
+                            xsi:type="xs:string"><xslout:value-of select="$locals//mapping:user/mapping:domain[1]/@value"/></saml2:AttributeValue>
                     </saml2:Attribute>
                     <saml2:Attribute Name="email">
                         <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xsi:type="xs:string"><xslout:value-of select="$locals//mapping:user/@email[1]"/></saml2:AttributeValue>
+                            xsi:type="xs:string"><xslout:value-of select="$locals//mapping:user/mapping:email[1]/@value"/></saml2:AttributeValue>
                     </saml2:Attribute>
                     <saml2:Attribute Name="roles">
-                        <xslout:variable name="allRolesJoin" as="xs:string" select="string-join($locals//mapping:role/@names,' ')"/>
+                        <xslout:variable name="allRolesJoin" as="xs:string" select="string-join($locals//mapping:user/mapping:roles/@value,' ')"/>
                         <xslout:variable name="allRoles" as="xs:string*" select="tokenize($allRolesJoin,' ')"/>
                         <xslout:for-each select="$allRoles">
                             <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -84,16 +84,22 @@
                 <local>
                     <xslout:if test="not(empty($locals))">
                         <user>
-                            <xslout:attribute name="name" select="$locals//mapping:user/@name[1]"/>
-                            <xslout:attribute name="email" select="$locals//mapping:user/@email[1]"/>
-                            <xslout:attribute name="expire" select="$locals//mapping:user/@expire[1]"/>
+                            <name>
+                                <xslout:attribute name="value" select="$locals//mapping:user/mapping:name[1]/@value"/>
+                            </name>
+                            <email>
+                                <xslout:attribute name="value" select="$locals//mapping:user/mapping:email[1]/@value"/>
+                            </email>
+                            <expire>
+                                <xslout:attribute name="value" select="$locals//mapping:user/mapping:expire[1]/@value"/>
+                            </expire>
+                            <domain>
+                                <xslout:attribute name="value" select="$locals//mapping:user/mapping:domain[1]/@value"/>
+                            </domain>
+                            <roles>
+                                <xslout:attribute name="value" select="string-join($locals//mapping:user/mapping:roles/@value,' ')"/>
+                            </roles>
                         </user>
-                        <domain>
-                            <xslout:attribute name="id" select="$locals//mapping:domain/@id[1]"/>
-                        </domain>
-                        <role>
-                            <xslout:attribute name="names" select="string-join($locals//mapping:role/@names,' ')"/>
-                        </role>
                     </xslout:if>
                 </local>
             </xslout:template>
@@ -145,18 +151,18 @@
     <xsl:template match="node()" mode="genLocal" priority="10">
         <xsl:param name="remoteMappers" as="node()*"/>
         <xsl:copy>
-            <xsl:apply-templates mode="genLocal" select="node() | @*">
+            <xsl:apply-templates mode="genLocal" select="@* | node()">
                 <xsl:with-param name="remoteMappers" as="node()*" select="$remoteMappers"/>
             </xsl:apply-templates>
         </xsl:copy>
     </xsl:template>
     
     <xsl:template match="@*[not(name() = 'value')]" mode="genLocal">
-        <xsl:copy/>
+       <xslout:attribute name="{name()}" select="'{.}'"/>
     </xsl:template>
     
     <xsl:template match="@value[not(contains(.,'{'))]" mode="genLocal">
-        <xsl:copy/>
+       <xslout:attribute name="{name()}" select="'{.}'"/>
     </xsl:template>
     
     <xsl:template match="@value[contains(.,'{')]" mode="genLocal">
@@ -172,7 +178,7 @@
     
     <xsl:template match="@value[local-name(..)='expire' and local-name(../..)='user']" priority="10" mode="genLocal">
         <xsl:param name="remoteMappers" as="node()*"/>
-        <xslout:attribute name="expire">
+        <xslout:attribute name="value">
             <xslout:variable name="durationText" as="node()">
                 <xsl:call-template name="mapping:handleAttribute">
                     <xsl:with-param name="parent" select=".."/>
