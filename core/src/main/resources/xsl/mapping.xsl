@@ -292,6 +292,9 @@
             <xsl:when test="$name='email'"><xslout:value-of select="{mapping:attribute('email')}"/></xsl:when>
             <xsl:when test="$name='domain'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
             <xsl:when test="$name='roles'"><xslout:value-of select="{mapping:attributes('roles')}" separator=" "/></xsl:when>
+            <xsl:otherwise>
+                <xsl:message terminate="yes">[ERROR] No default value for attribute <xsl:value-of select="$name"/></xsl:message>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
     
