@@ -209,54 +209,66 @@
         </xsl:analyze-string>
     </xsl:template>
     
-    <xsl:template match="mapping:attribute" mode="genLocal" priority="15">
-        <xslout:value-of select="{mapping:attribute(@name)}"/>
+    <xsl:template match="mapping:attribute[not(xs:boolean(@regex))]" mode="genLocal" priority="15">
+        <xsl:variable name="cond">
+            <xsl:choose>
+                <xsl:when test="@name">
+                    <xsl:choose>
+                        <xsl:when test="xs:boolean(@multiValue)">
+                            <xsl:value-of select="mapping:attributes(@name)"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="mapping:attribute(@name)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:when test="@path"><xsl:value-of select="@path"/></xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="separator" as="xs:string" select="if (xs:boolean(@multiValue)) then ' ' else ''"/>
+        <xsl:choose>
+            <xsl:when test="@whitelist">
+                <xslout:value-of select="for $i in {$cond} return if ($i = {mapping:quotedList(@whitelist)}) then $i else ()" separator="{$separator}"/>
+            </xsl:when>
+            <xsl:when test="@blacklist">
+                <xslout:value-of select="for $i in {$cond} return if ($i = {mapping:quotedList(@blacklist)}) then () else $i" separator="{$separator}"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xslout:value-of select="{$cond}" separator="{$separator}"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="mapping:attributes[not(@whitelist) and not(@blacklist)]" mode="genLocal" priority="15">
-        <xslout:value-of select="{mapping:attributes(@name)}" separator=" "/>
+    <xsl:template match="mapping:attribute[xs:boolean(@regex)]" mode="genLocal" priority="15">
+        <xsl:variable name="cond">
+            <xsl:choose>
+                <xsl:when test="@name">
+                    <xsl:choose>
+                        <xsl:when test="xs:boolean(@multiValue)">
+                            <xsl:value-of select="mapping:attributes(@name)"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="mapping:attribute(@name)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:when test="@path"><xsl:value-of select="@path"/></xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="separator" as="xs:string" select="if (xs:boolean(@multiValue)) then ' ' else ''"/>
+        <xsl:choose>
+            <xsl:when test="@whitelist">
+                <xslout:value-of select="for $i in {$cond} return if (matches ($i, {mapping:quote(@whitelist)})) then $i else ()" separator="{$separator}"/>
+            </xsl:when>
+            <xsl:when test="@blacklist">
+                <xslout:value-of select="for $i in {$cond} return if (matches ($i, {mapping:quote(@blacklist)})) then () else $i" separator="{$separator}"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xslout:value-of select="{$cond}" separator="{$separator}"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
-    
-    <xsl:template match="mapping:attributes[@whitelist and not(xs:boolean(@regex))]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {mapping:attributes(@name)} return if ($i = {mapping:quotedList(@whitelist)}) then $i else ()" separator=" "/>
-    </xsl:template>
-    
-    <xsl:template match="mapping:attributes[@blacklist and not(xs:boolean(@regex))]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {mapping:attributes(@name)} return if ($i = {mapping:quotedList(@blacklist)}) then () else $i" separator=" "/>
-    </xsl:template>
-    
-    <xsl:template match="mapping:attributes[@whitelist and xs:boolean(@regex)]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {mapping:attributes(@name)} return if (matches ($i, {mapping:quote(@whitelist)})) then $i else ()" separator=" "/>
-    </xsl:template>
-    
-    <xsl:template match="mapping:attributes[@blacklist and xs:boolean(@regex)]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {mapping:attributes(@name)} return if (matches ($i, {mapping:quote(@blacklist)})) then () else $i" separator=" "/>
-    </xsl:template>
-    
-    <xsl:template match="mapping:assertion" mode="genLocal" priority="15">
-        <xslout:value-of select="{@path}"/>
-    </xsl:template>
-    
-    <xsl:template match="mapping:assertions[not(@whitelist) and not(@blacklist)]" mode="genLocal" priority="15">
-        <xslout:value-of select="{@path}" separator=" "/>
-    </xsl:template>
-    
-    <xsl:template match="mapping:assertions[@whitelist and not(xs:boolean(@regex))]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {@path} return if ($i = {mapping:quotedList(@whitelist)}) then $i else ()" separator=" "/>
-    </xsl:template>
-    
-    <xsl:template match="mapping:assertions[@blacklist and not(xs:boolean(@regex))]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {@path} return if ($i = {mapping:quotedList(@blacklist)}) then () else $i" separator=" "/>
-    </xsl:template>
-    
-    <xsl:template match="mapping:assertions[@whitelist and xs:boolean(@regex)]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {@path} return if (matches ($i, {mapping:quote(@whitelist)})) then $i else ()" separator=" "/>
-    </xsl:template>
-    
-    <xsl:template match="mapping:assertions[@blacklist and xs:boolean(@regex)]" mode="genLocal" priority="15">
-        <xslout:value-of select="for $i in {@path} return if (matches ($i, {mapping:quote(@blacklist)})) then () else $i" separator=" "/>
-    </xsl:template>
-    
+
     <xsl:function name="mapping:mapAttribute" as="node()*">
         <xsl:param name="parent" as="element()"/>
         <xsl:param name="part" as="xs:string"/>
@@ -299,7 +311,7 @@
     </xsl:function>
     
     <xsl:function name="mapping:attributeByNumber" as="node()*">
-        <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="parent" as="element()"/>
         <xsl:param name="part" as="xs:string"/>
         <xsl:param name="remoteMappers" as="node()*"/>
         <xsl:analyze-string select="$part" regex="\{{([0-9]*)\}}">
