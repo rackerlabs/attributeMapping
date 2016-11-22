@@ -163,7 +163,7 @@
         <xsl:param name="remoteMappers" as="node()*"/>
         <xslout:attribute name="value">
             <xsl:call-template name="mapping:handleAttribute">
-                <xsl:with-param name="name" select="../name()"/>
+                <xsl:with-param name="parent" select=".."/>
                 <xsl:with-param name="in" select="."/>
                 <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
             </xsl:call-template>
@@ -175,7 +175,7 @@
         <xslout:attribute name="expire">
             <xslout:variable name="durationText" as="node()">
                 <xsl:call-template name="mapping:handleAttribute">
-                    <xsl:with-param name="name" select="name()"/>
+                    <xsl:with-param name="parent" select=".."/>
                     <xsl:with-param name="in" select="."/>
                     <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
                 </xsl:call-template>
@@ -186,25 +186,25 @@
     </xsl:template>
     
     <xsl:template name="mapping:handleAttribute">
-        <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="parent" as="element()"/>
         <xsl:param name="in" as="xs:string"/>
         <xsl:param name="remoteMappers" as="node()*"/>
         <xsl:analyze-string select="$in" regex="(.*)??(\{{.*\}})(.*)?">
             <xsl:matching-substring>
                 <xsl:if test="not(empty(regex-group(1)))">
-                    <xsl:sequence select="mapping:mapAttribute($name,regex-group(1),$remoteMappers)"/>
+                    <xsl:sequence select="mapping:mapAttribute($parent,regex-group(1),$remoteMappers)"/>
                 </xsl:if>
-                <xsl:sequence select="mapping:mapAttribute($name,regex-group(2),$remoteMappers)"/>
+                <xsl:sequence select="mapping:mapAttribute($parent,regex-group(2),$remoteMappers)"/>
                 <xsl:if test="not(empty(regex-group(3)))">
                     <xsl:call-template name="mapping:handleAttribute">
-                        <xsl:with-param name="name" select="$name"/>
+                        <xsl:with-param name="parent" select="$parent"/>
                         <xsl:with-param name="in" select="regex-group(3)"/>
                         <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:matching-substring>
             <xsl:non-matching-substring>
-                <xsl:sequence select="mapping:mapAttribute($name,$in,$remoteMappers)"/>
+                <xsl:sequence select="mapping:mapAttribute($parent,$in,$remoteMappers)"/>
             </xsl:non-matching-substring>
         </xsl:analyze-string>
     </xsl:template>
@@ -258,7 +258,7 @@
     </xsl:template>
     
     <xsl:function name="mapping:mapAttribute" as="node()*">
-        <xsl:param name="name" as="xs:string"/>
+        <xsl:param name="parent" as="element()"/>
         <xsl:param name="part" as="xs:string"/>
         <xsl:param name="remoteMappers" as="node()*"/>
         
@@ -268,10 +268,18 @@
                 <xslout:text><xsl:value-of select="$part"/></xslout:text>
             </xsl:when>
             <xsl:when test="$part='{D}'">
-                <xsl:sequence select="mapping:defaultForName($name)"/>
+                <xsl:choose>
+                    <xsl:when test="(local-name($parent/..) = 'user') and
+                                    (namespace-uri($parent/..)='http://docs.rackspace.com/identity/api/ext/MappingRules') ">
+                        <xsl:sequence select="mapping:defaultForName(local-name($parent))"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:message terminate="yes">[ERROR] The attribute <xsl:value-of select="concat(name($parent/..),'/',name($parent))"/> does not have a default value.</xsl:message>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:when test="matches($part,'\{[0-9]*\}')">
-                <xsl:sequence select="mapping:attributeByNumber($name, $part, $remoteMappers)"/>
+                <xsl:sequence select="mapping:attributeByNumber($parent, $part, $remoteMappers)"/>
             </xsl:when>
         </xsl:choose>
     </xsl:function>
