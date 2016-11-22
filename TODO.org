@@ -10,11 +10,13 @@
    1. [X] Build Design
    2. [X] Design Schema
    3. [X] Convert Examples
-** TODO New XSL for format [0/4]
-   1. [ ] Support extension attributes
-   2. [ ] Better support for namespaces
-   3. [ ] Support {D(name)}
-   4. [ ] All Changes in first assert statement, leave others as is
+** TODO New XSL for format [0/6]
+   1. [ ] Ensure all previous examples work
+   2. [ ] Remove all old examples
+   3. [ ] Support extension attributes
+   4. [ ] Better support for namespaces
+   5. [ ] Support {D(name)}
+   6. [ ] All Changes in first assert statement, leave others as is
 ** TODO Validation
 ** TODO JSON Support
 ** TODO Tests Framework
