@@ -170,7 +170,7 @@
         </xslout:attribute>
     </xsl:template>
     
-    <xsl:template match="@expireAfter" priority="10" mode="genLocal">
+    <xsl:template match="@value[local-name(..)='expire' and local-name(../..)='user']" priority="10" mode="genLocal">
         <xsl:param name="remoteMappers" as="node()*"/>
         <xslout:attribute name="expire">
             <xslout:variable name="durationText" as="node()">
@@ -180,8 +180,15 @@
                     <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
                 </xsl:call-template>
             </xslout:variable>
-            <xslout:variable name="duration" as="xs:duration" select="xs:dayTimeDuration($durationText)"/>
-            <xslout:value-of select="current-dateTime()+$duration"/>
+            <xslout:choose>
+                <xslout:when test="$durationText castable as xs:dayTimeDuration">
+                    <xslout:variable name="duration" as="xs:duration" select="xs:dayTimeDuration($durationText)"/>
+                    <xslout:value-of select="current-dateTime()+$duration"/>
+                </xslout:when>
+                <xslout:otherwise>
+                    <xslout:value-of select="$durationText"/>
+                </xslout:otherwise>
+            </xslout:choose>
         </xslout:attribute>
     </xsl:template>
     
