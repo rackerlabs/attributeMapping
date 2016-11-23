@@ -104,12 +104,24 @@
                                 <xslout:with-param name="exclude" select="('name','email','expire','domain','roles')"/>
                             </xslout:call-template>
                         </user>
+                        <xslout:variable name="extendedAttributeGroupNames" as="xs:string*"
+                            select="distinct-values(for $group in $locals/mapping:* return 
+                                     for $groupName in local-name($group) return if ($groupName = 'user') then () else $groupName)"/>
+                        <xslout:for-each select="$extendedAttributeGroupNames">
+                            <xslout:variable name="extendedAttributeGroupName" as="xs:string" select="."/>
+                            <xslout:element>
+                                <xsl:attribute name="name">{$extendedAttributeGroupName}</xsl:attribute>
+                                <xslout:call-template name="mapping:outLocalExt">
+                                  <xslout:with-param name="groups" select="$locals/element()[local-name(.) = $extendedAttributeGroupName]"/>
+                                </xslout:call-template>
+                            </xslout:element>
+                        </xslout:for-each>
                     </xslout:if>
                 </local>
             </xslout:template>
             <xslout:template name="mapping:outLocalExt">
                 <xslout:param name="groups" as="node()*"/>
-                <xslout:param name="exclude" as="xs:string*"/>
+                <xslout:param name="exclude" as="xs:string*" select="()"/>
                 <xslout:variable name="distinctExts" as="xs:string*">
                     <xslout:sequence select="distinct-values(for $g in $groups/element() return if (local-name($g) = $exclude) then () else local-name($g))"/>
                 </xslout:variable>
@@ -124,7 +136,7 @@
                               <xslout:attribute name="value" select="string-join($groups/element()[local-name(.)=$extName]/@value,' ')"/>
                             </xslout:when>
                             <xslout:otherwise>
-                              <xslout:attribute name="value" select="$groups/element()[local-name(.)=$extName][1]/@value"/>
+                              <xslout:attribute name="value" select="($groups/element()[local-name(.)=$extName])[1]/@value"/>
                             </xslout:otherwise>
                         </xslout:choose>
                     </xslout:element>

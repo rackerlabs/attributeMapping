@@ -42,8 +42,16 @@
             <attribute name="domain"/>
             <attribute name="roles" multiValue="true"/>
             <attribute name="bar"/>
-            <attribute name="AWSPolicy"/>
+            <attribute path="'AWSPolicy'"/>
         </remote>
+    </rule>
+    <rule>
+        <local>
+            <user/>
+            <faws xsi:type="LocalAttributeGroup">
+                <policy value="AWSPolicy2" xsi:type="LocalAttribute"/>
+            </faws>
+        </local>
     </rule>
 </rules>
 
