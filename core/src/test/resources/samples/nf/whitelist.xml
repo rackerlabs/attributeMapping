@@ -9,9 +9,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <rule>
         <local>
-         <user>
-            <roles value="{0}"/>
-         </user>
+            <user>
+                <name value="{D}"/>
+                <email value="{D}"/>
+                <expire value="{D}"/>
+                <domain value="{D}"/>
+                <roles value="{0}"/>
+            </user>
       </local>
         <remote>
             <attribute multiValue="true"
