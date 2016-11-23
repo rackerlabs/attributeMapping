@@ -10,7 +10,7 @@
    1. [X] Build Design
    2. [X] Design Schema
    3. [X] Convert Examples
-** TODO New XSL for format [2/8]
+** TODO New XSL for format [2/9]
    1. [X] Ensure all previous examples work
    2. [X] Remove all old examples
    3. [ ] Support extension attributes
@@ -19,6 +19,7 @@
    6. [ ] Support {D(name)}
    7. [ ] All Changes in first assert statement, leave others as is
    8. [ ] Allow whitespaces in roles!
+   9. [ ] Handle quoted values
 ** TODO Validation
 ** TODO JSON Support
 ** TODO Tests Framework
