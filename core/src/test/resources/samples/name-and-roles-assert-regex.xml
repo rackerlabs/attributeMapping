@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
 <!-- 
    This shows of the regex example.  Note, that this is a conditional rule.
    It's a bit risky, because if zero permissions match, then we simply do
@@ -8,22 +6,30 @@
    
    This tests assertions rather than attributes.
 -->
-
 <rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+       xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <rule>
         <local>
-            <user name="{0}" email="{1}" epireAfter="{2}"/>
-            <domain id="78334"/>
-            <role names="nova:admin lbaas:admin"/>
-        </local>
+         <user>
+            <name value="{0}"/>
+            <email value="{1}"/>
+            <domain value="78334"/>
+            <roles value="nova:admin lbaas:admin"/>
+         </user>
+      </local>
         <remote>
             <attribute name="UserName"/>
             <attribute name="Email"/>
             <!-- This is a duration rather than a timestamp -->
             <attribute name="ExpireAfter"/>
-            <assertions path="/saml2:Assertion/saml2:Subject/saml2:NameID" notAnyOf=".*downer$" regex="true"/>
-            <assertions path="/saml2:Assertion/saml2:Subject/saml2:NameID" anyOneOf=".*upper$" regex="true"/>
+            <attribute path="/saml2:Assertion/saml2:Subject/saml2:NameID"
+                    notAnyOf=".*downer$"
+                    regex="true"/>
+            <attribute path="/saml2:Assertion/saml2:Subject/saml2:NameID"
+                    anyOneOf=".*upper$"
+                    regex="true"/>
         </remote>
     </rule>
 </rules>

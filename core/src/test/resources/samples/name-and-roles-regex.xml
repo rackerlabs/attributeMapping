@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+       xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <rule>
         <local>
-            <user name="{D}" email="{D}" expire="{D}"/>
-            <domain id="78334"/>
-        </local>
+         <user>
+            <name value="{D}"/>
+            <email value="{D}"/>
+            <expire value="{D}"/>
+            <domain value="78334"/>
+         </user>
+      </local>
     </rule>
     <rule>
         <local>
-            <role names="nova:admin lbaas:admin"/>
-        </local>
+         <user>
+            <roles value="nova:admin lbaas:admin"/>
+         </user>
+      </local>
         <remote>
-            <attributes name="roles" notAnyOf="C.*" regex="true"/>
+            <attribute name="roles" notAnyOf="C.*" regex="true"/>
         </remote>
     </rule>
     <rule>
         <local>
-            <role names="nova:observer lbaas:observer"/>
-        </local>
+         <user>
+            <roles value="nova:observer lbaas:observer"/>
+         </user>
+      </local>
         <remote>
-            <attributes name="roles" anyOneOf="U.*" regex="true"/>
+            <attribute name="roles" anyOneOf="U.*" regex="true"/>
         </remote>
     </rule>
 </rules>

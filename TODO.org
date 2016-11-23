@@ -10,9 +10,9 @@
    1. [X] Build Design
    2. [X] Design Schema
    3. [X] Convert Examples
-** TODO New XSL for format [0/6]
-   1. [ ] Ensure all previous examples work
-   2. [ ] Remove all old examples
+** TODO New XSL for format [2/6]
+   1. [X] Ensure all previous examples work
+   2. [X] Remove all old examples
    3. [ ] Support extension attributes
    4. [ ] Better support for namespaces
    5. [ ] Support {D(name)}

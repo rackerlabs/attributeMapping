@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+       xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <rule>
         <local>
-            <user name="{0}" email="{1}" expire="{2}"/>
-            <domain id="{3}"/>
-            <role names="{4}"/>
-        </local>
+         <user>
+            <name value="{0}"/>
+            <email value="{1}"/>
+            <expire value="{2}"/>
+            <domain value="{3}"/>
+            <roles value="{4}"/>
+         </user>
+      </local>
         <remote>
-            <assertion path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/>
+            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/>
             <attribute name="email"/>
-            <assertion path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/>
+            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/>
             <attribute name="domain"/>
-            <attributes name="roles" whitelist="nova:observer lbaas:observer"/>
+            <attribute multiValue="true"
+                    name="roles"
+                    whitelist="nova:observer lbaas:observer"/>
         </remote>
     </rule>
 </rules>
-
