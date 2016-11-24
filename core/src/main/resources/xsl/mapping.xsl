@@ -5,6 +5,7 @@
     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
     xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     version="2.0">
     
     <xsl:namespace-alias stylesheet-prefix="xslout" result-prefix="xsl"/>
@@ -139,6 +140,12 @@
                               <xslout:attribute name="value" select="($groups/element()[local-name(.)=$extName])[1]/@value"/>
                             </xslout:otherwise>
                         </xslout:choose>
+                        <xslout:for-each select="($groups/element()[local-name(.)=$extName])[1]/@*[not(local-name() = 'value')]">
+                            <xslout:attribute>
+                                <xsl:attribute name="name">{name(.)}</xsl:attribute>
+                                <xslout:value-of select="."/>
+                            </xslout:attribute>
+                        </xslout:for-each>
                     </xslout:element>
                 </xslout:for-each>
             </xslout:template>

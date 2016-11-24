@@ -10,14 +10,14 @@
    1. [X] Build Design
    2. [X] Design Schema
    3. [X] Convert Examples
-** TODO New XSL for format [2/9]
+** TODO New XSL for format [3/9]
    1. [X] Ensure all previous examples work
    2. [X] Remove all old examples
-   3. [ ] Support extension attributes
-   4. [ ] Handling of xs:dateTime types (with duration support)
+   3. [X] Support extension attributes
+   4. [ ] All Changes in first assert statement, leave others as is
    5. [ ] Better support for namespaces
-   6. [ ] Support {D(name)}
-   7. [ ] All Changes in first assert statement, leave others as is
+   6. [ ] Handling of xs:dateTime types (with duration support)
+   7. [ ] Support {D(name)}
    8. [ ] Allow whitespaces in roles!
    9. [ ] Handle quoted values
 ** TODO Validation
