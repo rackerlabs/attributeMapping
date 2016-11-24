@@ -44,58 +44,76 @@
                    <xslout:apply-templates select="@* | node()"/>
                </xslout:copy>
             </xslout:template>
-            
-            <xslout:template match="saml2:Subject[not(empty($locals))]">
+
+            <xslout:template match="saml2:Assertion[(position() = 1) and not(empty($locals))]">
+                <xslout:variable name="outLocal" as="node()*">
+                    <xslout:call-template name="mapping:outLocal"/>
+                </xslout:variable>
+                <saml2:Assertion>
+                    <xslout:apply-templates select="@*[not(local-name() = 'ID')]"/>
+                    <xslout:attribute name="ID" select="concat(@ID,'__RAX__')"/>
+                    <xslout:copy-of select="saml2:Issuer"/>
+                    <saml2:Subject>
+                        <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"><xslout:value-of select="$outLocal/mapping:user/mapping:name/@value"/></saml2:NameID>
+                        <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+                            <saml2:SubjectConfirmationData>
+                                <xslout:attribute name="NotOnOrAfter" select="$outLocal/mapping:user/mapping:expire/@value"/>
+                            </saml2:SubjectConfirmationData>
+                        </saml2:SubjectConfirmation>
+                    </saml2:Subject>
+                    <xslout:copy-of select="saml2:AuthnStatement"/>
+                    <saml2:AttributeStatement>
+                        <xslout:apply-templates select="$outLocal//element()[@value]" mode="samlout"/>
+                    </saml2:AttributeStatement>
+                </saml2:Assertion>
                 <xslout:copy>
-                    <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"><xslout:value-of select="$locals//mapping:user/mapping:name[1]/@value"/></saml2:NameID>
-                    <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-                        <saml2:SubjectConfirmationData>
-                            <xslout:attribute name="NotOnOrAfter"><xslout:value-of select="$locals//mapping:user/mapping:expire[1]/@value"/></xslout:attribute>
-                        </saml2:SubjectConfirmationData>
-                    </saml2:SubjectConfirmation>
+                   <xslout:apply-templates select="@* | node()"/>
                 </xslout:copy>
             </xslout:template>
             
-            <xslout:template match="saml2:AttributeStatement[not(empty($locals))]">
-                <xslout:copy>
-                    <xslout:apply-templates select="@*"/>
-                    <saml2:Attribute Name="domain">
-                        <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xsi:type="xs:string"><xslout:value-of select="$locals//mapping:user/mapping:domain[1]/@value"/></saml2:AttributeValue>
-                    </saml2:Attribute>
-                    <saml2:Attribute Name="email">
-                        <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xsi:type="xs:string"><xslout:value-of select="$locals//mapping:user/mapping:email[1]/@value"/></saml2:AttributeValue>
-                    </saml2:Attribute>
-                    <saml2:Attribute Name="roles">
-                        <xslout:variable name="allRolesJoin" as="xs:string" select="string-join($locals//mapping:user/mapping:roles/@value,' ')"/>
-                        <xslout:variable name="allRoles" as="xs:string*" select="tokenize($allRolesJoin,' ')"/>
-                        <xslout:for-each select="$allRoles">
-                            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                xsi:type="xs:string"><xslout:value-of select="."/></saml2:AttributeValue>
-                        </xslout:for-each>
-                    </saml2:Attribute>
-                    <xslout:apply-templates select="node()"/>
-                </xslout:copy>
+            <xslout:template match="element()[@value]" mode="samlout">
+                <xslout:variable name="specialAttributes" as="xs:string*" select="('name', 'email', 'expire','domain', 'roles')"/>
+                <xslout:variable name="groupName" as="xs:string" select="../local-name()"/>
+                <xslout:variable name="isMultiValue" select="if ($groupName = 'user' and local-name() = 'roles') then true() else 
+                                                             if (exists(@multiValue)) then xs:boolean(@multiValue) else false()" as="xs:boolean"/>
+                <xslout:variable name="attribName" as="xs:string"
+                    select="if (local-name() = $specialAttributes and $groupName='user') then local-name() else concat($groupName,'/',local-name())"/>
+                <xslout:variable name="attribValues" as="xs:string*"
+                         select="if ($isMultiValue) then tokenize(@value,' ') else (@value)"/>
+                <xslout:variable name="type" as="attribute()?" select="@mapping:type"/>
+                <saml2:Attribute>
+                  <xslout:attribute name="Name" select="$attribName"/>
+                  <xslout:for-each select="$attribValues"> 
+                      <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                          <xslout:choose>
+                              <xslout:when test="exists($type)">
+                                  <xslout:attribute name="xsi:type" select="$type"/>
+                              </xslout:when>
+                              <xslout:otherwise>
+                                  <xslout:attribute name="xsi:type">xs:string</xslout:attribute>
+                              </xslout:otherwise>
+                          </xslout:choose>
+                          <xslout:value-of select="."/>
+                      </saml2:AttributeValue>
+                </xslout:for-each>
+                </saml2:Attribute>
             </xslout:template>
-            
-            <xslout:template match="saml2:Attribute[@Name=('domain','email','roles') and not(empty($locals))]"/>
-            
+               
             <xslout:template name="mapping:outLocal">
                 <local>
                     <xslout:if test="not(empty($locals))">
                         <user>
                             <name>
-                                <xslout:attribute name="value" select="$locals//mapping:user/mapping:name[1]/@value"/>
+                                <xslout:attribute name="value" select="($locals//mapping:user/mapping:name)[1]/@value"/>
                             </name>
                             <email>
-                                <xslout:attribute name="value" select="$locals//mapping:user/mapping:email[1]/@value"/>
+                                <xslout:attribute name="value" select="($locals//mapping:user/mapping:email)[1]/@value"/>
                             </email>
                             <expire>
-                                <xslout:attribute name="value" select="$locals//mapping:user/mapping:expire[1]/@value"/>
+                                <xslout:attribute name="value" select="($locals//mapping:user/mapping:expire)[1]/@value"/>
                             </expire>
                             <domain>
-                                <xslout:attribute name="value" select="$locals//mapping:user/mapping:domain[1]/@value"/>
+                                <xslout:attribute name="value" select="($locals//mapping:user/mapping:domain)[1]/@value"/>
                             </domain>
                             <roles>
                                 <xslout:attribute name="value" select="string-join($locals//mapping:user/mapping:roles/@value,' ')"/>
@@ -128,7 +146,7 @@
                 </xslout:variable>
                 <xslout:for-each select="$distinctExts">
                     <xslout:variable name="extName" as="xs:string" select="."/>
-                    <xslout:variable name="multiValueAttrib" as="attribute()?" select="$groups/element()[local-name(.)=$extName]/@multiValue[1]"/>
+                    <xslout:variable name="multiValueAttrib" as="attribute()?" select="($groups/element()[local-name(.)=$extName]/@multiValue)[1]"/>
                     <xslout:variable name="isMultiValue" select="if (exists($multiValueAttrib)) then xs:boolean($multiValueAttrib) else false()" as="xs:boolean"/>
                     <xslout:element>
                         <xsl:attribute name="name">{$extName}</xsl:attribute>
@@ -358,8 +376,8 @@
     <xsl:function name="mapping:defaultForName" as="node()*">
         <xsl:param name="name" as="xs:string"/>
         <xsl:choose>
-            <xsl:when test="$name='name'"><xslout:value-of select="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/></xsl:when>
-            <xsl:when test="$name='expire'"><xslout:value-of select="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/></xsl:when>
+            <xsl:when test="$name='name'"><xslout:value-of select="(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)[1]"/></xsl:when>
+            <xsl:when test="$name='expire'"><xslout:value-of select="(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)[1]"/></xsl:when>
             <xsl:when test="$name='email'"><xslout:value-of select="{mapping:attribute('email')}"/></xsl:when>
             <xsl:when test="$name='domain'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
             <xsl:when test="$name='roles'"><xslout:value-of select="{mapping:attributes('roles')}" separator=" "/></xsl:when>
@@ -384,7 +402,7 @@
     
     <xsl:function name="mapping:attribute" as="xs:string">
         <xsl:param name="name" as="xs:string"/>
-        <xsl:value-of select="concat('/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=',mapping:quote($name),']/saml2:AttributeValue[1]')"/>
+        <xsl:value-of select="concat('(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=',mapping:quote($name),']/saml2:AttributeValue)[1]')"/>
     </xsl:function>
     
     <xsl:function name="mapping:attributes" as="xs:string">
