@@ -367,9 +367,19 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
+            <xsl:when test="matches($part,'\{D\(.*\)\}')">
+                <xsl:analyze-string select="$part" regex="\{{D\((.*)\)\}}">
+                    <xsl:matching-substring>
+                        <xsl:sequence select="mapping:defaultForName(regex-group(1))"/>
+                    </xsl:matching-substring>
+                </xsl:analyze-string>
+            </xsl:when>
             <xsl:when test="matches($part,'\{[0-9]*\}')">
                 <xsl:sequence select="mapping:attributeByNumber($parent, $part, $remoteMappers)"/>
             </xsl:when>
+            <xsl:otherwise>
+                <xslout:text><xsl:value-of select="$part"/></xslout:text>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
     
