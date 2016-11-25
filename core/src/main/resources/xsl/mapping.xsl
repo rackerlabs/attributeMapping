@@ -27,6 +27,8 @@
                 </xsl:for-each>
             </xslout:variable>
             <xslout:variable name="assert" as="node()" select="/"/>
+            <xslout:variable name="specialAttributes" as="xs:string*" select="('email', 'domain', 'roles')"/>
+            <xslout:variable name="skipAttributes" as="xs:string*" select="('name','expire')"/>
             <xslout:template match="/">
                 <xslout:choose>
                     <xslout:when test="$outputSAML">
@@ -73,7 +75,6 @@
             </xslout:template>
             
             <xslout:template match="element()[@value]" mode="samlout">
-                <xslout:variable name="specialAttributes" as="xs:string*" select="('name', 'email', 'expire','domain', 'roles')"/>
                 <xslout:variable name="groupName" as="xs:string" select="../local-name()"/>
                 <xslout:variable name="isMultiValue" select="if ($groupName = 'user' and local-name() = 'roles') then true() else 
                                                              if (exists(@multiValue)) then xs:boolean(@multiValue) else false()" as="xs:boolean"/>
@@ -81,23 +82,28 @@
                     select="if (local-name() = $specialAttributes and $groupName='user') then local-name() else concat($groupName,'/',local-name())"/>
                 <xslout:variable name="attribValues" as="xs:string*"
                          select="if ($isMultiValue) then tokenize(@value,' ') else (@value)"/>
-                <xslout:variable name="type" as="attribute()?" select="@mapping:type"/>
-                <saml2:Attribute>
-                  <xslout:attribute name="Name" select="$attribName"/>
-                  <xslout:for-each select="$attribValues"> 
-                      <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                          <xslout:choose>
-                              <xslout:when test="exists($type)">
-                                  <xslout:attribute name="xsi:type" select="$type"/>
-                              </xslout:when>
-                              <xslout:otherwise>
-                                  <xslout:attribute name="xsi:type">xs:string</xslout:attribute>
-                              </xslout:otherwise>
-                          </xslout:choose>
-                          <xslout:value-of select="."/>
-                      </saml2:AttributeValue>
-                </xslout:for-each>
-                </saml2:Attribute>
+                <xslout:variable name="type" as="attribute()?" select="@type"/>
+                <xslout:choose>
+                    <xslout:when test="local-name() = $skipAttributes and $groupName = 'user'"/>
+                    <xslout:otherwise>
+                        <saml2:Attribute>
+                            <xslout:attribute name="Name" select="$attribName"/>
+                            <xslout:for-each select="$attribValues">
+                                <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                                    <xslout:choose>
+                                        <xslout:when test="exists($type)">
+                                            <xslout:attribute name="xsi:type" select="$type"/>
+                                        </xslout:when>
+                                        <xslout:otherwise>
+                                            <xslout:attribute name="xsi:type">xs:string</xslout:attribute>
+                                        </xslout:otherwise>
+                                    </xslout:choose>
+                                    <xslout:value-of select="."/>
+                                </saml2:AttributeValue>
+                            </xslout:for-each>
+                        </saml2:Attribute>
+                    </xslout:otherwise>
+                </xslout:choose>
             </xslout:template>
                
             <xslout:template name="mapping:outLocal">
@@ -241,7 +247,12 @@
         </xslout:attribute>
     </xsl:template>
     
-    <xsl:template match="@value[local-name(..)='expire' and local-name(../..)='user']" priority="10" mode="genLocal">
+    <xsl:template match="@value[(local-name(..)='expire' and local-name(../..)='user') or
+                                (if (exists(../@type)) then
+                                  for $type in resolve-QName(../@type, ..) return
+                                    (local-name-from-QName($type) = 'dateTime' and
+                                    namespace-uri-from-QName($type) = 'http://www.w3.org/2001/XMLSchema')
+                                 else false())]" priority="10" mode="genLocal">
         <xsl:param name="remoteMappers" as="node()*"/>
         <xslout:attribute name="value">
             <xslout:variable name="durationText" as="node()">
