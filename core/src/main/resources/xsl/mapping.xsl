@@ -233,11 +233,11 @@
     </xsl:template>
     
     <xsl:template match="@*[not(name() = 'value')]" mode="genLocal">
-       <xslout:attribute name="{name()}" select="'{.}'"/>
+       <xslout:attribute name="{name()}"><xsl:value-of select="."/></xslout:attribute>
     </xsl:template>
     
     <xsl:template match="@value[not(contains(.,'{'))]" mode="genLocal">
-       <xslout:attribute name="{name()}" select="'{.}'"/>
+        <xslout:attribute name="{name()}"><xsl:value-of select="."/></xslout:attribute>
     </xsl:template>
     
     <xsl:template match="@value[contains(.,'{')]" mode="genLocal">
