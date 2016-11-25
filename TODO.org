@@ -10,14 +10,14 @@
    1. [X] Build Design
    2. [X] Design Schema
    3. [X] Convert Examples
-** TODO New XSL for format [6/10]
+** TODO New XSL for format [7/10]
    1. [X] Ensure all previous examples work
    2. [X] Remove all old examples
    3. [X] Support extension attributes
    4. [X] All Changes in first assert statement, leave others as is
    5. [X] Make sure all saml response samples validate.
    6. [X] Support {D(name)}
-   7. [ ] Better support for namespaces
+   7. [X] Better support for namespaces
    8. [ ] Handling of xs:dateTime types (with duration support)
    9. [ ] Allow whitespaces in roles!
    10. [ ] Handle quoted values

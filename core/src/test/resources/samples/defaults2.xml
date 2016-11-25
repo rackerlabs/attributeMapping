@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+       xmlns:foo="bar">
     <rule>
         <local>
             <user>
