@@ -10,7 +10,7 @@
    1. [X] Build Design
    2. [X] Design Schema
    3. [X] Convert Examples
-** TODO New XSL for format [8/10]
+** TODO New XSL for format [9/10]
    1. [X] Ensure all previous examples work
    2. [X] Remove all old examples
    3. [X] Support extension attributes
@@ -19,9 +19,9 @@
    6. [X] Support {D(name)}
    7. [X] Better support for namespaces
    8. [X] Handling of xs:dateTime types (with duration support)
-   9. [ ] Allow whitespaces in roles!
+   9. [X] Allow whitespaces in roles or any multiValue type.
    10. [ ] Handle quoted values
 ** TODO Validation
 ** TODO JSON Support
 ** TODO Tests Framework
-** TODO Setup logger for CLI util
+** TODO Setup logger for CLI util (better error messages)

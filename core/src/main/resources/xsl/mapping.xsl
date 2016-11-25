@@ -98,7 +98,7 @@
                                             <xslout:attribute name="xsi:type">xs:string</xslout:attribute>
                                         </xslout:otherwise>
                                     </xslout:choose>
-                                    <xslout:value-of select="."/>
+                                    <xslout:value-of select="mapping:transformNBSP(.)"/>
                                 </saml2:AttributeValue>
                             </xslout:for-each>
                         </saml2:Attribute>
@@ -182,6 +182,10 @@
             <xslout:function name="mapping:get-attribute" as="xs:string">
                 <xslout:param name="name" as="xs:string"/>
                 <xslout:sequence select="mapping:get-attributes($name)[1]"/>
+            </xslout:function>
+            <xslout:function name="mapping:transformNBSP" as="xs:string">
+                <xslout:param name="in" as="xs:string"/>
+                <xslout:value-of select="replace($in,'&#xA0;',' ')"/>
             </xslout:function>
         </xslout:transform>
     </xsl:template>
