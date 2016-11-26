@@ -282,10 +282,14 @@
         <xsl:param name="parent" as="element()"/>
         <xsl:param name="in" as="xs:string"/>
         <xsl:param name="remoteMappers" as="node()*"/>
-        <xsl:analyze-string select="$in" regex="(.*)??(\{{.*\}})(.*)?">
+        <xsl:analyze-string select="$in" regex="(.*)?(\{{.*\}})(.*)?">
             <xsl:matching-substring>
                 <xsl:if test="not(empty(regex-group(1)))">
-                    <xsl:sequence select="mapping:mapAttribute($parent,regex-group(1),$remoteMappers)"/>
+                    <xsl:call-template name="mapping:handleAttribute">
+                        <xsl:with-param name="parent" select="$parent"/>
+                        <xsl:with-param name="in" select="regex-group(1)"/>
+                        <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
+                    </xsl:call-template>
                 </xsl:if>
                 <xsl:sequence select="mapping:mapAttribute($parent,regex-group(2),$remoteMappers)"/>
                 <xsl:if test="not(empty(regex-group(3)))">
