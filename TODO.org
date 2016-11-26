@@ -10,7 +10,7 @@
    1. [X] Build Design
    2. [X] Design Schema
    3. [X] Convert Examples
-** TODO New XSL for format [10/12]
+** TODO New XSL for format [11/12]
    1. [X] Ensure all previous examples work
    2. [X] Remove all old examples
    3. [X] Support extension attributes
@@ -21,7 +21,7 @@
    8. [X] Handling of xs:dateTime types (with duration support)
    9. [X] Allow whitespaces in roles or any multiValue type.
    10. [X] Handle quoted values
-   11. [ ] Quotes in attribute names and XPaths.
+   11. [X] Quotes in attribute names and XPaths.
    12. [ ] Support multiple {} at a time in a single template.
 ** TODO Validation
 ** TODO JSON Support

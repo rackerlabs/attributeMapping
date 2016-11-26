@@ -473,8 +473,9 @@
     <!-- Util Functions -->
     <xsl:function name="mapping:quote" as="xs:string">
         <xsl:param name="in" as="xs:string"/>
+        <xsl:variable name="escapeQuotes" as="xs:string" select="replace($in,&quot;'&quot;,&quot;''&quot;)"/>
         <xsl:variable name="sq" as="xs:string">'</xsl:variable>
-        <xsl:value-of select="concat($sq,$in,$sq)"/>
+        <xsl:value-of select="concat($sq,$escapeQuotes,$sq)"/>
     </xsl:function>
     
     <xsl:function name="mapping:quotedList" as="xs:string">
