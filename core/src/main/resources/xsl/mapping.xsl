@@ -127,7 +127,7 @@
                             </roles>
                             <xslout:call-template name="mapping:outLocalExt">
                                 <xslout:with-param name="groups" select="$locals//mapping:user"/>
-                                <xslout:with-param name="exclude" select="('name','email','expire','domain','roles')"/>
+                                <xslout:with-param name="exclude" select="($specialAttributes, $skipAttributes)"/>
                             </xslout:call-template>
                         </user>
                         <xslout:variable name="extendedAttributeGroupNames" as="xs:string*"
