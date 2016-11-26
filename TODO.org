@@ -6,7 +6,7 @@
 ** DONE Interesting examples with XPath current-time etc.
 ** DONE Whitelist/Blacklist with regex
 ** DONE mapping:attribute mapping:attributes
-** DONE New Format -- with support for extensions [3/4]
+** DONE New Format -- with support for extensions [3/3]
    1. [X] Build Design
    2. [X] Design Schema
    3. [X] Convert Examples
