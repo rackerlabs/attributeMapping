@@ -259,13 +259,14 @@
                                  else false())]" priority="10" mode="genLocal">
         <xsl:param name="remoteMappers" as="node()*"/>
         <xslout:attribute name="value">
-            <xslout:variable name="durationText" as="node()">
+            <xslout:variable name="durationNodes" as="node()*">
                 <xsl:call-template name="mapping:handleAttribute">
                     <xsl:with-param name="parent" select=".."/>
                     <xsl:with-param name="in" select="."/>
                     <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
                 </xsl:call-template>
             </xslout:variable>
+            <xslout:variable name="durationText" as="xs:string" select="string-join($durationNodes,'')"/>
             <xslout:choose>
                 <xslout:when test="$durationText castable as xs:dayTimeDuration">
                     <xslout:variable name="duration" as="xs:duration" select="xs:dayTimeDuration($durationText)"/>
