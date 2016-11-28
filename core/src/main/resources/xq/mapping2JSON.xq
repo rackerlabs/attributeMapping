@@ -9,9 +9,9 @@ declare namespace xs = "http://www.w3.org/2001/XMLSchema";
 declare option output:method "json";
 declare option output:indent "yes";
 
-declare function mapping:convertAttributeList($in as xs:string) as array(xs:string) {
+declare function mapping:convertAttributeList($in as xs:string) as item() {
   let $inStrings := for $s in tokenize($in, ' ') return replace($s,'&#xA0;',' ')
-  return array {$inStrings}
+  return if (count($inStrings) = 1) then $inStrings[1] else array {$inStrings}
 };
 
 declare function mapping:convertAttributeMap($elem as element(), $multiValueAttribs as xs:string*) as map(*) {
@@ -25,8 +25,8 @@ declare function mapping:convertLocalGroup($local as element()) as map(*) {
   let $elems := $local/element()
   return map:merge(for $elem in $elems return map:entry(local-name($elem),
   let $multiAttribs := (
-    if ((local-name($elem) = 'roles') and (local-name($elem/..) = 'user') and count(tokenize($elem/@value,' ')) > 1) then "value" else (),
-      if (exists($elem/@multiValue) and xs:boolean($elem/@multiValue) and count(tokenize($elem/@value,' ')) > 1) then "value" else ())
+    if ((local-name($elem) = 'roles') and (local-name($elem/..) = 'user')) then "value" else (),
+      if (exists($elem/@multiValue) and xs:boolean($elem/@multiValue)) then "value" else ())
         return if ($elem/@*[name(.) = ('type','multiValue')]) then mapping:convertAttributeMap($elem, $multiAttribs) else
           if ($multiAttribs) then mapping:convertAttributeList (string($elem/@value)) else string($elem/@value)))
 };
