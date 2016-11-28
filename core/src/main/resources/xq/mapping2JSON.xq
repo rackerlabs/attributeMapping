@@ -25,8 +25,12 @@ declare function mapping:convertLocalGroups($local as element()) as map(*) {
   return map:merge(for $elem in $elems return map:entry(local-name($elem),mapping:convertLocalGroup($elem)))
 };
 
-let $rules := for $rule in /mapping:rules/mapping:rule return map {
-  "local" : mapping:convertLocalGroups($rule/mapping:local),
-  "remote" : "remotePart"
-}
+declare function mapping:convertRemote($remote as element()) as array(*) {
+  let $elems := $remote/element()
+  return array {for $elem in $elems return mapping:convertAttributeMap($elem)}
+};
+
+let $rules := for $rule in /mapping:rules/mapping:rule return map:merge((
+  map:entry("local",mapping:convertLocalGroups($rule/mapping:local)),
+  if (exists($rule/mapping:remote)) then map:entry("remote",mapping:convertRemote($rule/mapping:remote)) else ()))
 return map {"rules" : array{$rules}}
