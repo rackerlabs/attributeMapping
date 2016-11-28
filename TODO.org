@@ -26,9 +26,12 @@
    13. [X] Ensure that datetime works with multi-value templates.
 ** DONE Validation
 ** TODO JSON Support[0/3]
-   1. [ ] XML2JSON [0/2]
-      1. [ ] Handle MultiValues
-      2. [ ] Handle whitespace issues
+   1. [-] XML2JSON [2/4]
+      1. [X] Handle MultiValues
+      2. [X] Handle whitespace issues
+      3. [ ] Better handling of lists in remote section (use arrays
+         only if nessesary)
+      4. [ ] Clean up
    2. [ ] JSON2XML [0/2]
       1. [ ] Handle MultiValues
       2. [ ] Handle Extensions
