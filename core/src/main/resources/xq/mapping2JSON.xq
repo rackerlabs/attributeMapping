@@ -9,9 +9,15 @@ declare namespace xs = "http://www.w3.org/2001/XMLSchema";
 declare option output:method "json";
 declare option output:indent "yes";
 
+declare function mapping:convertAttributeMap($elem as element()) as map(*) {
+  let $attribs := $elem/@*[namespace-uri(.) != 'http://www.w3.org/2001/XMLSchema-instance']
+  return map:merge(for $attrib in $attribs return map:entry(local-name($attrib), string($attrib)))
+};
+
 declare function mapping:convertLocalGroup($local as element()) as map(*) {
   let $elems := $local/element()
-  return map:merge(for $elem in $elems return map:entry(local-name($elem),string($elem/@value)))
+  return map:merge(for $elem in $elems return map:entry(local-name($elem),
+    if ($elem/@*[name(.) = ('type','multivalue')]) then mapping:convertAttributeMap($elem) else string($elem/@value)))
 };
 
 declare function mapping:convertLocalGroups($local as element()) as map(*) {
