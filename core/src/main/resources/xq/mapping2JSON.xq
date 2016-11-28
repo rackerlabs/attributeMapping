@@ -27,7 +27,7 @@ declare function mapping:convertLocalGroup($local as element()) as map(*) {
   let $multiAttribs := (
     if ((local-name($elem) = 'roles') and (local-name($elem/..) = 'user') and count(tokenize($elem/@value,' ')) > 1) then "value" else (),
       if (exists($elem/@multiValue) and xs:boolean($elem/@multiValue) and count(tokenize($elem/@value,' ')) > 1) then "value" else ())
-        return if ($elem/@*[name(.) = ('type','multivalue')]) then mapping:convertAttributeMap($elem, $multiAttribs) else
+        return if ($elem/@*[name(.) = ('type','multiValue')]) then mapping:convertAttributeMap($elem, $multiAttribs) else
           if ($multiAttribs) then mapping:convertAttributeList (string($elem/@value)) else string($elem/@value)))
 };
 
