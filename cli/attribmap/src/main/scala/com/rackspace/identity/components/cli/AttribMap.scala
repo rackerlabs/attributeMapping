@@ -40,7 +40,7 @@ object AttribMap {
   val version = getClass.getPackage.getImplementationVersion
 
   def parseArgs(args: Array[String], base : String,
-                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Source, Destination, Boolean)] = {
+                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Source, Destination, Boolean, Boolean, String)] = {
 
     val parser = new ArgotParser("attribmap", preUsage=Some(s"$title v$version"))
 
@@ -55,6 +55,12 @@ object AttribMap {
     val output = parser.parameter[String]("output",
                                           "Output file. If not specified, stdout will be used.",
                                           true)
+
+    val dontValidate = parser.flag[Boolean](List("D", "dont-validate"),
+                                                 "Disable Validation (Validation will be enabled by default)")
+
+    val xsdEngine = parser.option[String](List("x", "xsd-engine"), "xsd-engine",
+                                                  "XSD Engine to use. Valid values are Auto, Saxon, Xerces (default is auto)")
 
     val help = parser.flag[Boolean] (List("h", "help"),
                                      "Display usage.")
@@ -86,7 +92,8 @@ object AttribMap {
         err.println(s"$title v$version")
         None
       } else {
-        Some((policySource, assertionSource, destination, useSAML.value.getOrElse(false)))
+        Some((policySource, assertionSource, destination, useSAML.value.getOrElse(false),
+              !dontValidate.value.getOrElse(false), xsdEngine.value.getOrElse("auto")))
       }
     } catch {
       case e: ArgotUsageException => err.println(e.message)
@@ -106,8 +113,9 @@ object AttribMap {
   def main(args : Array[String]) = {
     parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
                System.in, System.out, System.err) match {
-      case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean)) =>
-        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML)
+      case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean,
+                 validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }
@@ -118,8 +126,9 @@ object AttribMap {
   def nailMain(context : NGContext) = {
     parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
                context.in, context.out, context.err) match {
-      case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean)) =>
-        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML)
+      case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean,
+                validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }

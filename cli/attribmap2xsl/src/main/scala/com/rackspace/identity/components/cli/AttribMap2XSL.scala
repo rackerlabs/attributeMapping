@@ -40,7 +40,7 @@ object AttribMap2XSL {
   val version = getClass.getPackage.getImplementationVersion
 
   def parseArgs(args: Array[String], base : String,
-                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Destination)] = {
+                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Destination, Boolean, String)] = {
 
     val parser = new ArgotParser("attribmap2xsl", preUsage=Some(s"$title v$version"))
 
@@ -51,6 +51,12 @@ object AttribMap2XSL {
     val output = parser.parameter[String]("output",
                                           "Output file. If not specified, stdout will be used.",
                                           true)
+
+    val dontValidate = parser.flag[Boolean](List("D", "dont-validate"),
+                                                 "Disable Validation (Validation will be enabled by default)")
+
+    val xsdEngine = parser.option[String](List("x", "xsd-engine"), "xsd-engine",
+                                                  "XSD Engine to use. Valid values are Auto, Saxon, Xerces (default is auto)")
 
     val help = parser.flag[Boolean] (List("h", "help"),
                                      "Display usage.")
@@ -78,7 +84,8 @@ object AttribMap2XSL {
         err.println(s"$title v$version")
         None
       } else {
-        Some((policySource, destination))
+        Some((policySource, destination, !dontValidate.value.getOrElse(false),
+              xsdEngine.value.getOrElse("auto")))
       }
     } catch {
       case e: ArgotUsageException => err.println(e.message)
@@ -98,8 +105,8 @@ object AttribMap2XSL {
   def main(args : Array[String]) = {
     parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
                System.in, System.out, System.err) match {
-      case Some((policy : Source,  dest : Destination)) =>
-        AttributeMapper.generateXSL (policy,  dest)
+      case Some((policy : Source,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.generateXSL (policy,  dest, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }
@@ -110,8 +117,8 @@ object AttribMap2XSL {
   def nailMain(context : NGContext) = {
     parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
                context.in, context.out, context.err) match {
-      case Some((policy : Source,  dest : Destination)) =>
-        AttributeMapper.generateXSL (policy,  dest)
+      case Some((policy : Source,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.generateXSL (policy,  dest, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }

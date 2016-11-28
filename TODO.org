@@ -24,7 +24,7 @@
    11. [X] Quotes in attribute names and XPaths.
    12. [X] Support multiple {} at a time in a single template.
    13. [X] Ensure that datetime works with multi-value templates.
-** TODO Validation
+** DONE Validation
 ** TODO JSON Support
 ** TODO Setup logger for CLI util (better error messages)
 ** TODO Tests Framework
