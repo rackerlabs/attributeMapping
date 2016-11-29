@@ -15,8 +15,12 @@
  */
 package com.rackspace.identity.components
 
+import java.net.URI
+import java.io.File
+
 import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
+import javax.xml.transform.stream.StreamResult
 import javax.xml.transform.sax.SAXResult
 import javax.xml.validation.SchemaFactory
 
@@ -38,6 +42,7 @@ import net.sf.saxon.s9api.XQueryExecutable
 import net.sf.saxon.s9api.XQueryEvaluator
 import net.sf.saxon.s9api.XdmValue
 
+import com.fasterxml.jackson.databind.ObjectMapper
 
 object XSDEngine extends Enumeration {
   val Auto = Value("auto")
@@ -58,6 +63,7 @@ object AttributeMapper {
 
   private val mapperXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/mapping.xsl").toString))
   private lazy val mapper2JSONExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2JSON.xq"))
+  private lazy val mapper2XMLExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2XML.xq"))
 
   private lazy val mappingXSDSource = new StreamSource(getClass.getResource("/xsd/mapping.xsd").toString)
 
@@ -108,9 +114,12 @@ object AttributeMapper {
     t
   }
 
-  private def getXQueryEvaluator (xqueryExec : XQueryExecutable) : XQueryEvaluator = {
+  private def getXQueryEvaluator (xqueryExec : XQueryExecutable, params : Map[QName, XdmValue]=Map[QName, XdmValue]()) : XQueryEvaluator = {
     val e = xqueryExec.load
     e.setErrorListener (new LogErrorListener)
+    for ((param, value) <- params) {
+      e.setExternalVariable (param, value)
+    }
     e
   }
 
@@ -163,6 +172,20 @@ object AttributeMapper {
     val evaluator = getXQueryEvaluator(mapper2JSONExec)
     evaluator.setSource(policySrc)
     evaluator.setDestination(policyJSON)
+    evaluator.run
+  }
+
+  def policy2XML(policyJSON : Source, policyXML : Destination) : Unit = {
+    val om = new ObjectMapper()
+    val ss = policyJSON.asInstanceOf[StreamSource]
+    val node = {
+      if (ss.getInputStream != null) om.readTree(ss.getInputStream) else
+        if (ss.getReader != null) om.readTree(ss.getReader) else
+          om.readTree(new File(new URI(ss.getSystemId)))
+    }
+
+    val evaluator = getXQueryEvaluator(mapper2XMLExec, Map[QName, XdmValue](new QName("__JSON__") -> new XdmAtomicValue(om.writeValueAsString(node))))
+    evaluator.setDestination(policyXML)
     evaluator.run
   }
 

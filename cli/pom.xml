@@ -20,6 +20,7 @@
         <module>attribmap</module>
         <module>attribmap2xsl</module>
         <module>attribmap2json</module>
+        <module>attribmap2xml</module>
         <module>nailgun-server</module>
         <module>nailgun-client</module>
     </modules>
