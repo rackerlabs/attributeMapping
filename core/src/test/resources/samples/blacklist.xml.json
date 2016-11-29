@@ -1,0 +1,25 @@
+ {
+  "rules": [
+     {
+      "remote": [
+         {
+          "name":"roles",
+          "multiValue":true,
+          "blacklist": [
+            "lbaas:admin",
+            "nova:admin"
+           ]
+         }
+       ],
+      "local": {
+        "user": {
+          "domain":"{D}",
+          "name":"{D}",
+          "email":"{D}",
+          "roles":"{0}",
+          "expire":"{D}"
+         }
+       }
+     }
+   ]
+ }

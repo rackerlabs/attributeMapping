@@ -1,0 +1,40 @@
+ {
+  "rules": [
+     {
+      "remote": [
+         {
+          "path":"'PT2H'"
+         },
+         {
+          "path":"'AWSPolicy'"
+         }
+       ],
+      "local": {
+        "user": {
+          "domain":"{D}",
+          "foo": {
+            "value":"{0}",
+            "type":"xs:dateTime"
+           },
+          "name":"{D}",
+          "email":"{D}",
+          "roles":"{D}",
+          "expire":"{D}"
+         },
+        "faws": {
+          "policy":"{1}"
+         }
+       }
+     },
+     {
+      "local": {
+        "user": {
+          
+         },
+        "faws": {
+          "policy":"AWSPolicy2"
+         }
+       }
+     }
+   ]
+ }

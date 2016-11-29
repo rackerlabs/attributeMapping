@@ -1,0 +1,29 @@
+ {
+  "rules": [
+     {
+      "remote": [
+         {
+          "path":"\/saml2p:Response\/saml2:Assertion\/saml2:AttributeStatement\/saml2:Attribute[@Name=\"name\"]\/saml2:AttributeValue"
+         },
+         {
+          "name":"'e'mail"
+         },
+         {
+          "name":"\"do\"ma'in'"
+         },
+         {
+          "path":"\/saml2p:Response\/saml2:Assertion\/saml2:AttributeStatement\/saml2:Attribute[@Name='roles']\/saml2:AttributeValue"
+         }
+       ],
+      "local": {
+        "user": {
+          "domain":"{2}",
+          "name":"{0}",
+          "email":"{1}",
+          "roles":"{3}",
+          "expire":"{D}"
+         }
+       }
+     }
+   ]
+ }
