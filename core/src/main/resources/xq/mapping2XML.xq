@@ -13,7 +13,7 @@ declare option output:method "xml";
 declare option output:indent "yes";
 
 (: declare variable $__JSON__ external; :)
-declare variable $__JSON__ := "{&#34;rules&#34;:[{&#34;remote&#34;:[{&#34;regex&#34;:false,&#34;name&#34;:&#34;bar&#34;,&#34;multiValue&#34;:false},{&#34;path&#34;:&#34;'AWSPolicy'&#34;,&#34;regex&#34;:false,&#34;multiValue&#34;:false}],&#34;local&#34;:{&#34;user&#34;:{&#34;domain&#34;:&#34;{D}&#34;,&#34;foo&#34;:&#34;{0}&#34;,&#34;name&#34;:&#34;{D}&#34;,&#34;email&#34;:&#34;{D}&#34;,&#34;roles&#34;:&#34;{D}&#34;,&#34;expire&#34;:&#34;{D}&#34;},&#34;faws&#34;:{&#34;policy&#34;:&#34;{1}&#34;}}},{&#34;local&#34;:{&#34;user&#34;:{},&#34;faws&#34;:{&#34;policy&#34;:&#34;AWSPolicy2&#34;}}}]}";
+declare variable $__JSON__ external;
 declare variable $policyJSON := parse-json($__JSON__);
 declare variable $defaultAttributes as xs:string* := ('name','email','expire','domain','roles');
 
@@ -36,6 +36,10 @@ declare function mapping:convertLocalAttribute($attribName as xs:string, $attrib
     mapping:attributeFromValue("value",$attribValue),
     if ($userGroup and $attribName = $defaultAttributes) then () else attribute {"xsi:type"} {"LocalAttribute"}
   }
+};
+
+declare function mapping:convertRemoteAttribute($remoteAttribute as item()) as element() {
+  element {"attribute"} {mapping:attributeFromValue("", $remoteAttribute)}
 };
 
 <rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
@@ -62,6 +66,13 @@ declare function mapping:convertLocalAttribute($attribName as xs:string, $attrib
                    }
                  }
              </local>
+             {
+               if (map:contains($rule,"remote")) then
+               <remote>
+                 { for $remoteAttribute in $rule?remote?* return mapping:convertRemoteAttribute($remoteAttribute) }
+               </remote>
+               else ()
+             }
          </rule>
        }
 </rules>
