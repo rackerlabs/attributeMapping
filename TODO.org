@@ -25,15 +25,15 @@
    12. [X] Support multiple {} at a time in a single template.
    13. [X] Ensure that datetime works with multi-value templates.
 ** DONE Validation
-** TODO JSON Support[0/3]
-   1. [-] XML2JSON [5/6]
+** DONE JSON Support[1/3]
+   1. [X] XML2JSON [6/6]
       1. [X] Handle MultiValues
       2. [X] Handle whitespace issues
       3. [X] Better handling of lists in remote section (use arrays
          only if nessesary)
       4. [X] Support boolean attributes (multiValue)
       5. [X] Support namespaces!
-      6. [ ] attribmap2json cli utility
+      6. [X] attribmap2json cli utility
    2. [ ] JSON2XML [0/2]
       1. [ ] Handle MultiValues
       2. [ ] Handle Extensions

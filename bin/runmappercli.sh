@@ -113,7 +113,17 @@ function nailgunRun() {
     CLIENTEXE=$DIR/cli/nailgun-client/target/ng
     if [ -e $CLIENTEXE ]; then
         $CLIENTEXE $PROG_CLASS --nailgun-port $MAPPER_NAILGUN_PORT --nailgun-server $MAPPER_NAILGUN_HOST $CLI_ARGS
-        return $?
+        NGResult=$?
+        #
+        # Ignore error 227, connection broken. Some clients don't end
+        # gracefully.
+        #
+        if [ $NGResult -eq "227" ]; then
+            echo # Output an extra line, since we interrupted mid
+                 # stream
+            return 0
+        fi
+        return $NGResult
     else
         return 232 # Cloudn't find nailgun client
     fi

@@ -34,6 +34,8 @@ import net.sf.saxon.s9api.SAXDestination
 import net.sf.saxon.s9api.XdmAtomicValue
 import net.sf.saxon.s9api.XsltTransformer
 import net.sf.saxon.s9api.XsltExecutable
+import net.sf.saxon.s9api.XQueryExecutable
+import net.sf.saxon.s9api.XQueryEvaluator
 import net.sf.saxon.s9api.XdmValue
 
 
@@ -48,8 +50,14 @@ import XSDEngine._
 object AttributeMapper {
   val processor = new Processor(true)
   private val compiler = processor.newXsltCompiler
+  private val xqueryCompiler = {
+    val c = processor.newXQueryCompiler
+    c.setLanguageVersion("3.1")
+    c
+  }
 
   private val mapperXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/mapping.xsl").toString))
+  private lazy val mapper2JSONExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2JSON.xq"))
 
   private lazy val mappingXSDSource = new StreamSource(getClass.getResource("/xsd/mapping.xsd").toString)
 
@@ -100,6 +108,12 @@ object AttributeMapper {
     t
   }
 
+  private def getXQueryEvaluator (xqueryExec : XQueryExecutable) : XQueryEvaluator = {
+    val e = xqueryExec.load
+    e.setErrorListener (new LogErrorListener)
+    e
+  }
+
   def validatePolicy (policy : Source, engineStr : String) : Source ={
     val docBuilder = processor.newDocumentBuilder
     val engine = XSDEngine.withName(engineStr)
@@ -134,6 +148,22 @@ object AttributeMapper {
     mappingTrans.setSource(policySrc)
     mappingTrans.setDestination(xsl)
     mappingTrans.transform
+  }
+
+
+  def policy2JSON(policyXML : Source, policyJSON : Destination, validate : Boolean, xsdEngine : String) : Unit = {
+    val policySrc = {
+      if (validate) {
+        validatePolicy(policyXML, xsdEngine)
+      } else {
+        policyXML
+      }
+    }
+
+    val evaluator = getXQueryEvaluator(mapper2JSONExec)
+    evaluator.setSource(policySrc)
+    evaluator.setDestination(policyJSON)
+    evaluator.run
   }
 
   def convertAssertion (policy : Source, assertion : Source, dest : Destination, outputSAML : Boolean, validate : Boolean, xsdEngine : String) : Unit = {

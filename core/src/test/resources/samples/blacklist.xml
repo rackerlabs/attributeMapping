@@ -10,10 +10,10 @@
     <rule>
         <local>
             <user>
-                <name value="{D}"/>>
-                <email value="{D}"/>>
-                <expire value="{D}"/>>
-                <domain value="{D}"/>>
+                <name value="{D}"/>
+                <email value="{D}"/>
+                <expire value="{D}"/>
+                <domain value="{D}"/>
                 <roles value="{0}"/>
          </user>
       </local>

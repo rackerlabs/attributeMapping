@@ -19,6 +19,7 @@
         <module>util</module>
         <module>attribmap</module>
         <module>attribmap2xsl</module>
+        <module>attribmap2json</module>
         <module>nailgun-server</module>
         <module>nailgun-client</module>
     </modules>
