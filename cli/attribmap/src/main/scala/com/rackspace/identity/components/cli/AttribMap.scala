@@ -60,7 +60,7 @@ object AttribMap {
                                                  "Disable Validation (Validation will be enabled by default)")
 
     val xsdEngine = parser.option[String](List("x", "xsd-engine"), "xsd-engine",
-                                                  "XSD Engine to use. Valid values are Auto, Saxon, Xerces (default is auto)")
+                                                  "XSD Engine to use. Valid values are auto, saxon, xerces (default is auto)")
 
     val help = parser.flag[Boolean] (List("h", "help"),
                                      "Display usage.")
