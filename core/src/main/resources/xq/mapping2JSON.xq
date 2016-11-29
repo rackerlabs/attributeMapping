@@ -9,6 +9,8 @@ declare namespace xs = "http://www.w3.org/2001/XMLSchema";
 declare option output:method "json";
 declare option output:indent "yes";
 
+declare variable $knownPrefixes as xs:string* := ('saml2p','saml2','xs','xsi','mapping','xml','');
+
 declare function mapping:convertAttributeValue($name as xs:string, $in as xs:string, $flags as xs:string*) as xs:anyAtomicType {
   let $retValue := replace($in,'&#xA0;',' ')
   return if ($name = $flags) then xs:boolean($retValue) else $retValue
@@ -47,7 +49,14 @@ declare function mapping:convertRemote($remote as element()) as array(*) {
   return array {for $elem in $elems return mapping:convertAttributeMap($elem,('blacklist','whitelist','notAnyOf','anyOneOf'),('multiValue','regex'))}
 };
 
+declare function mapping:convertNamespaces($rules as element(), $prefixes as xs:string*) as map(*) {
+  map:merge (for $p in $prefixes return map:entry($p , namespace-uri-for-prefix ($p, $rules)))
+};
+
+let $nsPrefixes := for $prefix in in-scope-prefixes(/mapping:rules) return if ($prefix = $knownPrefixes) then () else $prefix
 let $rules := for $rule in /mapping:rules/mapping:rule return map:merge((
   map:entry("local",mapping:convertLocalGroups($rule/mapping:local)),
   if (exists($rule/mapping:remote)) then map:entry("remote",mapping:convertRemote($rule/mapping:remote)) else ()))
-return map {"rules" : array{$rules}}
+    return
+      map:merge((map:entry("rules", array{$rules}),
+      if (not(empty($nsPrefixes))) then map:entry("namespaces", mapping:convertNamespaces(/mapping:rules,$nsPrefixes)) else ()))
