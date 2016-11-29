@@ -25,7 +25,7 @@
    12. [X] Support multiple {} at a time in a single template.
    13. [X] Ensure that datetime works with multi-value templates.
 ** DONE Validation
-** DONE JSON Support[2/5]
+** DONE JSON Support[3/4]
    1. [X] XML2JSON [6/6]
       1. [X] Handle MultiValues
       2. [X] Handle whitespace issues
@@ -37,10 +37,10 @@
    2. [X] JSON2XML [2/2]
       1. [X] Handle MultiValues
       2. [X] Handle Extensions
-   3. [ ] Local conversion for mapper result to JSON
+   3. [X] Local conversion for mapper result to JSON
    4. [ ] Allow mapper to support JSON
-   5. [ ] Validation with JSON Schema
-** TODO Setup logger for CLI util (better error messages)
 ** TODO Tests Framework
 ** TODO Document all!
+** TODO Validation with JSON Schema
+** TODO Setup logger for CLI util (better error messages)
 ** TODO Cleanup all!

@@ -53,10 +53,13 @@ declare function mapping:convertNamespaces($rules as element(), $prefixes as xs:
   map:merge (for $p in $prefixes return map:entry($p , namespace-uri-for-prefix ($p, $rules)))
 };
 
-let $nsPrefixes := for $prefix in in-scope-prefixes(/mapping:rules) return if ($prefix = $knownPrefixes) then () else $prefix
-let $rules := for $rule in /mapping:rules/mapping:rule return map:merge((
-  map:entry("local",mapping:convertLocalGroups($rule/mapping:local)),
-  if (exists($rule/mapping:remote)) then map:entry("remote",mapping:convertRemote($rule/mapping:remote)) else ()))
-    return
-      map:merge((map:entry("rules", array{$rules}),
-      if (not(empty($nsPrefixes))) then map:entry("namespaces", mapping:convertNamespaces(/mapping:rules,$nsPrefixes)) else ()))
+
+if (exists(/mapping:rules)) then
+  let $nsPrefixes := for $prefix in in-scope-prefixes(/mapping:rules) return if ($prefix = $knownPrefixes) then () else $prefix
+  let $rules := for $rule in /mapping:rules/mapping:rule return map:merge((
+    map:entry("local",mapping:convertLocalGroups($rule/mapping:local)),
+    if (exists($rule/mapping:remote)) then map:entry("remote",mapping:convertRemote($rule/mapping:remote)) else ()))
+      return
+        map:merge((map:entry("rules", array{$rules}),
+        if (not(empty($nsPrefixes))) then map:entry("namespaces", mapping:convertNamespaces(/mapping:rules,$nsPrefixes)) else ()))
+else map { "local" : mapping:convertLocalGroups(mapping:local) }
