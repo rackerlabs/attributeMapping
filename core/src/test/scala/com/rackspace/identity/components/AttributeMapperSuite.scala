@@ -15,6 +15,7 @@
  */
 package com.rackspace.identity.components
 
+import java.io.ByteArrayOutputStream
 import java.io.File
 
 import javax.xml.transform.stream.StreamSource
@@ -30,16 +31,36 @@ class AttributeMapperSuite extends FunSuite {
   val testDir = new File("src/test/resources/tests")
   val tests : List[File] = testDir.listFiles.toList
 
+  val testerXSLExec = AttributeMapper.compiler.compile (new StreamSource(new File("src/test/resources/xsl/mapping-tests.xsl")))
+
   tests.foreach( t => {
     val maps : List[File] = (new File(t,"maps")).listFiles().toList.filter(f => {f.toString.endsWith("xml") || f.toString.endsWith("json")})
     val asserts : List[File] = (new File(t,"asserts")).listFiles().toList.filter(f => {f.toString.endsWith("xml")})
 
     maps.foreach ( map => {
-      asserts.foreach ( assert => {
+      asserts.foreach ( assertFile => {
         val dest = new XdmDestination
-        test (s"Testing $map on $assert") {
-          AttributeMapper.convertAssertion (new StreamSource(map), new StreamSource(assert), dest, true,
+        val asserterXSL = new XdmDestination
+
+        val asserterTrans = AttributeMapper.getXsltTransformer (testerXSLExec)
+        asserterTrans.setSource (new StreamSource(assertFile))
+        asserterTrans.setDestination(asserterXSL)
+        asserterTrans.transform
+
+        val asserterExec = AttributeMapper.compiler.compile(asserterXSL.getXdmNode.asSource)
+
+        test (s"Testing $map on $assertFile") {
+          val bout = new ByteArrayOutputStream
+          println (s"Running $map on $assertFile")
+          AttributeMapper.convertAssertion (new StreamSource(map), new StreamSource(assertFile), dest, true,
                                             map.toString.endsWith("json"), true, "auto")
+          println ("Testing assertions")
+          val asserter = AttributeMapper.getXsltTransformer(asserterExec)
+          asserter.setSource(dest.getXdmNode.asSource)
+          asserter.setDestination(AttributeMapper.processor.newSerializer(bout))
+          asserter.transform
+
+          assert(bout.toString.contains("mapping:success"))
         }
       })
     })

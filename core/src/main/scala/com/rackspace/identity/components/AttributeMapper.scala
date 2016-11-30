@@ -54,7 +54,7 @@ import XSDEngine._
 
 object AttributeMapper {
   val processor = new Processor(true)
-  private val compiler = processor.newXsltCompiler
+  val compiler = processor.newXsltCompiler
   private val xqueryCompiler = {
     val c = processor.newXQueryCompiler
     c.setLanguageVersion("3.1")
@@ -104,7 +104,7 @@ object AttributeMapper {
   //
   //  Given XSLTExec and an optional set of XSLT parameters, creates an XsltTransformer
   //
-  private def getXsltTransformer (xsltExec : XsltExecutable, params : Map[QName, XdmValue]=Map[QName, XdmValue]()) : XsltTransformer = {
+  def getXsltTransformer (xsltExec : XsltExecutable, params : Map[QName, XdmValue]=Map[QName, XdmValue]()) : XsltTransformer = {
     val t = xsltExec.load
     t.setErrorListener (new LogErrorListener)
     t.getUnderlyingController.setMessageEmitter(new MessageWarner)
