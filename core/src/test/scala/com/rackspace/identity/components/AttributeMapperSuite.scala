@@ -65,8 +65,4 @@ class AttributeMapperSuite extends FunSuite {
       })
     })
   })
-
-  test("true") {
-    assert (testDir.isDirectory)
-  }
 }
