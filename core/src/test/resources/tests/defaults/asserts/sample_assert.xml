@@ -6,6 +6,18 @@
 <!-- There should be a single nova:admin attribute -->
 <?assert /saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='roles']/saml2:AttributeValue = 'nova:admin'?>
 
+<!-- The name should be john.doe -->
+<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID = 'john.doe'?>
+
+<!-- The message should expire at 2013-11-17T16:19:06.298Z -->
+<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter = '2013-11-17T16:19:06.298Z'?>
+
+<!-- The email should be no-reply@rackspace.com -->
+<?assert mapping:get-attribute('email') = 'no-reply@rackspace.com'?>
+
+<!-- The email should be no-reply@rackspace.com -->
+<?assert mapping:get-attribute('domain') = '323676'?>
+
 <saml2p:Response ID="_7fcd6173-e6e0-45a4-a2fd-74a4ef85bf30" IssueInstant="2015-12-04T15:47:15.057Z" Version="2.0" xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <saml2:Issuer xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">http://test.rackspace.com</saml2:Issuer>
     <saml2p:Status>
