@@ -39,6 +39,8 @@
       2. [X] Handle Extensions
    3. [X] Local conversion for mapper result to JSON
    4. [ ] Allow mapper to support JSON
+** TODO Ensure everything works without SAXON license
+** TODO Call that returns XSLTExec
 ** TODO Tests Framework
 ** TODO Document all!
 ** TODO Validation with JSON Schema
