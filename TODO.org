@@ -25,7 +25,7 @@
    12. [X] Support multiple {} at a time in a single template.
    13. [X] Ensure that datetime works with multi-value templates.
 ** DONE Validation
-** DONE JSON Support[3/4]
+** DONE JSON Support[4/4]
    1. [X] XML2JSON [6/6]
       1. [X] Handle MultiValues
       2. [X] Handle whitespace issues
@@ -38,10 +38,11 @@
       1. [X] Handle MultiValues
       2. [X] Handle Extensions
    3. [X] Local conversion for mapper result to JSON
-   4. [ ] Allow mapper to support JSON
+   4. [X] Allow mapper to support JSON
 ** TODO Ensure everything works without SAXON license
 ** TODO Call that returns XSLTExec
 ** TODO Tests Framework
+** TODO FixBug whitespaces in XPath return
 ** TODO Document all!
 ** TODO Validation with JSON Schema
 ** TODO Setup logger for CLI util (better error messages)
