@@ -40,7 +40,7 @@ object AttribMap2XSL {
   val version = getClass.getPackage.getImplementationVersion
 
   def parseArgs(args: Array[String], base : String,
-                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Destination, Boolean, String)] = {
+                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Destination, Boolean, Boolean, String)] = {
 
     val parser = new ArgotParser("attribmap2xsl", preUsage=Some(s"$title v$version"))
 
@@ -84,7 +84,8 @@ object AttribMap2XSL {
         err.println(s"$title v$version")
         None
       } else {
-        Some((policySource, destination, !dontValidate.value.getOrElse(false),
+        Some((policySource, destination, policy.value.get.endsWith("json"),
+              !dontValidate.value.getOrElse(false),
               xsdEngine.value.getOrElse("auto")))
       }
     } catch {
@@ -105,8 +106,9 @@ object AttribMap2XSL {
   def main(args : Array[String]) = {
     parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
                System.in, System.out, System.err) match {
-      case Some((policy : Source,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.generateXSL (policy,  dest, validate, xsdEngine)
+      case Some((policy : Source,  dest : Destination, isJSON : Boolean,
+                 validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.generateXSL (policy,  dest, isJSON, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }
@@ -117,8 +119,9 @@ object AttribMap2XSL {
   def nailMain(context : NGContext) = {
     parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
                context.in, context.out, context.err) match {
-      case Some((policy : Source,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.generateXSL (policy,  dest, validate, xsdEngine)
+      case Some((policy : Source,  dest : Destination, isJSON : Boolean,
+                 validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.generateXSL (policy, dest, isJSON, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }

@@ -144,12 +144,23 @@ object AttributeMapper {
     bch.getDocumentNode.asSource
   }
 
-  def generateXSL (policy : Source, xsl : Destination, validate : Boolean, xsdEngine : String) : Unit = {
-    val policySrc = {
-      if (validate) {
-        validatePolicy(policy, xsdEngine)
+  def generateXSL (policy : Source, xsl : Destination, isJSON : Boolean, validate : Boolean, xsdEngine : String) : Unit = {
+    val policySourceConv1 = {
+      if (isJSON) {
+        val outPolicyXML = new XdmDestination
+        // TODO: Fail nicely if we get something other than a stream source.
+        policy2XML(policy.asInstanceOf[StreamSource], outPolicyXML)
+        outPolicyXML.getXdmNode.asSource
       } else {
         policy
+      }
+    }
+
+    val policySrc = {
+      if (validate) {
+        validatePolicy(policySourceConv1, xsdEngine)
+      } else {
+        policySourceConv1
       }
     }
 
@@ -190,17 +201,6 @@ object AttributeMapper {
 
   def convertAssertion (policy : Source, assertion : Source, dest : Destination, outputSAML : Boolean, isJSON : Boolean,
                         validate : Boolean, xsdEngine : String) : Unit = {
-    val policySource = {
-      if (isJSON) {
-        val outPolicyXML = new XdmDestination
-        // TODO: Fail nicely if we get something other than a stream source.
-        policy2XML(policy.asInstanceOf[StreamSource], outPolicyXML)
-        outPolicyXML.getXdmNode.asSource
-      } else {
-        policy
-      }
-    }
-
     val assertionDest = {
       if (isJSON && !outputSAML) {
         new XdmDestination
@@ -214,7 +214,7 @@ object AttributeMapper {
     //
     //  Genereate the XSLT.
     //
-    generateXSL (policySource, outXSL, validate, xsdEngine)
+    generateXSL (policy, outXSL, isJSON, validate, xsdEngine)
 
     //
     // Comple the resulting XSL
