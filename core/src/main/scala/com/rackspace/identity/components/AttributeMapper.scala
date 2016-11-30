@@ -175,13 +175,12 @@ object AttributeMapper {
     evaluator.run
   }
 
-  def policy2XML(policyJSON : Source, policyXML : Destination) : Unit = {
+  def policy2XML(policyJSON : StreamSource, policyXML : Destination) : Unit = {
     val om = new ObjectMapper()
-    val ss = policyJSON.asInstanceOf[StreamSource]
     val node = {
-      if (ss.getInputStream != null) om.readTree(ss.getInputStream) else
-        if (ss.getReader != null) om.readTree(ss.getReader) else
-          om.readTree(new File(new URI(ss.getSystemId)))
+      if (policyJSON.getInputStream != null) om.readTree(policyJSON.getInputStream) else
+        if (policyJSON.getReader != null) om.readTree(policyJSON.getReader) else
+          om.readTree(new File(new URI(policyJSON.getSystemId)))
     }
 
     val evaluator = getXQueryEvaluator(mapper2XMLExec, Map[QName, XdmValue](new QName("__JSON__") -> new XdmAtomicValue(om.writeValueAsString(node))))

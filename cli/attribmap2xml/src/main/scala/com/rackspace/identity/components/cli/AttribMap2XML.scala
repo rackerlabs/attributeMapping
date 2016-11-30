@@ -21,7 +21,6 @@ import java.io.InputStream
 
 import java.net.URI
 
-import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
 
 import org.clapper.argot.ArgotConverters._
@@ -40,7 +39,7 @@ object AttribMap2XML {
   val version = getClass.getPackage.getImplementationVersion
 
   def parseArgs(args: Array[String], base : String,
-                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Destination, Boolean, String)] = {
+                in : InputStream, out : PrintStream, err : PrintStream) : Option[(StreamSource, Destination, Boolean, String)] = {
 
     val parser = new ArgotParser("attribmap2xml", preUsage=Some(s"$title v$version"))
 
@@ -65,7 +64,7 @@ object AttribMap2XML {
                                              "Display version.")
 
 
-    def policySource : Source = new StreamSource(URLResolver.toAbsoluteSystemId(policy.value.get, base).toString)
+    def policySource = new StreamSource(URLResolver.toAbsoluteSystemId(policy.value.get, base).toString)
     def destination : Destination = {
       if (output.value.isEmpty) {
         AttributeMapper.processor.newSerializer(out)
@@ -105,7 +104,7 @@ object AttribMap2XML {
   def main(args : Array[String]) = {
     parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
                System.in, System.out, System.err) match {
-      case Some((policy : Source,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
+      case Some((policy : StreamSource,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
         AttributeMapper.policy2XML (policy,  dest)
       case None => /* Bad args, Ignore */
     }
@@ -117,7 +116,7 @@ object AttribMap2XML {
   def nailMain(context : NGContext) = {
     parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
                context.in, context.out, context.err) match {
-      case Some((policy : Source,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
+      case Some((policy : StreamSource,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
         AttributeMapper.policy2XML (policy,  dest)
       case None => /* Bad args, Ignore */
     }
