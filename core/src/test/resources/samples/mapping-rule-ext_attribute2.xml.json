@@ -22,7 +22,7 @@
           "expire":"{D}"
          },
         "faws": {
-          "policy":"{1}"
+            "policy": { "value" : "{1}", "multiValue" : true }
          }
        }
      },
@@ -32,7 +32,17 @@
           
          },
         "faws": {
-          "policy":"AWSPolicy2"
+            "policy": { "value" : ["AWSPolicy2", "AWSPolicy YEA!"], "multiValue" : true }
+         }
+       }
+     },
+     {
+      "local": {
+        "user": {
+          
+         },
+        "faws": {
+            "policy": ["AWSPolicy3", "AWSPolicy YEA!!"]
          }
        }
      }

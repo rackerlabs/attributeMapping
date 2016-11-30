@@ -16,30 +16,44 @@ declare option output:indent "yes";
 declare variable $__JSON__ external;
 declare variable $policyJSON := parse-json($__JSON__);
 declare variable $defaultAttributes as xs:string* := ('name','email','expire','domain','roles');
+declare variable $remoteMultiValues as xs:string* := ('whitelist','blacklist','notAnyOf','anyOneOf');
 
-declare function mapping:convertValue($in as xs:string) as xs:string {
-  replace($in,' ','&#xA0;')
+declare function mapping:convertValue($name as xs:string, $in as xs:string, $multiValues as xs:string*) as xs:string {
+  if ($name = $multiValues) then replace($in,' ','&#xA0;') else $in
 };
 
 
-declare function mapping:attributeFromValue ($attName as xs:string, $value as item()) as attribute()* {
+declare function mapping:attributeFromValue ($attName as xs:string, $value as item(), $multiValues as xs:string*) as attribute()* {
   typeswitch ($value)
-    case $s as xs:string return attribute {$attName} {mapping:convertValue($s)}
-    case $b as xs:boolean return attribute {$attName} {mapping:convertValue(string($b))}
-    case $a as array(*) return attribute {$attName} {string-join(for $i in $a?* return mapping:convertValue($i),' ')}
-    case $o as map(*) return for $att in map:keys($o) return mapping:attributeFromValue($att, $o?($att))
+    case $s as xs:string return attribute {$attName} {mapping:convertValue($attName, $s, $multiValues)}
+    case $b as xs:boolean return attribute {$attName} {mapping:convertValue($attName, string($b), $multiValues)}
+    case $a as array(*) return attribute {$attName} {string-join(for $i in $a?* return mapping:convertValue($attName, $i, $multiValues),' ')}
+    case $o as map(*) return for $att in map:keys($o) return mapping:attributeFromValue($att, $o?($att),$multiValues)
     default return ()
 };
 
 declare function mapping:convertLocalAttribute($attribName as xs:string, $attribValue as item(), $userGroup as xs:boolean) as element() {
-  element {$attribName} {
-    mapping:attributeFromValue("value",$attribValue),
-    if ($userGroup and $attribName = $defaultAttributes) then () else attribute {"xsi:type"} {"LocalAttribute"}
+  let $multiValues as xs:string* :=
+    (
+    if ($userGroup and ($attribName="roles")) then "value" else (),
+      typeswitch ($attribValue)
+        case $o as map(*) return if (map:contains($o, "multiValue") and $o?multiValue) then "value" else ()
+        case $a as array(*) return "value"
+        default return ()
+    )
+  return element {$attribName} {
+    mapping:attributeFromValue("value",$attribValue,$multiValues),
+    if ($userGroup and $attribName = $defaultAttributes) then () else attribute {"xsi:type"} {"LocalAttribute"},
+    if ($multiValues) then
+      typeswitch ($attribValue)
+        case $o as map(*) return if (not(map:contains($o, "multiValue"))) then attribute {"multiValue"} {"true"} else ()
+        default return attribute {"multiValue"} {"true"}
+      else ()
   }
 };
 
 declare function mapping:convertRemoteAttribute($remoteAttribute as item()) as element() {
-  element {"attribute"} {mapping:attributeFromValue("", $remoteAttribute)}
+  element {"attribute"} {mapping:attributeFromValue("", $remoteAttribute, $remoteMultiValues)}
 };
 
 <rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
