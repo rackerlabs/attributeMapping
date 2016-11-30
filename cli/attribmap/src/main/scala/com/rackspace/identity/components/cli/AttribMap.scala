@@ -40,7 +40,7 @@ object AttribMap {
   val version = getClass.getPackage.getImplementationVersion
 
   def parseArgs(args: Array[String], base : String,
-                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Source, Destination, Boolean, Boolean, String)] = {
+                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Source, Destination, Boolean, Boolean, Boolean, String)] = {
 
     val parser = new ArgotParser("attribmap", preUsage=Some(s"$title v$version"))
 
@@ -93,7 +93,8 @@ object AttribMap {
         None
       } else {
         Some((policySource, assertionSource, destination, useSAML.value.getOrElse(false),
-              !dontValidate.value.getOrElse(false), xsdEngine.value.getOrElse("auto")))
+              policy.value.get.endsWith("json"), !dontValidate.value.getOrElse(false),
+              xsdEngine.value.getOrElse("auto")))
       }
     } catch {
       case e: ArgotUsageException => err.println(e.message)
@@ -114,8 +115,8 @@ object AttribMap {
     parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
                System.in, System.out, System.err) match {
       case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean,
-                 validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML, validate, xsdEngine)
+                 isJSON : Boolean, validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML, isJSON, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }
@@ -127,8 +128,8 @@ object AttribMap {
     parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
                context.in, context.out, context.err) match {
       case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean,
-                validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML, validate, xsdEngine)
+                 isJSON : Boolean, validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML, isJSON, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }

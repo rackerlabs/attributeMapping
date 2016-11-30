@@ -188,13 +188,33 @@ object AttributeMapper {
     evaluator.run
   }
 
-  def convertAssertion (policy : Source, assertion : Source, dest : Destination, outputSAML : Boolean, validate : Boolean, xsdEngine : String) : Unit = {
+  def convertAssertion (policy : Source, assertion : Source, dest : Destination, outputSAML : Boolean, isJSON : Boolean,
+                        validate : Boolean, xsdEngine : String) : Unit = {
+    val policySource = {
+      if (isJSON) {
+        val outPolicyXML = new XdmDestination
+        // TODO: Fail nicely if we get something other than a stream source.
+        policy2XML(policy.asInstanceOf[StreamSource], outPolicyXML)
+        outPolicyXML.getXdmNode.asSource
+      } else {
+        policy
+      }
+    }
+
+    val assertionDest = {
+      if (isJSON && !outputSAML) {
+        new XdmDestination
+      } else {
+        dest
+      }
+    }
+
     val outXSL = new XdmDestination
 
     //
     //  Genereate the XSLT.
     //
-    generateXSL (policy, outXSL, validate, xsdEngine)
+    generateXSL (policySource, outXSL, validate, xsdEngine)
 
     //
     // Comple the resulting XSL
@@ -206,7 +226,11 @@ object AttributeMapper {
     //
     val mapTrans = getXsltTransformer (mapExec, Map(new QName("outputSAML") -> new XdmAtomicValue(outputSAML)))
     mapTrans.setSource(assertion)
-    mapTrans.setDestination(dest)
+    mapTrans.setDestination(assertionDest)
     mapTrans.transform
+
+    if (isJSON && !outputSAML) {
+      policy2JSON(assertionDest.asInstanceOf[XdmDestination].getXdmNode.asSource, dest, false, xsdEngine)
+    }
   }
 }
