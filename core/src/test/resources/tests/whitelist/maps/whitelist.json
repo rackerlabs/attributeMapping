@@ -1,0 +1,27 @@
+ {
+  "rules": [
+     {
+      "remote": [
+         {
+          "whitelist": [
+            "lbaas:admin",
+            "lbaas:observer",
+            "nova:admin",
+            "nova:observer"
+           ],
+          "name":"roles",
+          "multiValue":true
+         }
+       ],
+      "local": {
+        "user": {
+          "domain":"{D}",
+          "name":"{D}",
+          "email":"{D}",
+          "roles":"{0}",
+          "expire":"{D}"
+         }
+       }
+     }
+   ]
+ }
