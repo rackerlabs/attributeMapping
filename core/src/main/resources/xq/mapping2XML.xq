@@ -44,7 +44,7 @@ declare function mapping:convertLocalAttribute($attribName as xs:string, $attrib
   return element {$attribName} {
     mapping:attributeFromValue("value",$attribValue,$multiValues),
     if ($userGroup and $attribName = $defaultAttributes) then () else attribute {"xsi:type"} {"LocalAttribute"},
-    if ($multiValues) then
+    if (not(empty($multiValues))) then
       typeswitch ($attribValue)
         case $o as map(*) return if (not(map:contains($o, "multiValue"))) then attribute {"multiValue"} {"true"} else ()
         default return attribute {"multiValue"} {"true"}
