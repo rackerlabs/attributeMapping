@@ -38,6 +38,9 @@
                 <xslout:param name="name" as="xs:string"/>
                 <xslout:sequence select="mapping:get-attributes($name)[1]"/>
             </xslout:function>
+            <xslout:function name="mapping:get-expire" as="xs:dateTime">
+                <xslout:sequence select="xs:dateTime($assert//saml2:Assertion[1]/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)"/>
+            </xslout:function>
         </xslout:transform>
     </xsl:template>
     
