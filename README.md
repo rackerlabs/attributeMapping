@@ -65,11 +65,7 @@ TODO
 
 ## Tests
 
-There are many examples of polices and related assertions here:
-
-https://github.rackspace.com/jorge-williams/attributeMapping/tree/master/core/src/test/resources/samples
-
-These are slowly being migrated into formal test suites here:
+A test suite is here:
 
 https://github.rackspace.com/jorge-williams/attributeMapping/tree/master/core/src/test/resources/tests
 
