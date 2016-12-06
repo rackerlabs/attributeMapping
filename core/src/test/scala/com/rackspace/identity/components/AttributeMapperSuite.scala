@@ -25,6 +25,7 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 
 import net.sf.saxon.s9api._
+import net.sf.saxon.Configuration.LicenseFeature._
 
 @RunWith(classOf[JUnitRunner])
 class AttributeMapperSuite extends FunSuite {
@@ -32,6 +33,17 @@ class AttributeMapperSuite extends FunSuite {
   val tests : List[File] = testDir.listFiles.toList
 
   val testerXSLExec = AttributeMapper.compiler.compile (new StreamSource(new File("src/test/resources/xsl/mapping-tests.xsl")))
+
+  val validators : List[String] = {
+    if (!AttributeMapper.processor.getUnderlyingConfiguration.isLicensedFeature(SCHEMA_VALIDATION)) {
+      println("-----------------------------------------------")
+      println("NO SAXON LICENSE DETECTED - SKIPING SAXON TESTS")
+      println("-----------------------------------------------")
+      List[String]("xerces")
+    } else {
+      List[String]("xerces", "saxon")
+    }
+  }
 
   tests.foreach( t => {
     val maps : List[File] = (new File(t,"maps")).listFiles().toList.filter(f => {f.toString.endsWith("xml") || f.toString.endsWith("json")})
@@ -49,19 +61,21 @@ class AttributeMapperSuite extends FunSuite {
 
         val asserterExec = AttributeMapper.compiler.compile(asserterXSL.getXdmNode.asSource)
 
-        test (s"Testing $map on $assertFile") {
-          val bout = new ByteArrayOutputStream
-          println (s"Running $map on $assertFile")
-          AttributeMapper.convertAssertion (new StreamSource(map), new StreamSource(assertFile), dest, true,
-                                            map.toString.endsWith("json"), true, "auto")
-          println ("Testing assertions")
-          val asserter = AttributeMapper.getXsltTransformer(asserterExec)
-          asserter.setSource(dest.getXdmNode.asSource)
-          asserter.setDestination(AttributeMapper.processor.newSerializer(bout))
-          asserter.transform
+        validators.foreach (v => {
+          test (s"Testing $map on $assertFile validated with $v") {
+            val bout = new ByteArrayOutputStream
+            println (s"Running $map on $assertFile")
+            AttributeMapper.convertAssertion (new StreamSource(map), new StreamSource(assertFile), dest, true,
+                                              map.toString.endsWith("json"), true, v)
+            println ("Testing assertions")
+            val asserter = AttributeMapper.getXsltTransformer(asserterExec)
+            asserter.setSource(dest.getXdmNode.asSource)
+            asserter.setDestination(AttributeMapper.processor.newSerializer(bout))
+            asserter.transform
 
-          assert(bout.toString.contains("mapping:success"))
-        }
+            assert(bout.toString.contains("mapping:success"))
+          }
+        })
       })
     })
   })
