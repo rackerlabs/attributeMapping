@@ -1,0 +1,25 @@
+{
+    "rules": [
+        {
+            "remote": [
+                {
+                    "name": "http://schemas.xmlsoap.org/claims/Group",
+                    "multiValue": true
+                },
+                {
+                    "name": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+                }
+            ],
+            "local": {
+                "user": {
+                    "roles": "{0}",
+                    "email": "{1}",
+                    "domain": "5821006",
+                    "name": "{D}",
+                    "expire": "{D}"
+                }
+            }
+        }
+    ]
+}
+
