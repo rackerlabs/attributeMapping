@@ -6,7 +6,6 @@
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
     xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    exclude-result-prefixes="xs"
     version="2.0">
     
     <xsl:namespace-alias stylesheet-prefix="xslout" result-prefix="xsl"/>
