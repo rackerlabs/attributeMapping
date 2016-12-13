@@ -187,6 +187,10 @@
                 <xslout:param name="in" as="xs:string"/>
                 <xslout:value-of select="replace($in,'&#xA0;',' ')"/>
             </xslout:function>
+            <xslout:function name="mapping:transformToNBSP" as="xs:string">
+                <xslout:param name="in" as="xs:string"/>
+                <xslout:value-of select="replace($in,' ','&#xA0;')"/>
+            </xslout:function>
         </xslout:transform>
     </xsl:template>
     
@@ -325,14 +329,22 @@
         </xsl:variable>
         <xsl:variable name="separator" as="xs:string" select="if (xs:boolean(@multiValue)) then ' ' else ''"/>
         <xsl:choose>
-            <xsl:when test="@whitelist">
-                <xslout:value-of select="for $i in {$cond} return if ($i = {mapping:quotedList(@whitelist)}) then $i else ()" separator="{$separator}"/>
-            </xsl:when>
-            <xsl:when test="@blacklist">
-                <xslout:value-of select="for $i in {$cond} return if ($i = {mapping:quotedList(@blacklist)}) then () else $i" separator="{$separator}"/>
+            <xsl:when test="xs:boolean(@multiValue)">
+                <xslout:variable name="{generate-id(.)}" as="xs:string*" select="for $c in {$cond} return mapping:transformToNBSP($c)"/>
             </xsl:when>
             <xsl:otherwise>
-                <xslout:value-of select="{$cond}" separator="{$separator}"/>
+                <xslout:variable name="{generate-id(.)}" as="xs:string*" select="{$cond}"/>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:choose>
+            <xsl:when test="@whitelist">
+                <xslout:value-of select="for $i in ${generate-id(.)} return if ($i = {mapping:quotedList(@whitelist)}) then $i else ()" separator="{$separator}"/>
+            </xsl:when>
+            <xsl:when test="@blacklist">
+                <xslout:value-of select="for $i in ${generate-id(.)} return if ($i = {mapping:quotedList(@blacklist)}) then () else $i" separator="{$separator}"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xslout:value-of select="${generate-id(.)}" separator="{$separator}"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -355,14 +367,22 @@
         </xsl:variable>
         <xsl:variable name="separator" as="xs:string" select="if (xs:boolean(@multiValue)) then ' ' else ''"/>
         <xsl:choose>
-            <xsl:when test="@whitelist">
-                <xslout:value-of select="for $i in {$cond} return if (matches ($i, {mapping:quote(@whitelist)})) then $i else ()" separator="{$separator}"/>
-            </xsl:when>
-            <xsl:when test="@blacklist">
-                <xslout:value-of select="for $i in {$cond} return if (matches ($i, {mapping:quote(@blacklist)})) then () else $i" separator="{$separator}"/>
+            <xsl:when test="xs:boolean(@multiValue)">
+                <xslout:variable name="{generate-id(.)}" as="xs:string*" select="for $c in {$cond} return mapping:transformToNBSP($c)"/>
             </xsl:when>
             <xsl:otherwise>
-                <xslout:value-of select="{$cond}" separator="{$separator}"/>
+                <xslout:variable name="{generate-id(.)}" as="xs:string*" select="{$cond}"/>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:choose>
+            <xsl:when test="@whitelist">
+                <xslout:value-of select="for $i in ${generate-id(.)} return if (matches ($i, {mapping:quote(@whitelist)})) then $i else ()" separator="{$separator}"/>
+            </xsl:when>
+            <xsl:when test="@blacklist">
+                <xslout:value-of select="for $i in ${generate-id(.)} return if (matches ($i, {mapping:quote(@blacklist)})) then () else $i" separator="{$separator}"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xslout:value-of select="${generate-id(.)}" separator="{$separator}"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
