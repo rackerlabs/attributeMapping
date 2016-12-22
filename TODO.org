@@ -40,10 +40,24 @@
    3. [X] Local conversion for mapper result to JSON
    4. [X] Allow mapper to support JSON
 ** DONE Ensure everything works without SAXON license
+** DONE Tests Framework
+** TODO Support for mapping wrapper
+   - with version and description
+** TODO Explicit support for DOM and JSON Node
+** TODO Support for returning extended attributes
 ** TODO Call that returns XSLTExec
-** TODO Tests Framework
+** TODO Test enhancements [0/3]
+   1. [ ] Better output especially of failed assertions
+   2. [ ] Support for common assertions
+   3. [ ] Test to support Auto
+** TODO Validation with JSON Schema
+** TODO Better Error Handling [0/4]
+   1. [ ] Setup Logger
+   2. [ ] Better handling of exception - AttribMap exception.
+   3. [ ] Handle exceptions for common errors
+   4. [ ] Negative Error suite
+** TODO Secure processing
 ** TODO FixBug whitespaces in XPath return
 ** TODO Document all!
-** TODO Validation with JSON Schema
 ** TODO Setup logger for CLI util (better error messages)
 ** TODO Cleanup all!
