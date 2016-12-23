@@ -1,15 +1,18 @@
  {
-  "rules": [
-     {
-      "local": {
-        "user": {
-          "domain":"{D}",
-          "name":"John 'The Boss' Doe",
-          "email":"{D}",
-          "roles":"\"BossMan\"",
-          "expire":"{D}"
+  "mapping": {
+    "rules": [
+       {
+        "local": {
+          "user": {
+            "domain":"{D}",
+            "name":"John 'The Boss' Doe",
+            "email":"{D}",
+            "roles":"\"BossMan\"",
+            "expire":"{D}"
+           }
          }
        }
-     }
-   ]
+     ],
+    "version":"RAX-1"
+   }
  }

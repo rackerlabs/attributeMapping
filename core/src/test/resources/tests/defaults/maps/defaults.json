@@ -1,15 +1,18 @@
  {
-  "rules": [
-     {
-      "local": {
-        "user": {
-          "domain":"{D}",
-          "name":"{D}",
-          "email":"{D}",
-          "roles":"{D}",
-          "expire":"{D}"
+  "mapping": {
+    "rules": [
+       {
+        "local": {
+          "user": {
+            "domain":"{D}",
+            "name":"{D}",
+            "email":"{D}",
+            "roles":"{D}",
+            "expire":"{D}"
+           }
          }
        }
-     }
-   ]
+     ],
+    "version":"RAX-1"
+   }
  }

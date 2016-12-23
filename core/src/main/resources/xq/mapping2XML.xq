@@ -56,18 +56,26 @@ declare function mapping:convertRemoteAttribute($remoteAttribute as item()) as e
   element {"attribute"} {mapping:attributeFromValue("", $remoteAttribute, $remoteMultiValues)}
 };
 
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
        xmlns:xs="http://www.w3.org/2001/XMLSchema"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
        {
-       if (map:contains($policyJSON,"namespaces")) then
-         let $namespaces := $policyJSON?namespaces
+         attribute {"version"} {$policyJSON?mapping?version}
+       }
+       {
+       if (map:contains($policyJSON?mapping,"namespaces")) then
+         let $namespaces := $policyJSON?mapping?namespaces
          for $key in map:keys($namespaces) return namespace {$key} {$namespaces?($key)}
        else ()
        }
-
        {
-         for $rule in $policyJSON?rules?* return
+         if (map:contains($policyJSON?mapping,"description")) then
+           element {"description"} {$policyJSON?mapping?description}
+         else ()
+       }
+       <rules>
+       {
+         for $rule in $policyJSON?mapping?rules?* return
          <rule>
              <local>
                  {
@@ -89,5 +97,6 @@ declare function mapping:convertRemoteAttribute($remoteAttribute as item()) as e
              }
          </rule>
        }
-</rules>
+       </rules>
+</mapping>
 

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <rule>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="RAX-1">
+   <rules>
+      <rule>
         <local>
             <user>
                 <name value="{D}"/>
                 <email value="{D}"/>
                 <expire value="{D}"/>
                 <domain value="{D}"/>
-                <roles  value="{D}"/>
+                <roles value="{D}"/>
                 <!--
                     foo is not a standard role, the attribute will still be captured,
                     The attribute name will be user/foo Because it's the attribute foo
@@ -39,14 +40,14 @@
             <attribute name="bar"/>
             <attribute path="'AWSPolicy'"/>
         </remote>
-    </rule>
-    <rule>
+      </rule>
+      <rule>
         <local>
             <user/>
             <faws xsi:type="LocalAttributeGroup">
                 <policy value="AWSPolicy2" xsi:type="LocalAttribute"/>
             </faws>
         </local>
-    </rule>
-</rules>
-
+      </rule>
+   </rules>
+</mapping>

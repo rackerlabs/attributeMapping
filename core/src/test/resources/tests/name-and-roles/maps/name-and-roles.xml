@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-       xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
-       xmlns:xs="http://www.w3.org/2001/XMLSchema"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <rule>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="RAX-1">
+   <rules>
+      <rule>
         <local>
-         <user>
-            <name value="{D}"/>
-            <email value="{D}"/>
-            <expire value="{D}"/>
-            <domain value="78334"/>
-         </user>
-      </local>
-    </rule>
-    <rule>
+            <user>
+               <name value="{D}"/>
+               <email value="{D}"/>
+               <expire value="{D}"/>
+               <domain value="78334"/>
+            </user>
+         </local>
+      </rule>
+      <rule>
         <local>
-         <user>
-            <roles value="nova:admin lbaas:admin"/>
-         </user>
-      </local>
+            <user>
+               <roles value="nova:admin lbaas:admin"/>
+            </user>
+         </local>
         <remote>
             <attribute name="roles" notAnyOf="Contractor SubContractor"/>
         </remote>
-    </rule>
-    <rule>
+      </rule>
+      <rule>
         <local>
-         <user>
-            <roles value="nova:observer lbaas:observer"/>
-         </user>
-      </local>
+            <user>
+               <roles value="nova:observer lbaas:observer"/>
+            </user>
+         </local>
         <remote>
             <attribute name="roles" anyOneOf="Contractor SubContractor"/>
         </remote>
-    </rule>
-</rules>
+      </rule>
+   </rules>
+</mapping>

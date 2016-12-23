@@ -1,18 +1,26 @@
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <rule>
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="RAX-1">
+   <rules>
+      <rule>
         <local>
             <user>
                 <name value="{D}"/>
                 <email value="{D}"/>
                 <expire value="{D}"/>
                 <domain value="{D}"/>
-                <roles value="role1 role2 role&#xA0;with&#xA0;space3 role4"/>
-                <ext value="value1 value2 value&#xA0;with&#xA0;space3 value4" multiValue="true" xsi:type="LocalAttribute"/>
+                <roles value="role1 role2 role with space3 role4"/>
+                <ext value="value1 value2 value with space3 value4"
+                    multiValue="true"
+                    xsi:type="LocalAttribute"/>
             </user>
             <extGroup xsi:type="LocalAttributeGroup">
-                <ext2 value="value1 value2 value&#xA0;with&#xA0;space3 value4" multiValue="true" xsi:type="LocalAttribute"/>
+                <ext2 value="value1 value2 value with space3 value4"
+                     multiValue="true"
+                     xsi:type="LocalAttribute"/>
             </extGroup>
         </local>
-    </rule>
-</rules>
+      </rule>
+   </rules>
+</mapping>

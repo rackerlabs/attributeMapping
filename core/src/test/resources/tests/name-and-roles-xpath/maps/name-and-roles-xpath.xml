@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-       xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
-       xmlns:xs="http://www.w3.org/2001/XMLSchema"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <rule>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="RAX-1">
+   <rules>
+      <rule>
         <local>
-         <user>
-            <name value="{D}"/>
-            <email value="{D}"/>
-            <expire value="{D}"/>
-            <domain value="78334"/>
-            <roles value="{0}"/>
-         </user>
-      </local>
+            <user>
+               <name value="{D}"/>
+               <email value="{D}"/>
+               <expire value="{D}"/>
+               <domain value="78334"/>
+               <roles value="{0}"/>
+            </user>
+         </local>
         <remote>
             <attribute multiValue="true"
-                    path="if ((xs:integer(seconds-from-time(current-time())) mod 2) = 0) then ('nova:admin', 'lbaas:admin') else ('nova:observer','lbaas:observer')"/>
+                       path="if ((xs:integer(seconds-from-time(current-time())) mod 2) = 0) then ('nova:admin', 'lbaas:admin') else ('nova:observer','lbaas:observer')"/>
         </remote>
-    </rule>
-</rules>
+      </rule>
+   </rules>
+</mapping>

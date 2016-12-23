@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-       xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <rule>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         version="RAX-1">
+   <rules>
+      <rule>
         <local>
             <user>
-                <name value="{0}"  type="xs:string" multiValue="false"/>
+                <name value="{0}" type="xs:string" multiValue="false"/>
                 <email value="{1}" type="xs:string" multiValue="false"/>
                 <expire value="{2}" type="xs:dateTime" multiValue="false"/>
                 <domain value="{3}" type="xs:string" multiValue="false"/>
-                <roles  value="{4}" type="xs:string" multiValue="true"/>
+                <roles value="{4}" type="xs:string" multiValue="true"/>
             </user>
         </local>
         <remote>
-            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID" multiValue="false"/>
+            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"
+                       multiValue="false"/>
             <attribute name="email" multiValue="false"/>
-            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter" multiValue="false"/>
+            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"
+                       multiValue="false"/>
             <attribute name="domain" multiValue="false"/>
             <attribute name="roles" multiValue="true"/>
         </remote>
-    </rule>
-</rules>
-
-
+      </rule>
+   </rules>
+</mapping>

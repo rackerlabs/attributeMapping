@@ -6,7 +6,16 @@
     targetNamespace="http://docs.rackspace.com/identity/api/ext/MappingRules"
     elementFormDefault="qualified" 
     attributeFormDefault="unqualified">
-    <xs:element name="rules" type="mapping:Rules"/>
+
+    <xs:element name="mapping" type="mapping:Mapping"/>
+
+    <xs:complexType name="Mapping">
+        <xs:all>
+            <xs:element name="description" type="xs:string" minOccurs="0"/>
+            <xs:element name="rules" type="mapping:Rules"/>
+        </xs:all>
+        <xs:attribute name="version" type="xs:string" use="required" fixed="RAX-1"/>
+    </xs:complexType>
     
     <xs:complexType name="Rules">
         <xs:sequence>

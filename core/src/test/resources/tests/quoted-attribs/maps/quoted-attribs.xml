@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <rule>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         version="RAX-1">
+   <rules>
+      <rule>
         <local>
             <user>
                 <name value="{D}"/>
                 <email value="{0}"/>
                 <expire value="{D}"/>
                 <domain value="{1}"/>
-                <roles  value="{D}"/> 
+                <roles value="{D}"/> 
             </user>
         </local>
         <remote>
             <attribute name="'e'mail"/>
-            <attribute name='"do"ma&apos;in&apos;'/>
+            <attribute name="&#34;do&#34;ma'in'"/>
         </remote>
-    </rule>
-</rules>
-
+      </rule>
+   </rules>
+</mapping>

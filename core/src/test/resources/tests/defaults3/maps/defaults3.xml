@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    xmlns:foo="bar">
-    <rule>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:foo="bar"
+         version="RAX-1">
+   <rules>
+      <rule>
         <local>
             <user>
                 <!-- Get default from another attribute -->
@@ -12,6 +14,6 @@
                 <roles value="{D}"/>
             </user>
         </local>
-    </rule>
-</rules>
-
+      </rule>
+   </rules>
+</mapping>

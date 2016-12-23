@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-       xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
-       xmlns:xs="http://www.w3.org/2001/XMLSchema"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <rule>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="RAX-1">
+   <rules>
+      <rule>
         <local>
-         <user>
-            <name value="{0}"/>
-            <email value="{1}"/>
-            <expire value="{2}"/>
-            <domain value="{3}"/>
-            <roles value="{4}"/>
-         </user>
-      </local>
+            <user>
+               <name value="{0}"/>
+               <email value="{1}"/>
+               <expire value="{2}"/>
+               <domain value="{3}"/>
+               <roles value="{4}"/>
+            </user>
+         </local>
         <remote>
             <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/>
             <attribute name="email"/>
             <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/>
             <attribute name="domain"/>
             <attribute multiValue="true"
-                    path="for $role in mapping:get-attributes('roles') return                               for $prod in ('nova', 'lbaas')                                 return concat($prod,':',lower-case($role))"/>
+                       path="for $role in mapping:get-attributes('roles') return                               for $prod in ('nova', 'lbaas')                                 return concat($prod,':',lower-case($role))"/>
         </remote>
-    </rule>
-</rules>
+      </rule>
+   </rules>
+</mapping>

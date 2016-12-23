@@ -41,7 +41,7 @@
    4. [X] Allow mapper to support JSON
 ** DONE Ensure everything works without SAXON license
 ** DONE Tests Framework
-** TODO Support for mapping wrapper
+** DONE Support for mapping wrapper
    - with version and description
 ** TODO Explicit support for DOM and JSON Node
 ** TODO Support for returning extended attributes

@@ -1,27 +1,31 @@
  {
-  "rules": [
-     {
-      "remote": [
-         {
-          "whitelist": [
-            "lbaas:admin",
-            "lbaas:observer",
-            "nova:admin",
-            "nova:observer"
-           ],
-          "name":"roles",
-          "multiValue":true
-         }
-       ],
-      "local": {
-        "user": {
-          "domain":"{D}",
-          "name":"{D}",
-          "email":"{D}",
-          "roles":"{0}",
-          "expire":"{D}"
+  "mapping": {
+    "rules": [
+       {
+        "remote": [
+           {
+            "whitelist": [
+              "lbaas:admin",
+              "lbaas:observer",
+              "nova:admin",
+              "nova:observer"
+             ],
+            "name":"roles",
+            "multiValue":true
+           }
+         ],
+        "local": {
+          "user": {
+            "domain":"{D}",
+            "name":"{D}",
+            "email":"{D}",
+            "roles":"{0}",
+            "expire":"{D}"
+           }
          }
        }
-     }
-   ]
+     ],
+    "version":"RAX-1",
+    "description":" \n  This is an example of a whitelist...note that because we didn't mention\n  user, domain — then default values will be used for those.\n"
+   }
  }

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+         version="RAX-1">
+   <description> 
   This is an example of a blacklist...note that because we didn't mention
   user, domain — then default values will be used for those.
--->
-<rules xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-       xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
-       xmlns:xs="http://www.w3.org/2001/XMLSchema"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <rule>
+</description>
+   <rules>
+      <rule>
         <local>
             <user>
                 <name value="{D}"/>
@@ -15,10 +17,11 @@
                 <expire value="{D}"/>
                 <domain value="{D}"/>
                 <roles value="{0}"/>
-         </user>
-      </local>
+            </user>
+         </local>
         <remote>
             <attribute multiValue="true" name="roles" blacklist="lbaas:admin nova:admin"/>
         </remote>
-    </rule>
-</rules>
+      </rule>
+   </rules>
+</mapping>

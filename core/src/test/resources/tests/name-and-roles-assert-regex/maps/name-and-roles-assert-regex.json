@@ -1,39 +1,43 @@
  {
-  "rules": [
-     {
-      "remote": [
-         {
-          "name":"UserName"
-         },
-         {
-          "name":"Email"
-         },
-         {
-          "name":"ExpireAfter"
-         },
-         {
-          "path":"\/\/saml2:Assertion\/saml2:Subject\/saml2:NameID",
-          "regex":true,
-          "notAnyOf":".*downer$"
-         },
-         {
-          "path":"\/\/saml2:Assertion\/saml2:Subject\/saml2:NameID",
-          "regex":true,
-          "anyOneOf":".*upper$"
-         }
-       ],
-      "local": {
-        "user": {
-          "domain":"78334",
-          "name":"{0}",
-          "email":"{1}",
-          "expire":"{2}",
-          "roles": [
-            "nova:admin",
-            "lbaas:admin"
-           ]
+  "mapping": {
+    "rules": [
+       {
+        "remote": [
+           {
+            "name":"UserName"
+           },
+           {
+            "name":"Email"
+           },
+           {
+            "name":"ExpireAfter"
+           },
+           {
+            "path":"\/\/saml2:Assertion\/saml2:Subject\/saml2:NameID",
+            "regex":true,
+            "notAnyOf":".*downer$"
+           },
+           {
+            "path":"\/\/saml2:Assertion\/saml2:Subject\/saml2:NameID",
+            "regex":true,
+            "anyOneOf":".*upper$"
+           }
+         ],
+        "local": {
+          "user": {
+            "domain":"78334",
+            "name":"{0}",
+            "email":"{1}",
+            "roles": [
+              "nova:admin",
+              "lbaas:admin"
+             ],
+            "expire":"{2}"
+           }
          }
        }
-     }
-   ]
+     ],
+    "version":"RAX-1",
+    "description":"\n   This shows of the regex example.  Note, that this is a conditional rule.\n   It's a bit risky, because if zero permissions match, then we simply do\n   a direct copy of the assertion — that is we don't map at all.\n\n   This tests assertions rather than attributes.\n"
+   }
  }
