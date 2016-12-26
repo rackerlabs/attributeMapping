@@ -43,9 +43,9 @@
 ** DONE Tests Framework
 ** DONE Support for mapping wrapper
    - with version and description
+** DONE Call that returns XSLTExec
 ** TODO Explicit support for DOM and JSON Node
 ** TODO Support for returning extended attributes
-** TODO Call that returns XSLTExec
 ** TODO Test enhancements [0/3]
    1. [ ] Better output especially of failed assertions
    2. [ ] Support for common assertions

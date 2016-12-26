@@ -170,6 +170,13 @@ object AttributeMapper {
     mappingTrans.transform
   }
 
+  def generateXSLExec (policy : Source, isJSON : Boolean, validate : Boolean, xsdEngine : String) : XsltExecutable = {
+    val outXSL = new XdmDestination
+
+    generateXSL (policy, outXSL, isJSON, validate, xsdEngine)
+    compiler.compile(outXSL.getXdmNode.asSource)
+  }
+
 
   def policy2JSON(policyXML : Source, policyJSON : Destination, validate : Boolean, xsdEngine : String) : Unit = {
     val policySrc = {
@@ -201,36 +208,36 @@ object AttributeMapper {
 
   def convertAssertion (policy : Source, assertion : Source, dest : Destination, outputSAML : Boolean, isJSON : Boolean,
                         validate : Boolean, xsdEngine : String) : Unit = {
+    //
+    // Generate the XSLTExec
+    //
+    val mapExec = generateXSLExec (policy, isJSON, validate, xsdEngine)
+
+    //
+    //  Run the generate XSL on the assertion
+    //
+    convertAssertion(mapExec, assertion, dest, outputSAML, isJSON)
+  }
+
+  def convertAssertion (policyExec : XsltExecutable, assertion : Source, dest : Destination, outputSAML : Boolean, toJSON : Boolean) : Unit = {
     val assertionDest = {
-      if (isJSON && !outputSAML) {
+      if (toJSON && !outputSAML) {
         new XdmDestination
       } else {
         dest
       }
     }
 
-    val outXSL = new XdmDestination
-
-    //
-    //  Genereate the XSLT.
-    //
-    generateXSL (policy, outXSL, isJSON, validate, xsdEngine)
-
-    //
-    // Comple the resulting XSL
-    //
-    val mapExec = compiler.compile(outXSL.getXdmNode.asSource)
-
     //
     //  Run the generate XSL on the assertion
     //
-    val mapTrans = getXsltTransformer (mapExec, Map(new QName("outputSAML") -> new XdmAtomicValue(outputSAML)))
+    val mapTrans = getXsltTransformer (policyExec, Map(new QName("outputSAML") -> new XdmAtomicValue(outputSAML)))
     mapTrans.setSource(assertion)
     mapTrans.setDestination(assertionDest)
     mapTrans.transform
 
-    if (isJSON && !outputSAML) {
-      policy2JSON(assertionDest.asInstanceOf[XdmDestination].getXdmNode.asSource, dest, false, xsdEngine)
+    if (toJSON && !outputSAML) {
+      policy2JSON(assertionDest.asInstanceOf[XdmDestination].getXdmNode.asSource, dest, false, "Xerces")
     }
   }
 }
