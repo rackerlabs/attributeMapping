@@ -25,6 +25,8 @@ import javax.xml.transform.sax.SAXResult
 import javax.xml.transform.dom.DOMSource
 import javax.xml.validation.SchemaFactory
 
+import javax.xml.parsers.DocumentBuilder
+
 import com.rackspace.cloud.api.wadl.util.LogErrorListener
 import com.rackspace.cloud.api.wadl.util.XSLErrorDispatcher
 
@@ -35,6 +37,7 @@ import net.sf.saxon.s9api.QName
 import net.sf.saxon.s9api.Processor
 import net.sf.saxon.s9api.Destination
 import net.sf.saxon.s9api.XdmDestination
+import net.sf.saxon.s9api.DOMDestination
 import net.sf.saxon.s9api.SAXDestination
 import net.sf.saxon.s9api.XdmAtomicValue
 import net.sf.saxon.s9api.XsltTransformer
@@ -45,6 +48,8 @@ import net.sf.saxon.s9api.XdmValue
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.JsonNode
+
+import com.rackspace.com.papi.components.checker.util.XMLParserPool
 
 import org.w3c.dom.Document
 
@@ -266,5 +271,24 @@ object AttributeMapper {
     if (toJSON && !outputSAML) {
       policy2JSON(assertionDest.asInstanceOf[XdmDestination].getXdmNode.asSource, dest, false, "Xerces")
     }
+  }
+
+  def convertAssertion (policyExec : XsltExecutable, assertion : Source) : Document = {
+    var docBuilder : DocumentBuilder = null
+    var outDoc : Document = null
+    try {
+      docBuilder = XMLParserPool.borrowParser
+      outDoc = docBuilder.newDocument
+    } finally {
+      if (docBuilder != null) XMLParserPool.returnParser(docBuilder)
+    }
+
+    val dest = new DOMDestination(outDoc)
+    convertAssertion (policyExec, assertion, dest, true, false)
+    outDoc
+  }
+
+  def convertAssertion (policyExec : XsltExecutable, assertion : Document) : Document = {
+    convertAssertion (policyExec, new DOMSource(assertion))
   }
 }
