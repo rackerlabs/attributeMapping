@@ -18,6 +18,7 @@ package com.rackspace.identity.components
 import java.io.ByteArrayOutputStream
 import java.io.File
 
+import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
 
 import org.junit.runner.RunWith
@@ -45,38 +46,52 @@ class AttributeMapperSuite extends FunSuite {
     }
   }
 
-  tests.foreach( t => {
-    val maps : List[File] = (new File(t,"maps")).listFiles().toList.filter(f => {f.toString.endsWith("xml") || f.toString.endsWith("json")})
-    val asserts : List[File] = (new File(t,"asserts")).listFiles().toList.filter(f => {f.toString.endsWith("xml")})
+  def getAsserterExec (assertSource : Source) : XsltExecutable = {
+    val asserterXSL = new XdmDestination
 
-    maps.foreach ( map => {
-      asserts.foreach ( assertFile => {
-        val dest = new XdmDestination
-        val asserterXSL = new XdmDestination
+    val asserterTrans = AttributeMapper.getXsltTransformer (testerXSLExec)
+    asserterTrans.setSource (assertSource)
+    asserterTrans.setDestination(asserterXSL)
+    asserterTrans.transform
 
-        val asserterTrans = AttributeMapper.getXsltTransformer (testerXSLExec)
-        asserterTrans.setSource (new StreamSource(assertFile))
-        asserterTrans.setDestination(asserterXSL)
-        asserterTrans.transform
+    AttributeMapper.compiler.compile(asserterXSL.getXdmNode.asSource)
+  }
 
-        val asserterExec = AttributeMapper.compiler.compile(asserterXSL.getXdmNode.asSource)
+  def getMapsFromTest (test : File) : List[File] = (new File(test,"maps")).listFiles().toList.filter(f => {f.toString.endsWith("xml") || f.toString.endsWith("json")})
+  def getAssertsFromTest (test : File) : List[File] = (new File(test,"asserts")).listFiles().toList.filter(f => {f.toString.endsWith("xml")})
 
-        validators.foreach (v => {
-          test (s"Testing $map on $assertFile validated with $v") {
-            val bout = new ByteArrayOutputStream
-            println (s"Running $map on $assertFile")
-            AttributeMapper.convertAssertion (new StreamSource(map), new StreamSource(assertFile), dest, true,
-                                              map.toString.endsWith("json"), true, v)
-            println ("Testing assertions")
-            val asserter = AttributeMapper.getXsltTransformer(asserterExec)
-            asserter.setSource(dest.getXdmNode.asSource)
-            asserter.setDestination(AttributeMapper.processor.newSerializer(bout))
-            asserter.transform
+  type MapperTest = (File /* map */, File /* assertion */, String /* validation engine */) => Source /* Resulting assertion */
 
-            assert(bout.toString.contains("mapping:success"))
-          }
+  def runTests(description : String, mapperTest : MapperTest) : Unit = {
+      tests.foreach( t => {
+        val maps : List[File] = getMapsFromTest(t)
+        val asserts : List[File] = getAssertsFromTest(t)
+
+        maps.foreach ( map => {
+          asserts.foreach ( assertFile => {
+            val asserterExec = getAsserterExec(new StreamSource(assertFile))
+            validators.foreach (v => {
+              test (s"$description ($map on $assertFile validated with $v)") {
+                val bout = new ByteArrayOutputStream
+                val newAssertion = mapperTest(map, assertFile, v)
+                val asserter = AttributeMapper.getXsltTransformer(asserterExec)
+                asserter.setSource(newAssertion)
+                asserter.setDestination(AttributeMapper.processor.newSerializer(bout))
+                asserter.transform
+
+                assert(bout.toString.contains("mapping:success"))
+              }
+            })
+          })
         })
       })
-    })
+  }
+
+  runTests("Stream Source and XDM Dest", (map : File, assertFile : File, v : String) => {
+    println (s"Running $map on $assertFile")
+    val dest = new XdmDestination
+    AttributeMapper.convertAssertion (new StreamSource(map), new StreamSource(assertFile), dest, true,
+                                      map.toString.endsWith("json"), true, v)
+    dest.getXdmNode.asSource
   })
 }
