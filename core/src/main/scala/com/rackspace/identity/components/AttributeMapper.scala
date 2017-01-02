@@ -22,6 +22,7 @@ import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
 import javax.xml.transform.stream.StreamResult
 import javax.xml.transform.sax.SAXResult
+import javax.xml.transform.dom.DOMSource
 import javax.xml.validation.SchemaFactory
 
 import com.rackspace.cloud.api.wadl.util.LogErrorListener
@@ -43,6 +44,9 @@ import net.sf.saxon.s9api.XQueryEvaluator
 import net.sf.saxon.s9api.XdmValue
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.JsonNode
+
+import org.w3c.dom.Document
 
 object XSDEngine extends Enumeration {
   val Auto = Value("auto")
@@ -170,6 +174,13 @@ object AttributeMapper {
     mappingTrans.transform
   }
 
+  def generateXSL (policy : JsonNode, xsl : Destination, validate : Boolean, xsdEngine : String) : Unit = {
+    val outPolicyXML = new XdmDestination
+    policy2XML(policy, outPolicyXML)
+
+    generateXSL(outPolicyXML.getXdmNode.asSource, xsl, false, validate, xsdEngine)
+  }
+
   def generateXSLExec (policy : Source, isJSON : Boolean, validate : Boolean, xsdEngine : String) : XsltExecutable = {
     val outXSL = new XdmDestination
 
@@ -177,6 +188,16 @@ object AttributeMapper {
     compiler.compile(outXSL.getXdmNode.asSource)
   }
 
+  def generateXSLExec (policy : JsonNode, validate : Boolean, xsdEngine : String) : XsltExecutable = {
+    val outXSL = new XdmDestination
+
+    generateXSL (policy, outXSL, validate, xsdEngine)
+    compiler.compile(outXSL.getXdmNode.asSource)
+  }
+
+  def generateXSLExec (policy : Document, validate : Boolean, xsdEngine : String) : XsltExecutable = {
+    generateXSLExec (new DOMSource(policy), false, validate, xsdEngine)
+  }
 
   def policy2JSON(policyXML : Source, policyJSON : Destination, validate : Boolean, xsdEngine : String) : Unit = {
     val policySrc = {
@@ -200,6 +221,12 @@ object AttributeMapper {
         if (policyJSON.getReader != null) om.readTree(policyJSON.getReader) else
           om.readTree(new File(new URI(policyJSON.getSystemId)))
     }
+
+    policy2XML(node, policyXML)
+  }
+
+  def policy2XML(node : JsonNode, policyXML : Destination) : Unit = {
+    val om = new ObjectMapper()
 
     val evaluator = getXQueryEvaluator(mapper2XMLExec, Map[QName, XdmValue](new QName("__JSON__") -> new XdmAtomicValue(om.writeValueAsString(node))))
     evaluator.setDestination(policyXML)
