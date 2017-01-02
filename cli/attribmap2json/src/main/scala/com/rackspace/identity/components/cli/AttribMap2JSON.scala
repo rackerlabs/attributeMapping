@@ -32,6 +32,7 @@ import com.martiansoftware.nailgun.NGContext
 import net.sf.saxon.s9api.Serializer
 import net.sf.saxon.s9api.Destination
 
+import com.rackspace.com.papi.components.checker.util.URLResolver
 
 import com.rackspace.identity.components.AttributeMapper
 
@@ -65,12 +66,12 @@ object AttribMap2JSON {
                                              "Display version.")
 
 
-    def policySource : Source = new StreamSource(URLResolver.toAbsoluteSystemId(policy.value.get, base).toString)
+    def policySource : Source = new StreamSource(URLResolver.toAbsoluteSystemId(policy.value.get, base))
     def destination : Destination = {
       if (output.value.isEmpty) {
         AttributeMapper.processor.newSerializer(out)
       } else {
-        AttributeMapper.processor.newSerializer(new File(URLResolver.toAbsoluteSystemId(output.value.get, base)))
+        AttributeMapper.processor.newSerializer(new File(new URI(URLResolver.toAbsoluteSystemId(output.value.get, base))))
       }
     }
     try {

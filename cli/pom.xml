@@ -16,7 +16,6 @@
     <description>Attribute Mapper Command Line Tools</description>
 
     <modules>
-        <module>util</module>
         <module>attribmap</module>
         <module>attribmap2xsl</module>
         <module>attribmap2json</module>
@@ -30,6 +29,7 @@
         <slf4j.version>1.7.7</slf4j.version>
         <log4j.version>2.1</log4j.version>
         <nailgun.version>0.9.1</nailgun.version>
+        <checker-util.version>2.0.4-SNAPSHOT</checker-util.version>
     </properties>
 
     <dependencies>
@@ -63,6 +63,11 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rackspace.papi.components.api-checker</groupId>
+            <artifactId>checker-util</artifactId>
+            <version>${checker-util.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
