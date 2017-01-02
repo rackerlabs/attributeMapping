@@ -20,6 +20,9 @@ import java.io.File
 
 import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
+import javax.xml.transform.dom.DOMSource
+
+import com.rackspace.com.papi.components.checker.util.XMLParserPool
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -27,6 +30,8 @@ import org.scalatest.FunSuite
 
 import net.sf.saxon.s9api._
 import net.sf.saxon.Configuration.LicenseFeature._
+
+import com.fasterxml.jackson.databind.ObjectMapper
 
 @RunWith(classOf[JUnitRunner])
 class AttributeMapperSuite extends FunSuite {
@@ -93,5 +98,27 @@ class AttributeMapperSuite extends FunSuite {
     AttributeMapper.convertAssertion (new StreamSource(map), new StreamSource(assertFile), dest, true,
                                       map.toString.endsWith("json"), true, v)
     dest.getXdmNode.asSource
+  })
+
+  runTests("DOM/JSON Node Source and DOM Dest", (map : File, assertFile : File, v : String) => {
+    println (s"Running $map on $assertFile")
+    var docBuilder : javax.xml.parsers.DocumentBuilder = null
+    try {
+      docBuilder = XMLParserPool.borrowParser
+      val isJSON = map.toString.endsWith("json")
+      val policyExec : XsltExecutable = {
+        if (isJSON) {
+          val om = new ObjectMapper()
+          AttributeMapper.generateXSLExec (om.readTree(map), true, v)
+        } else {
+          AttributeMapper.generateXSLExec (docBuilder.parse(map), true, v)
+        }
+      }
+
+      val resultDoc = AttributeMapper.convertAssertion (policyExec, docBuilder.parse(assertFile))
+      new DOMSource(resultDoc)
+    } finally {
+      if (docBuilder != null) XMLParserPool.returnParser(docBuilder)
+    }
   })
 }
