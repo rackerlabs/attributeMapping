@@ -50,6 +50,8 @@
    1. [ ] Better output especially of failed assertions
    2. [ ] Support for common assertions
    3. [ ] Test to support Auto
+** TODO Misc Additional Tests [/]
+   1. [ ] Put "auto" validate feature under test
 ** TODO Validation with JSON Schema
 ** TODO Better Error Handling [0/4]
    1. [ ] Setup Logger
