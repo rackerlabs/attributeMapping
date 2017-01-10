@@ -1,4 +1,4 @@
-/***
+/**
  *   Copyright 2016 Rackspace US, Inc.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,33 +15,27 @@
  */
 package com.rackspace.identity.components.cli
 
-import java.io.File
-import java.io.PrintStream
-import java.io.InputStream
-
+import java.io.{File, InputStream, PrintStream}
 import java.net.URI
-
 import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
 
+import com.martiansoftware.nailgun.NGContext
+import com.rackspace.com.papi.components.checker.util.URLResolver
+import com.rackspace.identity.components.AttributeMapper
+import net.sf.saxon.s9api.Destination
 import org.clapper.argot.ArgotConverters._
 import org.clapper.argot.{ArgotParser, ArgotUsageException}
-
-import com.martiansoftware.nailgun.NGContext
-
-import net.sf.saxon.s9api.Serializer
-import net.sf.saxon.s9api.Destination
-
-import com.rackspace.com.papi.components.checker.util.URLResolver
-
-import com.rackspace.identity.components.AttributeMapper
 
 object AttribMap {
   val title = getClass.getPackage.getImplementationTitle
   val version = getClass.getPackage.getImplementationVersion
 
-  def parseArgs(args: Array[String], base : String,
-                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Source, Destination, Boolean, Boolean, Boolean, String)] = {
+  def parseArgs(args: Array[String], // scalastyle:ignore
+                base: String,        // This method is longer than 50 lines due to locally defined methods.
+                in: InputStream,
+                out: PrintStream,
+                err: PrintStream): Option[(Source, Source, Destination, Boolean, Boolean, Boolean, String)] = {
 
     val parser = new ArgotParser("attribmap", preUsage=Some(s"$title v$version"))
 
@@ -72,7 +66,6 @@ object AttribMap {
     val printVersion = parser.flag[Boolean] (List("version"),
                                              "Display version.")
 
-
     def policySource : Source = new StreamSource(URLResolver.toAbsoluteSystemId(policy.value.get, base))
     def assertionSource : Source = new StreamSource(URLResolver.toAbsoluteSystemId(assertion.value.get, base))
     def destination : Destination = {
@@ -90,7 +83,7 @@ object AttribMap {
       }
 
       if (printVersion.value.getOrElse(false)) {
-        err.println(s"$title v$version")
+        err.println(s"$title v$version") // scalastyle:ignore
         None
       } else {
         Some((policySource, assertionSource, destination, useSAML.value.getOrElse(false),
@@ -98,9 +91,9 @@ object AttribMap {
               xsdEngine.value.getOrElse("auto")))
       }
     } catch {
-      case e: ArgotUsageException => err.println(e.message)
+      case e: ArgotUsageException => err.println(e.message) // scalastyle:ignore
                                      None
-      case iae : IllegalArgumentException => err.println(iae.getMessage)
+      case iae : IllegalArgumentException => err.println(iae.getMessage) // scalastyle:ignore
                                              None
     }
   }
@@ -112,7 +105,7 @@ object AttribMap {
   //
   // Local run...
   //
-  def main(args : Array[String]) = {
+  def main(args : Array[String]): Unit = {
     parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
                System.in, System.out, System.err) match {
       case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean,
@@ -125,7 +118,7 @@ object AttribMap {
   //
   //  Nailgun run...
   //
-  def nailMain(context : NGContext) = {
+  def nailMain(context : NGContext): Unit = {
     parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
                context.in, context.out, context.err) match {
       case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean,

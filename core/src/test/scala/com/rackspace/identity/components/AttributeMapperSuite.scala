@@ -1,4 +1,4 @@
-/***
+/**
  *   Copyright 2016 Rackspace US, Inc.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,9 +42,9 @@ class AttributeMapperSuite extends FunSuite {
 
   val validators : List[String] = {
     if (!AttributeMapper.processor.getUnderlyingConfiguration.isLicensedFeature(SCHEMA_VALIDATION)) {
-      println("-----------------------------------------------")
-      println("NO SAXON LICENSE DETECTED - SKIPING SAXON TESTS")
-      println("-----------------------------------------------")
+      println("------------------------------------------------") // scalastyle:ignore
+      println("NO SAXON LICENSE DETECTED - SKIPPING SAXON TESTS") // scalastyle:ignore
+      println("------------------------------------------------") // scalastyle:ignore
       List[String]("xerces")
     } else {
       List[String]("xerces", "saxon")
@@ -57,12 +57,13 @@ class AttributeMapperSuite extends FunSuite {
     val asserterTrans = AttributeMapper.getXsltTransformer (testerXSLExec)
     asserterTrans.setSource (assertSource)
     asserterTrans.setDestination(asserterXSL)
-    asserterTrans.transform
+    asserterTrans.transform()
 
     AttributeMapper.compiler.compile(asserterXSL.getXdmNode.asSource)
   }
 
-  def getMapsFromTest (test : File) : List[File] = (new File(test,"maps")).listFiles().toList.filter(f => {f.toString.endsWith("xml") || f.toString.endsWith("json")})
+  def getMapsFromTest (test : File) : List[File] = (new File(test,"maps")).listFiles().toList.filter(f => {
+    f.toString.endsWith("xml") || f.toString.endsWith("json")})
   def getAssertsFromTest (test : File) : List[File] = (new File(test,"asserts")).listFiles().toList.filter(f => {f.toString.endsWith("xml")})
 
   type MapperTest = (File /* map */, File /* assertion */, String /* validation engine */) => Source /* Resulting assertion */
@@ -82,7 +83,7 @@ class AttributeMapperSuite extends FunSuite {
                 val asserter = AttributeMapper.getXsltTransformer(asserterExec)
                 asserter.setSource(newAssertion)
                 asserter.setDestination(AttributeMapper.processor.newSerializer(bout))
-                asserter.transform
+                asserter.transform()
 
                 assert(bout.toString.contains("mapping:success"))
               }
@@ -93,7 +94,7 @@ class AttributeMapperSuite extends FunSuite {
   }
 
   runTests("Stream Source and XDM Dest", (map : File, assertFile : File, v : String) => {
-    println (s"Running $map on $assertFile")
+    println (s"Running $map on $assertFile") // scalastyle:ignore
     val dest = new XdmDestination
     AttributeMapper.convertAssertion (new StreamSource(map), new StreamSource(assertFile), dest, true,
                                       map.toString.endsWith("json"), true, v)
@@ -101,7 +102,7 @@ class AttributeMapperSuite extends FunSuite {
   })
 
   runTests("DOM/JSON Node Source and DOM Dest", (map : File, assertFile : File, v : String) => {
-    println (s"Running $map on $assertFile")
+    println (s"Running $map on $assertFile") // scalastyle:ignore
     var docBuilder : javax.xml.parsers.DocumentBuilder = null
     try {
       docBuilder = XMLParserPool.borrowParser

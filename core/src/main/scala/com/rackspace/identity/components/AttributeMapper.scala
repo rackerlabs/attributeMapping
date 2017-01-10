@@ -1,4 +1,4 @@
-/***
+/**
  *   Copyright 2016 Rackspace US, Inc.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,9 +54,9 @@ import com.rackspace.com.papi.components.checker.util.XMLParserPool
 import org.w3c.dom.Document
 
 object XSDEngine extends Enumeration {
-  val Auto = Value("auto")
-  val Saxon = Value("saxon")
-  val Xerces = Value("xerces")
+  val AUTO = Value("auto")
+  val SAXON = Value("saxon")
+  val XERCES = Value("xerces")
 }
 
 import XSDEngine._
@@ -117,7 +117,7 @@ object AttributeMapper {
     val t = xsltExec.load
     t.setErrorListener (new LogErrorListener)
     t.getUnderlyingController.setMessageEmitter(new MessageWarner)
-    for ((param, value) <- params) {
+    for {(param, value) <- params} {
       t.setParameter(param, value)
     }
     t
@@ -126,26 +126,26 @@ object AttributeMapper {
   private def getXQueryEvaluator (xqueryExec : XQueryExecutable, params : Map[QName, XdmValue]=Map[QName, XdmValue]()) : XQueryEvaluator = {
     val e = xqueryExec.load
     e.setErrorListener (new LogErrorListener)
-    for ((param, value) <- params) {
+    for {(param, value) <- params} {
       e.setExternalVariable (param, value)
     }
     e
   }
 
-  def validatePolicy (policy : Source, engineStr : String) : Source ={
+  def validatePolicy (policy : Source, engineStr : String) : Source = {
     val docBuilder = processor.newDocumentBuilder
     val engine = XSDEngine.withName(engineStr)
     val saxonEdition = processor.getUnderlyingConfiguration.isLicensedFeature(SCHEMA_VALIDATION)
-    val useSaxon : Boolean = ((engine == Auto && saxonEdition)  || engine == Saxon);
+    val useSaxon : Boolean = ((engine == AUTO && saxonEdition)  || engine == SAXON);
     val bch = docBuilder.newBuildingContentHandler
 
     if (useSaxon) {
-      Console.err.println("Using Saxon for validation...")
+      Console.err.println("Using Saxon for validation...") // scalastyle:ignore
       val svalidator = mappingSchemaManager.newSchemaValidator
       svalidator.setDestination(new SAXDestination(bch))
       svalidator.validate(policy)
     } else {
-      Console.err.println("Using Xerces for validation...")
+      Console.err.println("Using Xerces for validation...") // scalastyle:ignore
       val schemaHandler = mappingSchema.newValidatorHandler
       schemaHandler.setContentHandler(bch)
       idTransform.transform(policy, new SAXResult(schemaHandler))
@@ -157,7 +157,6 @@ object AttributeMapper {
     val policySourceConv1 = {
       if (isJSON) {
         val outPolicyXML = new XdmDestination
-        // TODO: Fail nicely if we get something other than a stream source.
         policy2XML(policy.asInstanceOf[StreamSource], outPolicyXML)
         outPolicyXML.getXdmNode.asSource
       } else {
@@ -176,7 +175,7 @@ object AttributeMapper {
     val mappingTrans = getXsltTransformer(mapperXsltExec)
     mappingTrans.setSource(policySrc)
     mappingTrans.setDestination(xsl)
-    mappingTrans.transform
+    mappingTrans.transform()
   }
 
   def generateXSL (policy : JsonNode, xsl : Destination, validate : Boolean, xsdEngine : String) : Unit = {
@@ -216,17 +215,20 @@ object AttributeMapper {
     val evaluator = getXQueryEvaluator(mapper2JSONExec)
     evaluator.setSource(policySrc)
     evaluator.setDestination(policyJSON)
-    evaluator.run
+    evaluator.run()
   }
 
   def policy2XML(policyJSON : StreamSource, policyXML : Destination) : Unit = {
     val om = new ObjectMapper()
     val node = {
-      if (policyJSON.getInputStream != null) om.readTree(policyJSON.getInputStream) else
-        if (policyJSON.getReader != null) om.readTree(policyJSON.getReader) else
-          om.readTree(new File(new URI(policyJSON.getSystemId)))
+      if (policyJSON.getInputStream != null) {
+        om.readTree(policyJSON.getInputStream)
+      } else if (policyJSON.getReader != null) {
+        om.readTree(policyJSON.getReader)
+      } else {
+        om.readTree(new File(new URI(policyJSON.getSystemId)))
+      }
     }
-
     policy2XML(node, policyXML)
   }
 
@@ -235,7 +237,7 @@ object AttributeMapper {
 
     val evaluator = getXQueryEvaluator(mapper2XMLExec, Map[QName, XdmValue](new QName("__JSON__") -> new XdmAtomicValue(om.writeValueAsString(node))))
     evaluator.setDestination(policyXML)
-    evaluator.run
+    evaluator.run()
   }
 
   def convertAssertion (policy : Source, assertion : Source, dest : Destination, outputSAML : Boolean, isJSON : Boolean,
@@ -266,7 +268,7 @@ object AttributeMapper {
     val mapTrans = getXsltTransformer (policyExec, Map(new QName("outputSAML") -> new XdmAtomicValue(outputSAML)))
     mapTrans.setSource(assertion)
     mapTrans.setDestination(assertionDest)
-    mapTrans.transform
+    mapTrans.transform()
 
     if (toJSON && !outputSAML) {
       policy2JSON(assertionDest.asInstanceOf[XdmDestination].getXdmNode.asSource, dest, false, "Xerces")
