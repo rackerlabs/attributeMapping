@@ -1,4 +1,4 @@
-/***
+/**
  *   Copyright 2016 Rackspace US, Inc.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,7 +87,7 @@ object NailgunServer {
       }
 
       if (printVersion.value.getOrElse(false)) {
-        System.err.println(s"$title v$version")
+        System.err.println(s"$title v$version") // scalastyle:ignore
         None
       } else {
         //
@@ -101,9 +101,9 @@ object NailgunServer {
               !dontExitOnShutdown.value.getOrElse(DONT_EXIT_ON_SHUTDOWN)))
       }
     } catch {
-      case e: ArgotUsageException => System.err.println(e.message)
+      case e: ArgotUsageException => System.err.println(e.message) // scalastyle:ignore
                                      None
-      case ia : IllegalArgumentException => System.err.println(ia.getMessage)
+      case ia : IllegalArgumentException => System.err.println(ia.getMessage) // scalastyle:ignore
                                             None
     }
   }
@@ -143,17 +143,17 @@ object NailgunServer {
         override def run : Unit = {
           //  Retrieving any watch event should trigger a server shutdown
           ws.take()
-          System.err.println(s"$jarPath changed nailgun server shutting down...")
+          System.err.println(s"$jarPath changed nailgun server shutting down...") // scalastyle:ignore
           server.shutdown(exitOnShutdown)
         }}, s"Change Listener ($title v$version)")
       listenThread.setDaemon(true)
       listenThread.start()
     } catch {
       case unsupportedException : UnsupportedOperationException =>
-        System.err.println ("WARNING: file watching is not supported. You'll need to manually shut down the server if the code changes.")
+        System.err.println ("WARNING: file watching is not supported. You'll need to manually shut down the server if the code changes.") // scalastyle:ignore
       case ioe : IOException =>
         val msg = ioe.getMessage()
-      System.err.println (s"I/O Exception ($msg) : You'll need to manually shut down the server if the code changes.")
+      System.err.println (s"I/O Exception ($msg) : You'll need to manually shut down the server if the code changes.") // scalastyle:ignore
       ioe.printStackTrace()
     }
   }
@@ -167,7 +167,7 @@ object NailgunServer {
     }, durationInMillis)
   }
 
-  def main(args : Array[String]) = {
+  def main(args : Array[String]): Unit = {
     parseArgs (args) match {
       case Some((host : String, port : Int, duration : Long, exitOnShutdown : Boolean)) => {
         //

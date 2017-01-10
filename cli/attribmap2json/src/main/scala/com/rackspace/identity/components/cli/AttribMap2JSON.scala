@@ -1,4 +1,4 @@
-/***
+/**
  *   Copyright 2016 Rackspace US, Inc.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,8 +40,11 @@ object AttribMap2JSON {
   val title = getClass.getPackage.getImplementationTitle
   val version = getClass.getPackage.getImplementationVersion
 
-  def parseArgs(args: Array[String], base : String,
-                in : InputStream, out : PrintStream, err : PrintStream) : Option[(Source, Destination, Boolean, String)] = {
+  def parseArgs(args: Array[String], // scalastyle:ignore
+                base: String,        // This method is longer than 50 lines due to locally defined methods.
+                in: InputStream,
+                out: PrintStream,
+                err: PrintStream): Option[(Source, Destination, Boolean, String)] = {
 
     val parser = new ArgotParser("attribmap2json", preUsage=Some(s"$title v$version"))
 
@@ -82,16 +85,16 @@ object AttribMap2JSON {
       }
 
       if (printVersion.value.getOrElse(false)) {
-        err.println(s"$title v$version")
+        err.println(s"$title v$version") // scalastyle:ignore
         None
       } else {
         Some((policySource, destination, !dontValidate.value.getOrElse(false),
               xsdEngine.value.getOrElse("auto")))
       }
     } catch {
-      case e: ArgotUsageException => err.println(e.message)
+      case e: ArgotUsageException => err.println(e.message) // scalastyle:ignore
                                      None
-      case iae : IllegalArgumentException => err.println(iae.getMessage)
+      case iae : IllegalArgumentException => err.println(iae.getMessage) // scalastyle:ignore
                                              None
     }
   }
@@ -103,7 +106,7 @@ object AttribMap2JSON {
   //
   // Local run...
   //
-  def main(args : Array[String]) = {
+  def main(args : Array[String]): Unit = {
     parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
                System.in, System.out, System.err) match {
       case Some((policy : Source,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
@@ -115,7 +118,7 @@ object AttribMap2JSON {
   //
   // Nailgun run...
   //
-  def nailMain(context : NGContext) = {
+  def nailMain(context : NGContext): Unit = {
     parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
                context.in, context.out, context.err) match {
       case Some((policy : Source,  dest : Destination, validate : Boolean, xsdEngine : String)) =>
