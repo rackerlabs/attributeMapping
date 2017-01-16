@@ -7,14 +7,14 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-
     <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-    <artifactId>mapper-nailgun-server</artifactId>
+    <artifactId>saml2ext</artifactId>
     <packaging>jar</packaging>
 
-    <name>Attribute Mapper Nailgun Server</name>
+    <name>Attribute Mapper CLI (saml2ext)</name>
     <description>
-        A nailgun server application to launch mapper cli tools.
+        A command line utility to extract extended attributes access
+        attributes from a SAML Response.
     </description>
 
     <dependencies>
@@ -22,36 +22,6 @@
             <groupId>com.martiansoftware</groupId>
             <artifactId>nailgun-server</artifactId>
             <version>${nailgun.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>attribmap</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>attribmap2xsl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>attribmap2json</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>attribmap2xml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>saml2ext</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>addext</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -98,7 +68,7 @@
                             <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.rackspace.identity.components.cli.NailgunServer</mainClass>
+                                    <mainClass>com.rackspace.identity.components.cli.SAML2Ext</mainClass>
                                 </transformer>
                             </transformers>
                             <filters>
