@@ -67,7 +67,7 @@ TODO
 
 A test suite is here:
 
-https://github.com/rackerlabs/attributeMapping/tree/master/core/src/test/resources/tests
+https://github.com/rackerlabs/attributeMapping/tree/master/core/src/test/resources/tests/mapping-tests
 
 Each test suite is a directory with two subdirectories:
 

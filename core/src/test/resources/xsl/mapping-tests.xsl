@@ -51,9 +51,9 @@
                     <xsl:value-of select="preceding-sibling::comment()[1]"/>
                 </xsl:if>
                 </mapping:message>
-                <mapping:onAssertion>
+                <mapping:onXML>
                     <xslout:copy-of select="$assert"/>
-                </mapping:onAssertion>
+                </mapping:onXML>
             </mapping:fail>
         </xslout:when>
     </xsl:template>

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+PROG=saml2ext
+PROG_CLASS=com.rackspace.identity.components.cli.SAML2Ext
+
+MAPPER_JAVA_OPTS=$MAPPER_JAVA_OPTS
+
+. runmappercli.sh

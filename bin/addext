@@ -1,0 +1,8 @@
+#!/bin/bash
+
+PROG=addext
+PROG_CLASS=com.rackspace.identity.components.cli.AddExt
+
+MAPPER_JAVA_OPTS=$MAPPER_JAVA_OPTS
+
+. runmappercli.sh

@@ -34,33 +34,9 @@ import net.sf.saxon.Configuration.LicenseFeature._
 import com.fasterxml.jackson.databind.ObjectMapper
 
 @RunWith(classOf[JUnitRunner])
-class AttributeMapperSuite extends FunSuite {
-  val testDir = new File("src/test/resources/tests")
+class AttributeMapperSuite extends AttributeMapperBase {
+  val testDir = new File("src/test/resources/tests/mapping-tests")
   val tests : List[File] = testDir.listFiles.toList
-
-  val testerXSLExec = AttributeMapper.compiler.compile (new StreamSource(new File("src/test/resources/xsl/mapping-tests.xsl")))
-
-  val validators : List[String] = {
-    if (!AttributeMapper.processor.getUnderlyingConfiguration.isLicensedFeature(SCHEMA_VALIDATION)) {
-      println("------------------------------------------------") // scalastyle:ignore
-      println("NO SAXON LICENSE DETECTED - SKIPPING SAXON TESTS") // scalastyle:ignore
-      println("------------------------------------------------") // scalastyle:ignore
-      List[String]("xerces")
-    } else {
-      List[String]("xerces", "saxon")
-    }
-  }
-
-  def getAsserterExec (assertSource : Source) : XsltExecutable = {
-    val asserterXSL = new XdmDestination
-
-    val asserterTrans = AttributeMapper.getXsltTransformer (testerXSLExec)
-    asserterTrans.setSource (assertSource)
-    asserterTrans.setDestination(asserterXSL)
-    asserterTrans.transform()
-
-    AttributeMapper.compiler.compile(asserterXSL.getXdmNode.asSource)
-  }
 
   def getMapsFromTest (test : File) : List[File] = (new File(test,"maps")).listFiles().toList.filter(f => {
     f.toString.endsWith("xml") || f.toString.endsWith("json")})
