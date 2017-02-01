@@ -15,6 +15,11 @@
         <module>cli</module>
     </modules>
 
+    <scm>
+        <connection>scm:git:git@github.com:rackerlabs/attributeMapping.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
     <repositories>
         <repository>
             <id>public.maven.research.rackspace.com</id>
