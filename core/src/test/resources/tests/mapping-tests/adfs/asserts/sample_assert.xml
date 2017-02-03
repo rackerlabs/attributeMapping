@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- The issuer of the response should be Repose -->
+<?assert /saml2p:Response/saml2:Issuer = 'http://openrepose.org/filters/SAMLTranslation'?>
+
+<!-- The issuer of the first assertion should be Repose -->
+<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Issuer = 'http://openrepose.org/filters/SAMLTranslation'?>
+
+<!-- The issuer of the second assertion should be adfs trust -->
+<?assert /saml2p:Response/saml2:Assertion[2]/saml2:Issuer = 'http://adfs.contosowidgets.com/adfs/services/trust'?>
+
 <!-- The name should be btables@contosowidgets.loc -->
 <?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID = 'btables@contosowidgets.loc'?>
 

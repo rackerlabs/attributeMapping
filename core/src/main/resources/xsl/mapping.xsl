@@ -20,6 +20,7 @@
         <xslout:transform version="2.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
             <xsl:copy-of select="/mapping:mapping/namespace::*"/>
             <xslout:param name="outputSAML" as="xs:boolean" select="false()"/>
+            <xslout:param name="issuer" as="xs:string" select="'http://openrepose.org/filters/SAMLTranslation'"/>
             <xslout:output method="xml" encoding="UTF-8" indent="yes"/>
             <xslout:variable name="locals" as="node()*">
                 <xsl:for-each select="/mapping:mapping/mapping:rules/mapping:rule">
@@ -48,6 +49,10 @@
                </xslout:copy>
             </xslout:template>
 
+            <xslout:template match="saml2:Issuer[../local-name() = 'Response']">
+                <xslout:copy><xslout:value-of select="$issuer"/></xslout:copy>
+            </xslout:template>
+
             <xslout:template match="saml2:Assertion[(position() = 1) and not(empty($locals))]">
                 <xslout:variable name="outLocal" as="node()*">
                     <xslout:call-template name="mapping:outLocal"/>
@@ -55,7 +60,7 @@
                 <saml2:Assertion>
                     <xslout:apply-templates select="@*[not(local-name() = 'ID')]"/>
                     <xslout:attribute name="ID" select="concat(@ID,'__RAX__')"/>
-                    <xslout:copy-of select="saml2:Issuer"/>
+                    <saml2:Issuer><xslout:value-of select="$issuer"/></saml2:Issuer>
                     <saml2:Subject>
                         <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"><xslout:value-of select="$outLocal/mapping:user/mapping:name/@value"/></saml2:NameID>
                         <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
