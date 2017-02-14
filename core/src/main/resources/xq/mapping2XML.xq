@@ -32,6 +32,23 @@ declare function mapping:attributeFromValue ($attName as xs:string, $value as it
     default return ()
 };
 
+declare function mapping:convertLocalGroup($localGroupName as xs:string, $localGroup as item()) as element() {
+  try {
+    let $name := xs:Name($localGroupName) return
+    element {$name} {
+                     if ($localGroupName != 'user') then attribute {"xsi:type"} {"LocalAttributeGroup"} else (),
+                     for $attributeName in map:keys($localGroup) return
+                       mapping:convertLocalAttribute($attributeName, $localGroup?($attributeName), $localGroupName = 'user')
+    }
+  } catch err:XQDY0074 {
+    element {'attributeGroup'} {
+      attribute {"name"} {$localGroupName},
+      for $attributeName in map:keys($localGroup) return
+        mapping:convertLocalAttribute($attributeName, $localGroup?($attributeName), false())
+      }
+  }
+};
+
 declare function mapping:convertLocalAttribute($attribName as xs:string, $attribValue as item(), $userGroup as xs:boolean) as element() {
   let $multiValues as xs:string* :=
     (
@@ -41,15 +58,27 @@ declare function mapping:convertLocalAttribute($attribName as xs:string, $attrib
         case $a as array(*) return "value"
         default return ()
     )
-  return element {$attribName} {
-    mapping:attributeFromValue("value",$attribValue,$multiValues),
-    if ($userGroup and $attribName = $defaultAttributes) then () else attribute {"xsi:type"} {"LocalAttribute"},
-    if (not(empty($multiValues))) then
-      typeswitch ($attribValue)
-        case $o as map(*) return if (not(map:contains($o, "multiValue"))) then attribute {"multiValue"} {"true"} else ()
-        default return attribute {"multiValue"} {"true"}
-      else ()
-  }
+    return try {
+      element {$attribName} {
+        mapping:attributeFromValue("value",$attribValue,$multiValues),
+        if ($userGroup and $attribName = $defaultAttributes) then () else attribute {"xsi:type"} {"LocalAttribute"},
+          if (not(empty($multiValues))) then
+            typeswitch ($attribValue)
+              case $o as map(*) return if (not(map:contains($o, "multiValue"))) then attribute {"multiValue"} {"true"} else ()
+              default return attribute {"multiValue"} {"true"}
+            else ()
+      }
+    } catch err:XQDY0074 {
+      element{'attribute'} {
+        attribute {"name"} {$attribName},
+        mapping:attributeFromValue("value",$attribValue,$multiValues),
+        if (not(empty($multiValues))) then
+          typeswitch ($attribValue)
+            case $o as map(*) return if (not(map:contains($o, "multiValue"))) then attribute {"multiValue"} {"true"} else ()
+            default return attribute {"multiValue"} {"true"}
+          else ()
+      }
+    }
 };
 
 declare function mapping:convertRemoteAttribute($remoteAttribute as item()) as element() {
@@ -80,12 +109,7 @@ declare function mapping:convertRemoteAttribute($remoteAttribute as item()) as e
              <local>
                  {
                    let $local := $rule?local
-                   for $localGroupName in map:keys($local) return element {$localGroupName} {
-                     if ($localGroupName != 'user') then attribute {"xsi:type"} {"LocalAttributeGroup"} else (),
-                     let $localGroup := $local?($localGroupName)
-                     for $attributeName in map:keys($localGroup) return
-                       mapping:convertLocalAttribute($attributeName, $localGroup?($attributeName), $localGroupName = 'user')
-                   }
+                   for $localGroupName in map:keys($local) return mapping:convertLocalGroup($localGroupName, $local?($localGroupName))
                  }
              </local>
              {

@@ -80,16 +80,16 @@
             </xslout:template>
             
             <xslout:template match="element()[@value]" mode="samlout">
-                <xslout:variable name="groupName" as="xs:string" select="../local-name()"/>
-                <xslout:variable name="isMultiValue" select="if ($groupName = 'user' and local-name() = 'roles') then true() else 
+                <xslout:variable name="groupName" as="xs:string" select="../mapping:local-name(.)"/>
+                <xslout:variable name="isMultiValue" select="if ($groupName = 'user' and mapping:local-name(.) = 'roles') then true() else
                                                              if (exists(@multiValue)) then xs:boolean(@multiValue) else false()" as="xs:boolean"/>
                 <xslout:variable name="attribName" as="xs:string"
-                    select="if (local-name() = $specialAttributes and $groupName='user') then local-name() else concat($groupName,'/',local-name())"/>
+                    select="if (mapping:local-name(.) = $specialAttributes and $groupName='user') then mapping:local-name(.) else concat($groupName,'/',mapping:local-name(.))"/>
                 <xslout:variable name="attribValues" as="xs:string*"
                          select="if ($isMultiValue) then tokenize(@value,' ') else (@value)"/>
                 <xslout:variable name="type" as="attribute()?" select="@type"/>
                 <xslout:choose>
-                    <xslout:when test="local-name() = $skipAttributes and $groupName = 'user'"/>
+                    <xslout:when test="mapping:local-name(.) = $skipAttributes and $groupName = 'user'"/>
                     <xslout:otherwise>
                         <saml2:Attribute>
                             <xslout:attribute name="Name" select="$attribName"/>
@@ -137,13 +137,13 @@
                         </user>
                         <xslout:variable name="extendedAttributeGroupNames" as="xs:string*"
                             select="distinct-values(for $group in $locals/mapping:* return 
-                                     for $groupName in local-name($group) return if ($groupName = 'user') then () else $groupName)"/>
+                                     for $groupName in mapping:local-name($group) return if ($groupName = 'user') then () else $groupName)"/>
                         <xslout:for-each select="$extendedAttributeGroupNames">
                             <xslout:variable name="extendedAttributeGroupName" as="xs:string" select="."/>
-                            <xslout:element>
-                                <xsl:attribute name="name">{$extendedAttributeGroupName}</xsl:attribute>
+                            <xslout:element name="attributeGroup">
+                                <xslout:attribute name="name"><xslout:value-of select="$extendedAttributeGroupName"/></xslout:attribute>
                                 <xslout:call-template name="mapping:outLocalExt">
-                                  <xslout:with-param name="groups" select="$locals/element()[local-name(.) = $extendedAttributeGroupName]"/>
+                                  <xslout:with-param name="groups" select="$locals/element()[mapping:local-name(.) = $extendedAttributeGroupName]"/>
                                 </xslout:call-template>
                             </xslout:element>
                         </xslout:for-each>
@@ -154,16 +154,16 @@
                 <xslout:param name="groups" as="node()*"/>
                 <xslout:param name="exclude" as="xs:string*" select="()"/>
                 <xslout:variable name="distinctExts" as="xs:string*">
-                    <xslout:sequence select="distinct-values(for $g in $groups/element() return if (local-name($g) = $exclude) then () else local-name($g))"/>
+                    <xslout:sequence select="distinct-values(for $g in $groups/element() return if (mapping:local-name($g) = $exclude) then () else mapping:local-name($g))"/>
                 </xslout:variable>
                 <xslout:for-each select="$distinctExts">
                     <xslout:variable name="extName" as="xs:string" select="."/>
                     <xslout:variable name="multiValueAttrib" as="attribute()?" select="($groups/element()[local-name(.)=$extName]/@multiValue)[1]"/>
                     <xslout:variable name="isMultiValue" select="if (exists($multiValueAttrib)) then xs:boolean($multiValueAttrib) else false()" as="xs:boolean"/>
-                    <xslout:variable name="values" as="xs:string*" select="if ($isMultiValue) then for $v in $groups/element()[local-name(.)=$extName]/@value return tokenize($v,' ') else ($groups/element()[local-name(.)=$extName])[1]/@value"/>
+                    <xslout:variable name="values" as="xs:string*" select="if ($isMultiValue) then for $v in $groups/element()[mapping:local-name(.)=$extName]/@value return tokenize($v,' ') else ($groups/element()[mapping:local-name(.)=$extName])[1]/@value"/>
                     <xslout:if test="not(empty($values)) and not($values='')">
-                        <xslout:element>
-                            <xsl:attribute name="name">{$extName}</xsl:attribute>
+                        <xslout:element name="attribute">
+                            <xslout:attribute name="name"><xslout:value-of select="$extName"/></xslout:attribute>
                             <xslout:choose>
                                 <xslout:when test="$isMultiValue">
                                     <xslout:attribute name="value" select="string-join($values,' ')"/>
@@ -172,7 +172,7 @@
                                     <xslout:attribute name="value" select="$values"/>
                                 </xslout:otherwise>
                             </xslout:choose>
-                            <xslout:for-each select="($groups/element()[local-name(.)=$extName])[1]/@*[not(local-name() = 'value')]">
+                            <xslout:for-each select="($groups/element()[mapping:local-name(.)=$extName])[1]/@*[not(local-name(.) = ('value','type'))]">
                                 <xslout:attribute>
                                     <xsl:attribute name="name">{name(.)}</xsl:attribute>
                                     <xslout:value-of select="."/>
@@ -198,6 +198,13 @@
             <xslout:function name="mapping:transformToNBSP" as="xs:string">
                 <xslout:param name="in" as="xs:string"/>
                 <xslout:value-of select="replace($in,' ','&#xA0;')"/>
+            </xslout:function>
+            <xslout:function name="mapping:local-name" as="xs:string">
+                <xslout:param name="elem" as="element()"/>
+                <xslout:choose>
+                    <xslout:when test="$elem/@name"><xslout:value-of select="$elem/@name"/></xslout:when>
+                    <xslout:otherwise><xslout:value-of select="local-name($elem)"/></xslout:otherwise>
+                </xslout:choose>
             </xslout:function>
         </xslout:transform>
     </xsl:template>
@@ -318,7 +325,16 @@
             </xsl:non-matching-substring>
         </xsl:analyze-string>
     </xsl:template>
-    
+
+    <xsl:template match="mapping:attribute[@name and @value]" mode="genLocal" priority="20">
+        <xsl:param name="remoteMappers" as="node()*"/>
+        <xsl:copy>
+            <xsl:apply-templates mode="genLocal" select="@* | node()">
+                <xsl:with-param name="remoteMappers" as="node()*" select="$remoteMappers"/>
+            </xsl:apply-templates>
+        </xsl:copy>
+    </xsl:template>
+
     <xsl:template match="mapping:attribute[not(xs:boolean(@regex))]" mode="genLocal" priority="15">
         <xsl:variable name="cond">
             <xsl:choose>

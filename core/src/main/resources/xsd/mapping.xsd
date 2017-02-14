@@ -33,6 +33,7 @@
     <xs:complexType name="Local">
         <xs:all>
             <xs:element name="user" type="mapping:UserLocalAttributeGroup" minOccurs="0"/>
+            <xs:element name="attributeGroup" type="mapping:NamedLocalAttributeGroup" minOccurs="0" maxOccurs="unbounded"/>
             <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" notQName="##defined" processContents="strict"/>
         </xs:all>
         <xs:assert test="every $elm in element() satisfies not(exists($elm/@value))"
@@ -42,6 +43,7 @@
     
     <xs:complexType name="LocalAttributeGroup">
         <xs:all>
+            <xs:element name="attribute" type="mapping:NamedLocalAttribute" minOccurs="0" maxOccurs="unbounded"/>
             <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace" notQName="##defined" processContents="strict"/>
         </xs:all>
         <xs:assert test="every $elm in element() satisfies $elm/@value"
@@ -49,6 +51,14 @@
            xerces:message="Every element in an attribute group must be a local attribute"/>
     </xs:complexType>
     
+    <xs:complexType name="NamedLocalAttributeGroup">
+        <xs:complexContent>
+            <xs:extension base="mapping:LocalAttributeGroup">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="UserLocalAttributeGroup">
         <xs:complexContent>
             <xs:extension base="mapping:LocalAttributeGroup">
@@ -117,6 +127,14 @@
         <xs:attribute name="multiValue" type="xs:boolean" use="optional" />
     </xs:complexType>
     
+    <xs:complexType name="NamedLocalAttribute">
+        <xs:complexContent>
+            <xs:extension base="mapping:LocalAttribute">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="Remote">
         <xs:sequence>
             <xs:element name="attribute" type="mapping:Attribute" minOccurs="0" maxOccurs="unbounded">
