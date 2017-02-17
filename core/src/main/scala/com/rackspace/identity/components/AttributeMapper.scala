@@ -72,7 +72,12 @@ object XSDEngine extends Enumeration {
 import XSDEngine._
 
 object AttributeMapper {
-  val processor = new Processor(true)
+  val processor = {
+    val p = new Processor(true)
+    val dynLoader = p.getUnderlyingConfiguration.getDynamicLoader
+    dynLoader.setClassLoader(getClass.getClassLoader)
+    p
+  }
 
   val compiler = processor.newXsltCompiler
   val xqueryCompiler = {
