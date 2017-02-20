@@ -22,7 +22,7 @@ declare function mapping:convertAttributeList($name as xs:string, $in as xs:stri
 };
 
 declare function mapping:convertAttributeMap($elem as element(), $multiValueAttribs as xs:string*, $flags as xs:string*) as map(*) {
-  let $attribs := $elem/@*[namespace-uri(.) != 'http://www.w3.org/2001/XMLSchema-instance']
+  let $attribs := $elem/@*[namespace-uri(.) != 'http://www.w3.org/2001/XMLSchema-instance'][local-name() != 'name']
   return map:merge(for $attrib in $attribs return map:entry(local-name($attrib),
     if (local-name($attrib) = $multiValueAttribs) then mapping:convertAttributeList(local-name($attrib), string($attrib), $flags)
     else mapping:convertAttributeValue(local-name($attrib), string($attrib), $flags)))
@@ -30,18 +30,18 @@ declare function mapping:convertAttributeMap($elem as element(), $multiValueAttr
 
 declare function mapping:convertLocalGroup($local as element()) as map(*) {
   let $elems := $local/element()
-  return map:merge(for $elem in $elems return map:entry(local-name($elem),
+  return map:merge(for $elem in $elems return map:entry(mapping:local-name($elem),
   let $multiAttribs := (
-    if ((local-name($elem) = 'roles') and (local-name($elem/..) = 'user')) then "value" else (),
+    if ((mapping:local-name($elem) = 'roles') and (mapping:local-name($elem/..) = 'user')) then "value" else (),
       if (exists($elem/@multiValue) and xs:boolean($elem/@multiValue)) then "value" else ())
         return if ($elem/@*[name(.) = ('type','multiValue')]) then mapping:convertAttributeMap($elem, $multiAttribs, ('multiValue')) else
-          if ($multiAttribs) then mapping:convertAttributeList (local-name($elem), string($elem/@value), ('multiValue')) else
-            mapping:convertAttributeValue(local-name($elem), string($elem/@value), ('multiValue'))))
+          if ($multiAttribs) then mapping:convertAttributeList (mapping:local-name($elem), string($elem/@value), ('multiValue')) else
+            mapping:convertAttributeValue(mapping:local-name($elem), string($elem/@value), ('multiValue'))))
 };
 
 declare function mapping:convertLocalGroups($local as element()) as map(*) {
   let $elems := $local/element()
-  return map:merge(for $elem in $elems return map:entry(local-name($elem),mapping:convertLocalGroup($elem)))
+  return map:merge(for $elem in $elems return map:entry(mapping:local-name($elem),mapping:convertLocalGroup($elem)))
 };
 
 declare function mapping:convertRemote($remote as element()) as array(*) {
@@ -51,6 +51,10 @@ declare function mapping:convertRemote($remote as element()) as array(*) {
 
 declare function mapping:convertNamespaces($rules as element(), $prefixes as xs:string*) as map(*) {
   map:merge (for $p in $prefixes return map:entry($p , namespace-uri-for-prefix ($p, $rules)))
+};
+
+declare function mapping:local-name($elem as element()) as xs:string {
+  if ($elem/@name) then $elem/@name else local-name($elem)
 };
 
 
