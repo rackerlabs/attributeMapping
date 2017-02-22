@@ -22,10 +22,35 @@ import java.io.ByteArrayInputStream
 import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
 
+import javax.xml.xpath.XPathExpression
+import javax.xml.xpath.XPathConstants
+
 import org.scalatest.FunSuite
+import org.scalatest.exceptions.TestFailedException
+
+import org.w3c.dom.Document
 
 import net.sf.saxon.s9api._
 import net.sf.saxon.Configuration.LicenseFeature._
+
+import com.rackspace.com.papi.components.checker.util.ImmutableNamespaceContext
+import com.rackspace.com.papi.components.checker.util.XPathExpressionPool._
+
+object AttributeMapperBase {
+  //
+  //  XPath namespaces and expressions
+  //
+  val NS_CONTEXT = ImmutableNamespaceContext(Map[String,String]("mapping"->"http://docs.rackspace.com/identity/api/ext/MappingRules"))
+  val XPATH_VERSION = 31
+
+  val TEST_SUCCESS_EXP   = "/mapping:success"
+  val TEST_ASSERT_EXP    = "/mapping:fail/@assertion"
+  val TEST_MESSAGE_EXP   = "normalize-space(/mapping:fail/mapping:message)"
+  val TEST_CONT_EXP       = """if (/mapping:fail/mapping:onXML) then serialize(/mapping:fail/mapping:onXML/element())
+                               else /mapping:fail/mapping:onJSON"""
+}
+
+import AttributeMapperBase._
 
 class AttributeMapperBase extends FunSuite {
   val testerXSLExec = AttributeMapper.compiler.compile (new StreamSource(new File("src/test/resources/xsl/mapping-tests.xsl")))
@@ -63,5 +88,33 @@ class AttributeMapperBase extends FunSuite {
     asserterJsonTrans.transform()
 
     AttributeMapper.xqueryCompiler.compile (new ByteArrayInputStream(bout.toByteArray))
+  }
+
+  def assert (doc : Document) : Unit = {
+    var successExpression : XPathExpression = null
+    var assertExpression : XPathExpression = null
+    var messageExpression : XPathExpression = null
+    var contExpression : XPathExpression = null
+    try {
+      successExpression = borrowExpression(TEST_SUCCESS_EXP, NS_CONTEXT, XPATH_VERSION)
+      if (!successExpression.evaluate(doc, XPathConstants.BOOLEAN).asInstanceOf[Boolean]) {
+        assertExpression = borrowExpression(TEST_ASSERT_EXP, NS_CONTEXT, XPATH_VERSION)
+        messageExpression = borrowExpression(TEST_MESSAGE_EXP, NS_CONTEXT, XPATH_VERSION)
+        contExpression = borrowExpression(TEST_CONT_EXP, NS_CONTEXT, XPATH_VERSION)
+
+        val assertion = assertExpression.evaluate(doc,XPathConstants.STRING).asInstanceOf[String]
+        val message = messageExpression.evaluate(doc,XPathConstants.STRING).asInstanceOf[String]
+        val cont = contExpression.evaluate(doc,XPathConstants.STRING).asInstanceOf[String]
+
+        val fullMessage = s"TEST FAILED!\n- ASSERTION: $assertion\n- MESSAGE: $message\n- ON CONTENT: $cont\n"
+        print(fullMessage)
+        throw new TestFailedException (fullMessage, 4) // scalastyle:ignore
+      }
+    } finally {
+      if (successExpression != null) returnExpression(TEST_SUCCESS_EXP, NS_CONTEXT, XPATH_VERSION, successExpression)
+      if (assertExpression != null) returnExpression(TEST_ASSERT_EXP, NS_CONTEXT, XPATH_VERSION, assertExpression)
+      if (messageExpression != null) returnExpression(TEST_MESSAGE_EXP, NS_CONTEXT, XPATH_VERSION, messageExpression)
+      if (contExpression != null) returnExpression(TEST_CONT_EXP, NS_CONTEXT, XPATH_VERSION, contExpression)
+    }
   }
 }

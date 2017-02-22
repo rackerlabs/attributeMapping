@@ -26,7 +26,7 @@ import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
 import javax.xml.transform.dom.DOMSource
 
-import com.rackspace.com.papi.components.checker.util.XMLParserPool
+import com.rackspace.com.papi.components.checker.util.XMLParserPool._
 import com.rackspace.com.papi.components.checker.util.ImmutableNamespaceContext
 import com.rackspace.com.papi.components.checker.util.XPathExpressionPool._
 
@@ -62,14 +62,21 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
         val asserterExec = getAsserterExec(new StreamSource(assertFile))
         validators.foreach (v => {
           test (s"$description ($assertFile validated with $v)") {
-            val bout = new ByteArrayOutputStream
-            val newExt = extractTest(assertFile, v)
-            val asserter = AttributeMapper.getXsltTransformer(asserterExec)
-            asserter.setSource(newExt)
-            asserter.setDestination(AttributeMapper.processor.newSerializer(bout))
-            asserter.transform()
+            var docBuilder : javax.xml.parsers.DocumentBuilder = null
+            try {
+              docBuilder = borrowParser
+              val outDoc = docBuilder.newDocument
+              val domDest = new DOMDestination(outDoc)
+              val newExt = extractTest(assertFile, v)
+              val asserter = AttributeMapper.getXsltTransformer(asserterExec)
+              asserter.setSource(newExt)
+              asserter.setDestination(domDest)
+              asserter.transform()
 
-            assert(bout.toString.contains("mapping:success"))
+              assert(outDoc)
+            } finally {
+              if (docBuilder != null) returnParser(docBuilder)
+            }
           }
         })
       })
@@ -83,14 +90,21 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
         val asserterExec = getAsserterJsonExec(new StreamSource(assertFile))
         validators.foreach (v => {
           test (s"$description ($assertFile validated with $v)") {
-            val bout = new ByteArrayOutputStream
-            val newExt = extractTest(assertFile, v)
-            val asserter = AttributeMapper.getXQueryEvaluator(asserterExec, Map[QName,XdmValue](new QName("__JSON__") ->
+            var docBuilder : javax.xml.parsers.DocumentBuilder = null
+            try {
+              docBuilder = borrowParser
+              val outDoc = docBuilder.newDocument
+              val domDest = new DOMDestination(outDoc)
+              val newExt = extractTest(assertFile, v)
+              val asserter = AttributeMapper.getXQueryEvaluator(asserterExec, Map[QName,XdmValue](new QName("__JSON__") ->
                                                                                                 new XdmAtomicValue(newExt)))
-            asserter.setDestination(AttributeMapper.processor.newSerializer(bout))
-            asserter.run()
+              asserter.setDestination(domDest)
+              asserter.run()
 
-            assert(bout.toString.contains("mapping:success"))
+              assert(outDoc)
+            } finally {
+              if (docBuilder != null) returnParser(docBuilder)
+            }
           }
         })
       })
@@ -207,10 +221,10 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
     var docBuilder : javax.xml.parsers.DocumentBuilder = null
     var outDoc2 : Document = null
     try {
-      docBuilder = XMLParserPool.borrowParser
+      docBuilder = borrowParser
       outDoc2 = docBuilder.newDocument
     } finally {
-      if (docBuilder != null) XMLParserPool.returnParser(docBuilder)
+      if (docBuilder != null) returnParser(docBuilder)
     }
 
     //
@@ -271,7 +285,7 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
     println (s"Adding extended attributes in XML from $assertFile") // scalastyle:ignore
     var docBuilder : javax.xml.parsers.DocumentBuilder = null
     try {
-      docBuilder = XMLParserPool.borrowParser
+      docBuilder = borrowParser
       val outDoc = docBuilder.newDocument
       val accessDest = new DOMDestination(outDoc)
       AttributeMapper.addExtendedAttributes (new StreamSource(authXMLSample), new StreamSource(assertFile),
@@ -279,7 +293,7 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
 
       validateAuthExtensions (outDoc, new StreamSource(assertFile))
     } finally {
-      if (docBuilder != null) XMLParserPool.returnParser(docBuilder)
+      if (docBuilder != null) returnParser(docBuilder)
     }
   })
 
@@ -288,14 +302,14 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
     println (s"Adding extended attributes in XML from $assertFile") // scalastyle:ignore
     var docBuilder : javax.xml.parsers.DocumentBuilder = null
     try {
-      docBuilder = XMLParserPool.borrowParser
+      docBuilder = borrowParser
       val assert = docBuilder.parse(assertFile)
       val outDoc = AttributeMapper.addExtendedAttributes (new StreamSource(authXMLSample), assert,
                                                           true, v)
 
       validateAuthExtensions (outDoc, new DOMSource(assert))
     } finally {
-      if (docBuilder != null) XMLParserPool.returnParser(docBuilder)
+      if (docBuilder != null) returnParser(docBuilder)
     }
   })
 
@@ -303,7 +317,7 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
     println (s"Adding extended attributes in XML from $assertFile") // scalastyle:ignore
     var docBuilder : javax.xml.parsers.DocumentBuilder = null
     try {
-      docBuilder = XMLParserPool.borrowParser
+      docBuilder = borrowParser
       val assert = docBuilder.parse(assertFile)
       val authResp = docBuilder.parse(authXMLSample)
 
@@ -311,7 +325,7 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
 
       validateAuthExtensions (outDoc, new DOMSource(assert))
     } finally {
-      if (docBuilder != null) XMLParserPool.returnParser(docBuilder)
+      if (docBuilder != null) returnParser(docBuilder)
     }
   })
 
@@ -320,7 +334,7 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
     println (s"Adding extended attributes in XML from $assertFile") // scalastyle:ignore
     var docBuilder : javax.xml.parsers.DocumentBuilder = null
     try {
-      docBuilder = XMLParserPool.borrowParser
+      docBuilder = borrowParser
       val outDoc = docBuilder.newDocument
 
       val accessDest = new DOMDestination(outDoc)
@@ -329,7 +343,7 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
 
       validateAuthExtensions (outDoc, new StreamSource(assertFile))
     } finally {
-      if (docBuilder != null) XMLParserPool.returnParser(docBuilder)
+      if (docBuilder != null) returnParser(docBuilder)
     }
   })
 
@@ -389,14 +403,14 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
     println (s"Getting extended attributes in JSON from $assertFile") // scalastyle:ignore
     var docBuilder : javax.xml.parsers.DocumentBuilder = null
     try {
-      docBuilder = XMLParserPool.borrowParser
+      docBuilder = borrowParser
       val om = new ObjectMapper
       val assert = docBuilder.parse(assertFile)
       val node = AttributeMapper.addExtendedAttributes(om.readTree (authJSONSample), assert, true, v)
 
       validateAuthExtensions(node, new StreamSource(assertFile))
     } finally {
-      if (docBuilder != null) XMLParserPool.returnParser(docBuilder)
+      if (docBuilder != null) returnParser(docBuilder)
     }
   })
 }

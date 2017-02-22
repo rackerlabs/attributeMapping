@@ -45,21 +45,20 @@
    - with version and description
 ** DONE Call that returns XSLTExec
 ** DONE Explicit support for DOM and JSON Node
-** TODO Support for returning extended attributes
-** TODO Test enhancements [0/3]
-   1. [ ] Better output especially of failed assertions
+** DONE Support for returning extended attributes
+** TODO Test enhancements [1/2]
+   1. [X] Better output especially of failed assertions
    2. [ ] Support for common assertions
-   3. [ ] Test to support Auto
-** TODO Misc Additional Tests [/]
-   1. [ ] Put "auto" validate feature under test
 ** TODO Validation with JSON Schema
+** TODO Secure processing
 ** TODO Better Error Handling [0/4]
    1. [ ] Setup Logger
    2. [ ] Better handling of exception - AttribMap exception.
    3. [ ] Handle exceptions for common errors
    4. [ ] Negative Error suite
-** TODO Secure processing
 ** TODO FixBug whitespaces in XPath return
+** TODO Misc Additional Tests [/]
+   1. [ ] Put "auto" validate feature under test
 ** TODO Document all!
 ** TODO Setup logger for CLI util (better error messages)
 ** TODO Cleanup all!
