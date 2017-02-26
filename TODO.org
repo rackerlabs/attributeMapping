@@ -46,9 +46,9 @@
 ** DONE Call that returns XSLTExec
 ** DONE Explicit support for DOM and JSON Node
 ** DONE Support for returning extended attributes
-** TODO Test enhancements [1/2]
+** DONE Test enhancements [2/2]
    1. [X] Better output especially of failed assertions
-   2. [ ] Support for common assertions
+   2. [X] Support for common assertions
 ** TODO Validation with JSON Schema
 ** TODO Secure processing
 ** TODO Better Error Handling [0/4]

@@ -15,6 +15,8 @@
  */
 package com.rackspace.identity.components
 
+import java.net.URI
+
 import java.io.File
 import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
@@ -70,7 +72,8 @@ class AttributeMapperBase extends FunSuite {
   def getAsserterExec (assertSource : Source) : XsltExecutable = {
     val asserterXSL = new XdmDestination
 
-    val asserterTrans = AttributeMapper.getXsltTransformer (testerXSLExec)
+    val asserterTrans = AttributeMapper.getXsltTransformer (testerXSLExec, Map[QName, XdmValue]
+                                                            (new QName("base")->new XdmAtomicValue(new URI(assertSource.getSystemId))))
     asserterTrans.setSource (assertSource)
     asserterTrans.setDestination(asserterXSL)
     asserterTrans.transform()
@@ -82,7 +85,8 @@ class AttributeMapperBase extends FunSuite {
     val bout = new ByteArrayOutputStream
     val asserterXQuery = AttributeMapper.processor.newSerializer(bout)
 
-    val asserterJsonTrans = AttributeMapper.getXsltTransformer (testerJsonXSLExec)
+    val asserterJsonTrans = AttributeMapper.getXsltTransformer (testerJsonXSLExec, Map[QName, XdmValue]
+                                                                (new QName("base")->new XdmAtomicValue(new URI(assertSource.getSystemId))))
     asserterJsonTrans.setSource(assertSource)
     asserterJsonTrans.setDestination(asserterXQuery)
     asserterJsonTrans.transform()

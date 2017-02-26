@@ -1,0 +1,91 @@
+<!--
+    Assertions used to test extracting extensions
+-->
+
+<common-assertions xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <assert-group name="xml">
+        <assert test="/auth:extendedAttributes/auth:group[@name='user']/auth:attribute[@name='foo']">
+            There should be a user group with foo attribute.
+        </assert>
+        <assert test="count(/auth:extendedAttributes/auth:group[@name='user']/auth:attribute[@name='foo']/auth:value) = 2">
+            There should be two values for attribute foo
+        </assert>
+        <assert test="every $v in /auth:extendedAttributes/auth:group[@name='user']/auth:attribute[@name='foo']/auth:value satisfies $v=('2017-01-04T14:41:42.206-06:00',
+                      '2018-01-04T14:41:42.206-06:00')">
+            The values should match correctly.
+        </assert>
+        <assert test="/auth:extendedAttributes/auth:group[@name='user']/auth:attribute[@name='bar']">
+            There should be a user group with bar attribute
+        </assert>
+        <assert test="count(/auth:extendedAttributes/auth:group[@name='user']/auth:attribute[@name='bar']/auth:value) = 1">
+            There should be a single value for attribute bar
+        </assert>
+        <assert test="every $v in /auth:extendedAttributes/auth:group[@name='user']/auth:attribute[@name='bar']/auth:value satisfies $v=('bar')">
+            The value should match correctly.
+        </assert>
+        <assert test="count(/auth:extendedAttributes/auth:group[@name='user']/auth:attribute) = 2">
+            There should only be two attributes in user
+        </assert>
+        <assert test="/auth:extendedAttributes/auth:group[@name='faws']/auth:attribute[@name='policy']">
+            There should be a faws group with policy attribute
+        </assert>
+        <assert test="count(/auth:extendedAttributes/auth:group[@name='faws']/auth:attribute[@name='policy']/auth:value) = 5">
+            There should be 5 values for attribute policy
+        </assert>
+        <assert test="every $v in /auth:extendedAttributes/auth:group[@name='faws']/auth:attribute[@name='policy']/auth:value satisfies $v=
+                      ('AWSPolicy','AWSPolicy2','AWSPolicy YEA!','AWSPolicy3','AWSPolicy YEA!!')">
+            The values should match correctly
+        </assert>
+        <assert test="/auth:extendedAttributes/auth:group[@name='faws']/auth:attribute[@name='policy2']">
+            There should be a faws group with policy2 attribute
+        </assert>
+        <assert test="count(/auth:extendedAttributes/auth:group[@name='faws']/auth:attribute[@name='policy2']/auth:value) = 5">
+            There should be 5 values for attribute policy2
+        </assert>
+        <assert test="every $v in /auth:extendedAttributes/auth:group[@name='faws']/auth:attribute[@name='policy2']/auth:value satisfies $v=
+                      ('AWSPolicy','AWSPolicy2','AWSPolicy YEA!','AWSPolicy3','AWSPolicy YEA!!')">
+            The values should match correctly
+        </assert>
+    </assert-group>
+    <assert-group name="json">
+        <json-assert test='exists($_?("RAX-AUTH:extendedAttributes")?user?foo)'>
+            There should be a user group with foo attribute
+        </json-assert>
+        <json-assert test='count($_?("RAX-AUTH:extendedAttributes")?user?foo?*) = 2'>
+            There should be two values for attribute foo
+        </json-assert>
+        <json-assert test="every $val in $_?('RAX-AUTH:extendedAttributes')?user?foo?* satisfies $val=('2017-01-04T14:41:42.206-06:00',
+                           '2018-01-04T14:41:42.206-06:00')">
+            The values should match correctly.
+        </json-assert>
+        <json-assert test='exists($_?("RAX-AUTH:extendedAttributes")?user?bar)'>
+            There should be a user group with bar attribute
+        </json-assert>
+        <json-assert test="$_?('RAX-AUTH:extendedAttributes')?user?bar = 'bar'">
+            The value of bar should be bar
+        </json-assert>
+        <json-assert test='count($_?("RAX-AUTH:extendedAttributes")?user?*) = 2'>
+            There should only be 2 attributes in user
+        </json-assert>
+        <json-assert test='exists($_?("RAX-AUTH:extendedAttributes")?faws?policy)'>
+            There should be a user faws with policy attribute
+        </json-assert>
+        <json-assert test='count($_?("RAX-AUTH:extendedAttributes")?faws?policy?*) = 5'>
+            There should be 5 values for attribute policy
+        </json-assert>
+        <json-assert test="every $val in $_?('RAX-AUTH:extendedAttributes')?faws?policy?* satisfies $val=
+                           ('AWSPolicy','AWSPolicy2','AWSPolicy YEA!','AWSPolicy3','AWSPolicy YEA!!')">
+            The values should match correctly
+        </json-assert>
+        <json-assert test='exists($_?("RAX-AUTH:extendedAttributes")?faws?policy2)'>
+            There should be a user faws with policy2 attribute
+        </json-assert>
+        <json-assert test='count($_?("RAX-AUTH:extendedAttributes")?faws?policy2?*) = 5'>
+            There should be 5 values for attribute policy2
+        </json-assert>
+        <json-assert test="every $val in $_?('RAX-AUTH:extendedAttributes')?faws?policy2?* satisfies $val=
+                           ('AWSPolicy','AWSPolicy2','AWSPolicy YEA!','AWSPolicy3','AWSPolicy YEA!!')">
+            The values should match correctly
+        </json-assert>
+    </assert-group>
+</common-assertions>

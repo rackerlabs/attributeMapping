@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- Include all common assertions -->
+<?include ../../../include/common-asserts.xml#repose?>
+
+<!-- Include defaults assertions -->
+<?include ../../../include/defaults-asserts.xml#common?>
+<?include ../../../include/defaults-asserts.xml#name?>
+<?include ../../../include/defaults-asserts.xml#expire?>
+<?include ../../../include/defaults-asserts.xml#email?>
+
 <!-- There should be three assertions -->
 <?assert count(/saml2p:Response/saml2:Assertion) = 3 ?>
-
-<!-- The issuer of the response should be Repose -->
-<?assert /saml2p:Response/saml2:Issuer = 'http://openrepose.org/filters/SAMLTranslation'?>
-
-<!-- The issuer of the first assertion should be Repose -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Issuer = 'http://openrepose.org/filters/SAMLTranslation'?>
-
-<!-- The issuer of the second assertion should be my.rackspace -->
-<?assert /saml2p:Response/saml2:Assertion[2]/saml2:Issuer = 'http://my.rackspace.com'?>
 
 <!-- The issuer of the third assertion should be my.racker.com -->
 <?assert /saml2p:Response/saml2:Assertion[3]/saml2:Issuer = 'http://my.racker.com'?>
@@ -20,15 +20,6 @@
 
 <!-- The roles should be nova:admin lbaas:admin -->
 <?assert every $r in ('lbaas:admin','nova:admin') satisfies $r=mapping:get-attributes('roles')?>
-
-<!-- The name should be john.doe -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID = 'john.doe'?>
-
-<!-- The message should expire at 2013-11-17T16:19:06.298Z -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter = '2013-11-17T16:19:06.298Z'?>
-
-<!-- The email should be no-reply@rackspace.com -->
-<?assert mapping:get-attribute('email') = 'no-reply@rackspace.com'?>
 
 <!-- The doman should be 78334 -->
 <?assert mapping:get-attribute('domain') = '78334'?>
