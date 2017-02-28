@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- There should be two assertions -->
-<?assert count(/saml2p:Response/saml2:Assertion) = 2 ?>
+<!-- include common and default asserts -->
+<?include ../../../include/common-asserts.xml?>
+<?include ../../../include/defaults-asserts.xml#common?>
+<?include ../../../include/defaults-asserts.xml#expire?>
+<?include ../../../include/defaults-asserts.xml#name?>
+<?include ../../../include/defaults-asserts.xml#domain?>
+<?include ../../../include/defaults-asserts.xml#email?>
 
 <!-- There should be 4 roles -->
 <?assert count(mapping:get-attributes('roles')) = 4?>
@@ -11,18 +16,6 @@
 
 <!-- None of the roles that start with nova:* should be returned -->
 <?assert every $r in mapping:get-attributes('roles') satisfies not($r = ('nova:observer', 'nova:admin','nova:foo','nova:bar'))?>
-
-<!-- The name should be john.doe -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID = 'john.doe'?>
-
-<!-- The message should expire at 2013-11-17T16:19:06.298Z -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter = '2013-11-17T16:19:06.298Z'?>
-
-<!-- The email should be  John Doe &lt;john.doe@323676.rackspace.com&gt; -->
-<?assert mapping:get-attribute('email') = 'no-reply@rackspace.com'?>
-
-<!-- The email should be no-reply@rackspace.com -->
-<?assert mapping:get-attribute('domain') = '323676'?>
 
 <saml2p:Response ID="_7fcd6173-e6e0-45a4-a2fd-74a4ef85bf30" IssueInstant="2015-12-04T15:47:15.057Z" Version="2.0" xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <saml2:Issuer xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">http://test.rackspace.com</saml2:Issuer>

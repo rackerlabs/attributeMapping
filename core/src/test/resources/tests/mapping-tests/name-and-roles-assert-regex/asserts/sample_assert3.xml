@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- There should be two assertions -->
+<!-- There should be one assertion -->
 <?assert count(/saml2p:Response/saml2:Assertion) = 1 ?>
 
 <!-- There should be a single role  -->

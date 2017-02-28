@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- There should be two assertions -->
-<?assert count(/saml2p:Response/saml2:Assertion) = 2 ?>
+<!-- Include all common assertions -->
+<?include ../../../include/common-asserts.xml?>
 
 <!-- There should be two roles -->
 <?assert count(mapping:get-attributes('roles')) = 2 ?>

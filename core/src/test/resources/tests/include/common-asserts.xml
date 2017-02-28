@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The following is a set of common assertions that can be included in
+  other tests.
+
+  Assertions are organized in groups known as assert groups. You can
+  include a group of assertions in the test by using the include
+  processing instruction.
+
+  <?include ../../common-asserts.xml#{group-name} ?>
+
+  Where  #{group-name} is the name of the group to include. If you
+  leave out the hashtag then all groups in the file will be included.
+-->
+<common-assertions xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <!--
+        Common assertions generally applicable to all tests.
+    -->
+    <assert-group name="common">
+        <assert test="count(/saml2p:Response/saml2:Assertion) = 2">
+            There should be two assertions
+        </assert>
+    </assert-group>
+
+    <!--
+       Assertions denoting repose is the issuer.
+    -->
+    <assert-group name="repose">
+        <assert test="/saml2p:Response/saml2:Issuer = 'http://openrepose.org/filters/SAMLTranslation'">
+            The issuer of the response should be Repose
+        </assert>
+        <assert test="/saml2p:Response/saml2:Assertion[1]/saml2:Issuer = 'http://openrepose.org/filters/SAMLTranslation'">
+            The issuer of the first assertion should be Repose
+        </assert>
+    </assert-group>
+</common-assertions>

@@ -1,0 +1,20 @@
+<!--
+  Common assertions for adfs examples.
+-->
+
+<common-assertions xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <assert-group name="adfs">
+        <assert test="/saml2p:Response/saml2:Assertion[2]/saml2:Issuer = 'http://adfs.contosowidgets.com/adfs/services/trust'">
+            The issuer of the second assertion should be adfs trust.
+        </assert>
+        <assert test="/saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID = 'btables@contosowidgets.loc'">
+            The name should be btables@contosowidgets.loc
+        </assert>
+        <assert test="mapping:get-attribute('email') = 'btables@contosowidgets.loc'">
+            The email should be no-reply@rackspace.com
+        </assert>
+        <assert test="mapping:get-attribute('domain') = '5821006'">
+            The domain should be set to 5821006
+        </assert>
+    </assert-group>
+</common-assertions>

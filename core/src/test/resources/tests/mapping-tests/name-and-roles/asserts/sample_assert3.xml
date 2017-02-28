@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- There should be two assertions -->
-<?assert count(/saml2p:Response/saml2:Assertion) = 2 ?>
+<!-- Include all common assertions -->
+<?include ../../../include/common-asserts.xml?>
+
+<!-- Include defaults assertions -->
+<?include ../../../include/defaults-asserts.xml#common?>
+<?include ../../../include/defaults-asserts.xml#name?>
+<?include ../../../include/defaults-asserts.xml#expire?>
+<?include ../../../include/defaults-asserts.xml#email?>
 
 <!-- There should be 2 roles -->
 <?assert count(mapping:get-attributes('roles')) = 2?>
 
 <!-- The roles should be nova:observer lbaas:observer -->
 <?assert every $r in ('lbaas:observer','nova:observer') satisfies $r=mapping:get-attributes('roles')?>
-
-<!-- The name should be john.doe -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID = 'john.doe'?>
-
-<!-- The message should expire at 2013-11-17T16:19:06.298Z -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter = '2013-11-17T16:19:06.298Z'?>
-
-<!-- The email should be no-reply@rackspace.com -->
-<?assert mapping:get-attribute('email') = 'no-reply@rackspace.com'?>
 
 <!-- The doman should be 78334 -->
 <?assert mapping:get-attribute('domain') = '78334'?>

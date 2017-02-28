@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- There should be two assertions -->
-<?assert count(/saml2p:Response/saml2:Assertion) = 2 ?>
-
-<!-- There should be a single nova:admin attribute -->
-<?assert mapping:get-attributes('roles')='nova:admin' and count(mapping:get-attributes('roles'))=1?>
-
-<!-- The name should be john.doe -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID = 'john.doe'?>
-
-<!-- The message should expire at 2013-11-17T16:19:06.298Z -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter = '2013-11-17T16:19:06.298Z'?>
-
-<!-- The email should be no-reply@rackspace.com -->
-<?assert mapping:get-attribute('email') = 'no-reply@rackspace.com'?>
-
-<!-- The email should be no-reply@rackspace.com -->
-<?assert mapping:get-attribute('domain') = '323676'?>
+<!-- include common and default assertions -->
+<?include ../../../include/common-asserts.xml?>
+<?include ../../../include/defaults-asserts.xml?>
 
 <!-- There should be an extended user attribute foo with the value bar -->
 <?assert mapping:get-attribute('user/foo') = 'FOO?'?>

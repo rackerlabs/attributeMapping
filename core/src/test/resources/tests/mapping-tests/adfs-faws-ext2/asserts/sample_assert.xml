@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- The issuer of the response should be Repose -->
-<?assert /saml2p:Response/saml2:Issuer = 'http://openrepose.org/filters/SAMLTranslation'?>
+<!-- Include all common assertions -->
+<?include ../../../include/common-asserts.xml?>
 
-<!-- The issuer of the first assertion should be Repose -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Issuer = 'http://openrepose.org/filters/SAMLTranslation'?>
-
-<!-- The issuer of the second assertion should be adfs trust -->
-<?assert /saml2p:Response/saml2:Assertion[2]/saml2:Issuer = 'http://adfs.contosowidgets.com/adfs/services/trust'?>
-
-<!-- The name should be btables@contosowidgets.loc -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID = 'btables@contosowidgets.loc'?>
-
-<!-- The email should be no-reply@rackspace.com -->
-<?assert mapping:get-attribute('email') = 'btables@contosowidgets.loc'?>
-
-<!-- The domain should be set to 5821006 -->
-<?assert mapping:get-attribute('domain') = '5821006'?>
+<!-- Include all adfs-specific assertions -->
+<?include ../../../include/adfs-asserts.xml?>
 
 <!-- The roles should be set -->
 <?assert every $r in ('Domain Users','RAX-identity~admin','RAX-nova~admin','RACK-Domain-5821005','test_group_2') satisfies $r=mapping:get-attributes('roles')?>
