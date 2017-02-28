@@ -1,5 +1,8 @@
 # Releases #
 
+## In Progress Work ##
+1. Clean up : Better reporting of failed tests
+
 ## Release 1.0.2 (2017-02-20) ##
 1. Fixed a bug where an empty extension attribute value creates a malformed SAMLResponse
 1. Fixed a bug where specifying an attribute name that started with a digit caused a failure

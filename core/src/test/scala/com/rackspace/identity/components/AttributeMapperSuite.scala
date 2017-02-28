@@ -22,8 +22,6 @@ import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
 import javax.xml.transform.dom.DOMSource
 
-import com.rackspace.com.papi.components.checker.util.XMLParserPool
-
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
@@ -33,8 +31,11 @@ import net.sf.saxon.Configuration.LicenseFeature._
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
+import com.rackspace.com.papi.components.checker.util.XMLParserPool._
+
 @RunWith(classOf[JUnitRunner])
 class AttributeMapperSuite extends AttributeMapperBase {
+
   val testDir = new File("src/test/resources/tests/mapping-tests")
   val tests : List[File] = testDir.listFiles.toList
 
@@ -54,14 +55,21 @@ class AttributeMapperSuite extends AttributeMapperBase {
             val asserterExec = getAsserterExec(new StreamSource(assertFile))
             validators.foreach (v => {
               test (s"$description ($map on $assertFile validated with $v)") {
-                val bout = new ByteArrayOutputStream
-                val newAssertion = mapperTest(map, assertFile, v)
-                val asserter = AttributeMapper.getXsltTransformer(asserterExec)
-                asserter.setSource(newAssertion)
-                asserter.setDestination(AttributeMapper.processor.newSerializer(bout))
-                asserter.transform()
+                var docBuilder : javax.xml.parsers.DocumentBuilder = null
+                try {
+                  docBuilder = borrowParser
+                  val outDoc = docBuilder.newDocument
+                  val domDest = new DOMDestination(outDoc)
+                  val newAssertion = mapperTest(map, assertFile, v)
+                  val asserter = AttributeMapper.getXsltTransformer(asserterExec)
+                  asserter.setSource(newAssertion)
+                  asserter.setDestination(domDest)
+                  asserter.transform()
 
-                assert(bout.toString.contains("mapping:success"))
+                  assert(outDoc)
+                } finally {
+                  if (docBuilder != null) returnParser(docBuilder)
+                }
               }
             })
           })
@@ -81,7 +89,7 @@ class AttributeMapperSuite extends AttributeMapperBase {
     println (s"Running $map on $assertFile") // scalastyle:ignore
     var docBuilder : javax.xml.parsers.DocumentBuilder = null
     try {
-      docBuilder = XMLParserPool.borrowParser
+      docBuilder = borrowParser
       val isJSON = map.toString.endsWith("json")
       val policyExec : XsltExecutable = {
         if (isJSON) {
@@ -95,7 +103,7 @@ class AttributeMapperSuite extends AttributeMapperBase {
       val resultDoc = AttributeMapper.convertAssertion (policyExec, docBuilder.parse(assertFile))
       new DOMSource(resultDoc)
     } finally {
-      if (docBuilder != null) XMLParserPool.returnParser(docBuilder)
+      if (docBuilder != null) returnParser(docBuilder)
     }
   })
 }
