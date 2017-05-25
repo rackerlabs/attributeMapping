@@ -94,7 +94,11 @@ class AttributeMapperSuite extends AttributeMapperBase {
       val policyExec : XsltExecutable = {
         if (isJSON) {
           val om = new ObjectMapper()
-          AttributeMapper.generateXSLExec (om.readTree(map), true, v)
+          val jsonPolicy = om.readTree(map)
+          //
+          //  We double validate to make sure validation call works
+          //
+          AttributeMapper.generateXSLExec (AttributeMapper.validatePolicy(jsonPolicy, v), true, v)
         } else {
           AttributeMapper.generateXSLExec (docBuilder.parse(map), true, v)
         }
