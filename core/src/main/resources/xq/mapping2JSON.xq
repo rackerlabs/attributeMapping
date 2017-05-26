@@ -21,8 +21,11 @@ declare function mapping:convertAttributeList($name as xs:string, $in as xs:stri
   return if (count($inStrings) = 1) then $inStrings[1] else array {$inStrings}
 };
 
-declare function mapping:convertAttributeMap($elem as element(), $multiValueAttribs as xs:string*, $flags as xs:string*) as map(*) {
-  let $attribs := $elem/@*[namespace-uri(.) != 'http://www.w3.org/2001/XMLSchema-instance'][local-name() != 'name']
+declare function mapping:convertAttributeMap($elem as element(),
+                   $multiValueAttribs as xs:string*,
+                   $excludeAttribs as xs:string*,
+                   $flags as xs:string*) as map(*) {
+  let $attribs := $elem/@*[namespace-uri(.) != 'http://www.w3.org/2001/XMLSchema-instance'][not(local-name() = $excludeAttribs)]
   return map:merge(for $attrib in $attribs return map:entry(local-name($attrib),
     if (local-name($attrib) = $multiValueAttribs) then mapping:convertAttributeList(local-name($attrib), string($attrib), $flags)
     else mapping:convertAttributeValue(local-name($attrib), string($attrib), $flags)))
@@ -34,7 +37,7 @@ declare function mapping:convertLocalGroup($local as element()) as map(*) {
   let $multiAttribs := (
     if ((mapping:local-name($elem) = 'roles') and (mapping:local-name($elem/..) = 'user')) then "value" else (),
       if (exists($elem/@multiValue) and xs:boolean($elem/@multiValue)) then "value" else ())
-        return if ($elem/@*[name(.) = ('type','multiValue')]) then mapping:convertAttributeMap($elem, $multiAttribs, ('multiValue')) else
+        return if ($elem/@*[name(.) = ('type','multiValue')]) then mapping:convertAttributeMap($elem, $multiAttribs, ('name'), ('multiValue')) else
           if ($multiAttribs) then mapping:convertAttributeList (mapping:local-name($elem), string($elem/@value), ('multiValue')) else
             mapping:convertAttributeValue(mapping:local-name($elem), string($elem/@value), ('multiValue'))))
 };
@@ -46,7 +49,7 @@ declare function mapping:convertLocalGroups($local as element()) as map(*) {
 
 declare function mapping:convertRemote($remote as element()) as array(*) {
   let $elems := $remote/element()
-  return array {for $elem in $elems return mapping:convertAttributeMap($elem,('blacklist','whitelist','notAnyOf','anyOneOf'),('multiValue','regex'))}
+  return array {for $elem in $elems return mapping:convertAttributeMap($elem,('blacklist','whitelist','notAnyOf','anyOneOf'),(),('multiValue','regex'))}
 };
 
 declare function mapping:convertNamespaces($rules as element(), $prefixes as xs:string*) as map(*) {
