@@ -1,6 +1,6 @@
 # Releases #
 
-## In Progress Work ##
+## Release 1.1.0 (2017-05-31) ##
 1. Clean up : Better reporting of failed tests
 1. Clean up : Reuse common assertions in test suite
 1. Clean up : Add .DS_Store to .gitignore
