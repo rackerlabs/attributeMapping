@@ -20,6 +20,7 @@ import java.io.File
 import java.io.OutputStream
 import java.io.Writer
 import java.io.ByteArrayOutputStream
+import java.io.ByteArrayInputStream
 
 import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
@@ -185,6 +186,21 @@ object AttributeMapper {
 
   def validatePolicy (policy : Source, engineStr : String) : Source = {
     validate(policy, engineStr, mappingSchema, mappingSchemaManager)
+  }
+
+  def validatePolicy (policy : JsonNode, engineStr : String) : JsonNode = {
+    val outXMLPolicy = new XdmDestination
+
+    policy2XML(policy, outXMLPolicy)
+    val valXMLPolicySrc = validatePolicy(outXMLPolicy.getXdmNode.asSource, engineStr)
+
+    val bout = new ByteArrayOutputStream
+    val dest = processor.newSerializer(bout)
+
+    policy2JSON(valXMLPolicySrc, dest, false, engineStr)
+
+    val bin = new ByteArrayInputStream(bout.toByteArray)
+    parseJsonNode(new StreamSource(bin))
   }
 
   def generateXSL (policy : Source, xsl : Destination, isJSON : Boolean, validate : Boolean, xsdEngine : String) : Unit = {

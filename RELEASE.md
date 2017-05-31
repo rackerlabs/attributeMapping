@@ -4,6 +4,8 @@
 1. Clean up : Better reporting of failed tests
 1. Clean up : Reuse common assertions in test suite
 1. Clean up : Add .DS_Store to .gitignore
+1. Fixed bug in JSON to XML Convertion of attribute policy
+1. Adding new call to validate policy given a JSONNode
 
 ## Release 1.0.2 (2017-02-20) ##
 1. Fixed a bug where an empty extension attribute value creates a malformed SAMLResponse
