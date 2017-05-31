@@ -1,0 +1,48 @@
+ {
+  "mapping": {
+    "rules": [
+       {
+        "remote": [
+           {
+            "path":"\/saml2p:Response\/saml2:Assertion\/saml2:Subject\/saml2:NameID",
+            "multiValue":false
+           },
+           {
+            "path":"\/saml2p:Response\/saml2:Assertion\/saml2:Subject\/saml2:SubjectConfirmation\/saml2:SubjectConfirmationData\/@NotOnOrAfter",
+            "multiValue":false
+           }
+         ],
+        "local": {
+          "user": {
+            "domain": {
+              "value":"{At(domain)}",
+              "multiValue":false,
+              "type":"xs:string"
+             },
+            "name": {
+              "value":"{0}",
+              "multiValue":false,
+              "type":"xs:string"
+             },
+            "email": {
+              "value":"{At(email)}",
+              "multiValue":false,
+              "type":"xs:string"
+             },
+            "roles": {
+              "value":"{Ats(roles)}",
+              "multiValue":true,
+              "type":"xs:string"
+             },
+            "expire": {
+              "value":"{1}",
+              "multiValue":false,
+              "type":"xs:dateTime"
+             }
+           }
+         }
+       }
+     ],
+    "version":"RAX-1"
+   }
+ }

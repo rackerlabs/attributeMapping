@@ -52,7 +52,23 @@
     <saml2:AttributeStatement>
         <saml2:Attribute Name="roles">
             <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:type="xs:string">nova:admin</saml2:AttributeValue>
+                                  xsi:type="xs:string">role1</saml2:AttributeValue>
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">role2</saml2:AttributeValue>
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">role with space3</saml2:AttributeValue>
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">role4</saml2:AttributeValue>
+        </saml2:Attribute>
+        <saml2:Attribute Name="ext2">
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">value1</saml2:AttributeValue>
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">value2</saml2:AttributeValue>
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">value with space3</saml2:AttributeValue>
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">value4</saml2:AttributeValue>
         </saml2:Attribute>
         <saml2:Attribute Name="domain">
             <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

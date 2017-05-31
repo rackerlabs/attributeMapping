@@ -439,6 +439,20 @@
                     </xsl:matching-substring>
                 </xsl:analyze-string>
             </xsl:when>
+            <xsl:when test="matches($part,'\{At\(.*\)\}')">
+                <xsl:analyze-string select="$part" regex="\{{At\((.*)\)\}}">
+                    <xsl:matching-substring>
+                        <xsl:sequence select="mapping:attributeByName(regex-group(1))"/>
+                    </xsl:matching-substring>
+                </xsl:analyze-string>
+            </xsl:when>
+            <xsl:when test="matches($part,'\{Ats\(.*\)\}')">
+                <xsl:analyze-string select="$part" regex="\{{Ats\((.*)\)\}}">
+                    <xsl:matching-substring>
+                        <xsl:sequence select="mapping:attributesByName(regex-group(1))"/>
+                    </xsl:matching-substring>
+                </xsl:analyze-string>
+            </xsl:when>
             <xsl:when test="matches($part,'\{[0-9]*\}')">
                 <xsl:sequence select="mapping:attributeByNumber($parent, $part, $remoteMappers)"/>
             </xsl:when>
@@ -448,6 +462,16 @@
         </xsl:choose>
     </xsl:function>
     
+    <xsl:function name="mapping:attributeByName" as="node()*">
+        <xsl:param name="name" as="xs:string"/>
+        <xslout:value-of select="{mapping:attribute($name)}"/>
+    </xsl:function>
+
+    <xsl:function name="mapping:attributesByName" as="node()*">
+        <xsl:param name="name" as="xs:string"/>
+        <xslout:value-of select="for $c in {mapping:attributes($name)} return mapping:transformToNBSP($c)" separator=" "/>
+    </xsl:function>
+
     <xsl:function name="mapping:defaultForName" as="node()*">
         <xsl:param name="name" as="xs:string"/>
         <xsl:choose>

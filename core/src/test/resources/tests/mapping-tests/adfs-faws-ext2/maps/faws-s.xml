@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         version="RAX-1">
+   <rules>
+      <rule>
+         <local>
+            <user>
+               <domain value="5821006"/>
+               <name value="{D}"/>
+               <email value="{At(http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress)}"/>
+               <roles value="{Ats(http://schemas.xmlsoap.org/claims/Group)}" multiValue="true"/>
+               <expire value="{D}"/>
+            </user>
+         </local>
+      </rule>
+      <rule>
+         <local>
+            <faws xsi:type="LocalAttributeGroup">
+               <canAddAWSAccount value="true" xsi:type="LocalAttribute"/>
+               <attribute name="991049284483"
+                          value="fanatical_aws:admin AdminstratorAccess"
+                          multiValue="true"/>
+               <attribute name="042423532529"
+                          value="fanatical_aws:observer RackspaceReadOnly"
+                          multiValue="true"/>
+            </faws>
+         </local>
+         <remote>
+            <attribute name="http://schemas.xmlsoap.org/claims/Group" anyOneOf="test_group_2"/>
+         </remote>
+      </rule>
+   </rules>
+</mapping>

@@ -1,0 +1,37 @@
+ {
+  "mapping": {
+    "rules": [
+       {
+        "remote": [
+           {
+            "path":"'AWSPolicy'"
+           }
+         ],
+        "local": {
+          "user": {
+            "domain":"{D}",
+            "foo":"{At(bar)}",
+            "name":"{D}",
+            "email":"{D}",
+            "roles":"{D}",
+            "expire":"{D}"
+           },
+          "faws": {
+            "policy":"{0}"
+           }
+         }
+       },
+       {
+        "local": {
+          "user": {
+
+           },
+          "faws": {
+            "policy":"AWSPolicy2"
+           }
+         }
+       }
+     ],
+    "version":"RAX-1"
+   }
+ }

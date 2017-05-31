@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         version="RAX-1">
+   <rules>
+      <rule>
+        <local>
+            <user>
+                <name value="{0}"/>
+                <email value="{At(email)}"/>
+                <expire value="{1}"/>
+                <domain value="{At(domain)}"/>
+                <roles value="{Ats(roles)}"/>
+            </user>
+        </local>
+        <remote>
+            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"/>
+            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/>
+        </remote>
+      </rule>
+   </rules>
+</mapping>

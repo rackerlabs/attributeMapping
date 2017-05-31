@@ -6,6 +6,7 @@
 1. Clean up : Add .DS_Store to .gitignore
 1. Fixed bug in JSON to XML Conversion of attribute policy
 1. Adding new call to validate policy given a JSONNode
+1. Added support for {At()} and {Ats()} which provides direct access to attributes in a template.
 
 ## Release 1.0.2 (2017-02-20) ##
 1. Fixed a bug where an empty extension attribute value creates a malformed SAMLResponse
