@@ -17,25 +17,25 @@ above and the format implemented here (these are described below)
 however the concepts and much of the format is compatible.
 
 The main idea is that a SAML Request is sent to the identity
-provider -- if a Mapping Policy existis then the policy translates
+provider -- if a Mapping Policy exists then the policy translates
 this SAML Request into one the Identity System can understand.
 
 The current implementation is non-destructive which means it simply
 adds a new Assertion to the Request that contains only the mapped
 attributes -- with the idea that the Identity System will process the
 new assertion.  The initial assertion is kept on the request -- and
-the signiture of that assertion can still be verified.
+the signature of that assertion can still be verified.
 
-## Building CLI utilites
+## Building CLI utilities
 
-You can interact with the polcy engine with CLI utilites to build
+You can interact with the policy engine with CLI utilities to build
 these utilities you will need.
 
 1. Java 1.8
 2. Maven 3.3 (https://maven.apache.org/download.cgi)
 3. GCC C compiler
 
-Once you've intalled these in the main directory simply type:
+Once you've installed these in the main directory simply type:
 
 ````shell
 mvn install
@@ -44,11 +44,11 @@ mvn install
 You'll need to have Maven and Java in the system path.  Next add the
 ```bin``` directory to your system path. 
 
-## CLI utilites
+## CLI utilities
 
 1. attribmap : given a Mapping Policy and a SAML Request -- displays
 standard attributes according to the mapping.  OR if the ```-s```
-flaged is used outputs a modifed SAML Request with a new assertion.
+flagged is used outputs a modified SAML Request with a new assertion.
 
 1. attribmap2xml : converts a JSON policy to XML, cus XML is
 beautiful.
@@ -56,7 +56,7 @@ beautiful.
 1. attribmap2json : converts an XML policy to JSON, cus JSON rocks!
 
 1. attribmap2xsl : converts a Mapping Policy to an XSL 2.0 stylesheet
-that can be used to efficently translate SAML Request so that it
+that can be used to efficiently translate SAML Request so that it
 contains a new assertion with the mapped attributes.
 
 ## Differences from OpenStack Policy
@@ -72,7 +72,7 @@ https://github.com/rackerlabs/attributeMapping/tree/master/core/src/test/resourc
 Each test suite is a directory with two subdirectories:
 
 1. ```maps``` : contain different versions of a Mapping Policy which
-are functionally equivilant.
+are functionally equivalent.
 
 2. ```asserts``` : contain different SAML assertions that will work
 with the policy.
@@ -113,7 +113,7 @@ beginning of the file like this:
 These assertions are made are on the converted SAML an the test passes
 only if they all validate to true.
 
-There are a numeber of built in functions that XPath implementation
+There are a number of built in functions that XPath implementation
 understands:
 
 1. ```mapping:get-attributes()```  : Takes a name of an attribute and
@@ -138,6 +138,6 @@ can find a list of XPath 2.0 function here:
 
 http://www.w3schools.com/xml/xsl_functions.asp
 
-TODO : other resoures
+TODO : other resources
 
 
