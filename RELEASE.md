@@ -4,6 +4,7 @@
 1. Clean up : Better reporting of failed tests
 1. Clean up : Reuse common assertions in test suite
 1. Clean up : Add .DS_Store to .gitignore
+1. Fixed bug with {D} on role attribute if a role value contained a space
 1. Fixed bug in JSON to XML Conversion of attribute policy
 1. Adding new call to validate policy given a JSONNode
 
