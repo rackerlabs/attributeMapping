@@ -15,53 +15,22 @@
  */
 package com.rackspace.identity.components
 
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, OutputStream, Writer}
 import java.net.URI
-import java.io.File
-import java.io.OutputStream
-import java.io.Writer
-import java.io.ByteArrayOutputStream
-import java.io.ByteArrayInputStream
-
-import javax.xml.transform.Source
-import javax.xml.transform.stream.StreamSource
-import javax.xml.transform.stream.StreamResult
-import javax.xml.transform.sax.SAXResult
-import javax.xml.transform.dom.DOMSource
-import javax.xml.validation.SchemaFactory
-import javax.xml.validation.Schema
-
 import javax.xml.parsers.DocumentBuilder
-
-import com.rackspace.cloud.api.wadl.util.LogErrorListener
-import com.rackspace.cloud.api.wadl.util.XSLErrorDispatcher
-
-import net.sf.saxon.serialize.MessageWarner
-import net.sf.saxon.Configuration.LicenseFeature._
-
-import net.sf.saxon.s9api.QName
-import net.sf.saxon.s9api.Processor
-import net.sf.saxon.s9api.Serializer
-import net.sf.saxon.s9api.Destination
-import net.sf.saxon.s9api.XdmDestination
-import net.sf.saxon.s9api.TeeDestination
-import net.sf.saxon.s9api.DOMDestination
-import net.sf.saxon.s9api.SAXDestination
-import net.sf.saxon.s9api.XdmAtomicValue
-import net.sf.saxon.s9api.XsltTransformer
-import net.sf.saxon.s9api.XsltExecutable
-import net.sf.saxon.s9api.XQueryExecutable
-import net.sf.saxon.s9api.XQueryEvaluator
-import net.sf.saxon.s9api.XdmValue
-import net.sf.saxon.s9api.SchemaManager
-
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.SerializationFeature
+import javax.xml.transform.Source
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.sax.SAXResult
+import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.{Schema, SchemaFactory}
 
 import com.fasterxml.jackson.databind.node.ObjectNode
-
+import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper, SerializationFeature}
+import com.rackspace.cloud.api.wadl.util.LogErrorListener
 import com.rackspace.com.papi.components.checker.util.XMLParserPool
-
+import net.sf.saxon.Configuration.LicenseFeature._
+import net.sf.saxon.s9api._
+import net.sf.saxon.serialize.MessageWarner
 import org.w3c.dom.Document
 
 object XSDEngine extends Enumeration {
@@ -70,26 +39,44 @@ object XSDEngine extends Enumeration {
   val XERCES = Value("xerces")
 }
 
-import XSDEngine._
+import com.rackspace.identity.components.XSDEngine._
 
 object AttributeMapper {
+
+  //
+  // The version of XQuery (and, by extension, XPath) to use.
+  //
+  final val XQUERY_VERSION = 31
+  final val XQUERY_VERSION_STRING = "3.1"
+
   val processor = {
     val p = new Processor(true)
     val dynLoader = p.getUnderlyingConfiguration.getDynamicLoader
     dynLoader.setClassLoader(getClass.getClassLoader)
     p
   }
+  private val internalProcessor = {
+    val p = new Processor(processor.getUnderlyingConfiguration)
+    p.registerExtensionFunction(new ValidateXPathFunction(p.getUnderlyingConfiguration))
+    p
+  }
 
   val compiler = processor.newXsltCompiler
   val xqueryCompiler = {
     val c = processor.newXQueryCompiler
-    c.setLanguageVersion("3.1")
+    c.setLanguageVersion(XQUERY_VERSION_STRING)
+    c
+  }
+  private val internalXQueryCompiler = {
+    val c = internalProcessor.newXQueryCompiler
+    c.setLanguageVersion(XQUERY_VERSION_STRING)
     c
   }
 
   private val mapperXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/mapping.xsl").toString))
   private lazy val mapper2JSONExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2JSON.xq"))
   private lazy val mapper2XMLExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2XML.xq"))
+  private lazy val extractNamespacesExec = internalXQueryCompiler.compile(getClass.getResourceAsStream("/xq/extract-namespaces.xq"))
 
   private lazy val mappingXSDSource = new StreamSource(getClass.getResource("/xsd/mapping.xsd").toString)
 
@@ -185,7 +172,19 @@ object AttributeMapper {
   }
 
   def validatePolicy (policy : Source, engineStr : String) : Source = {
-    validate(policy, engineStr, mappingSchema, mappingSchemaManager)
+    val docBuilder = processor.newDocumentBuilder
+    val xdmPolicy = docBuilder.build(policy).asSource()
+
+    //
+    // Pre-parse the source to verify that XPath expressions are acceptable.
+    //
+    val dest = new XdmDestination
+    val evaluator = getXQueryEvaluator(extractNamespacesExec)
+    evaluator.setSource(xdmPolicy)
+    evaluator.setDestination(dest)
+    evaluator.run()
+
+    validate(xdmPolicy, engineStr, mappingSchema, mappingSchemaManager)
   }
 
   def validatePolicy (policy : JsonNode, engineStr : String) : JsonNode = {
