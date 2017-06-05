@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:foo="bar"
+         version="RAX-1">
+   <rules>
+      <rule>
+        <local>
+            <user>
+                <!-- Get default from another attribute -->
+                <name value="{D}"/>
+                <email value="{At(FirstName)} {At(LastName)} &lt;{D(name)}@{D(domain)}.rackspace.com&gt;"/>
+                <expire value="{D}"/>
+                <domain value="{D}"/>
+                <roles value="{D}"/>
+            </user>
+        </local>
+      </rule>
+   </rules>
+</mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         version="RAX-1">
+   <rules>
+      <rule>
+        <local>
+            <user>
+                <name value="{D}"/>
+                <email value="{At('e'mail)}"/>
+                <expire value="{D}"/>
+                <domain value="{At(&#34;do&#34;ma'in')}"/>
+                <roles value="{D}"/>
+            </user>
+        </local>
+      </rule>
+   </rules>
+</mapping>
