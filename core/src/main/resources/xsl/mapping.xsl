@@ -455,7 +455,7 @@
             <xsl:when test="$name='expire'"><xslout:value-of select="(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)[1]"/></xsl:when>
             <xsl:when test="$name='email'"><xslout:value-of select="{mapping:attribute('email')}"/></xsl:when>
             <xsl:when test="$name='domain'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
-            <xsl:when test="$name='roles'"><xslout:value-of select="{mapping:attributes('roles')}" separator=" "/></xsl:when>
+            <xsl:when test="$name='roles'"><xslout:value-of select="for $c in {mapping:attributes('roles')} return mapping:transformToNBSP($c)" separator=" "/></xsl:when>
             <xsl:otherwise>
                 <xsl:message terminate="yes">[ERROR] No default value for attribute <xsl:value-of select="$name"/></xsl:message>
             </xsl:otherwise>
