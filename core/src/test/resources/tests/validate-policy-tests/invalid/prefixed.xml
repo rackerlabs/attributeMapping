@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:foo="http://www.w3.org/2005/xpath-functions"
+         version="RAX-1">
+    <rules>
+        <rule>
+            <local/>
+            <remote>
+                <attribute path="foo:doc('file:///example.xml')"/>
+                <attribute path="foo:doc-available('file:///example.xml')"/>
+            </remote>
+        </rule>
+    </rules>
+</mapping>

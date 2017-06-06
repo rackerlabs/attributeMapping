@@ -1,0 +1,21 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "foo:doc('file:///example.xml')"
+          },
+          {
+            "path": "foo:doc-available('file:///example.xml')"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1",
+    "namespaces": {
+      "foo": "http://www.w3.org/2005/xpath-functions"
+    }
+  }
+}
