@@ -152,7 +152,8 @@ object ValidateXPathFunction {
   )
 
   private final val FUNCTIONS = List(
-    XQFunction("get-attributes", List(value.SequenceType.SINGLE_STRING), value.SequenceType.SINGLE_STRING)
+    XQFunction("get-attribute", List(value.SequenceType.SINGLE_STRING), value.SequenceType.SINGLE_STRING),
+    XQFunction("get-attributes", List(value.SequenceType.SINGLE_STRING), value.SequenceType.STRING_SEQUENCE)
   )
 
   private case class XQFunction(name: String, argTypes: List[value.SequenceType], retType: value.SequenceType)
