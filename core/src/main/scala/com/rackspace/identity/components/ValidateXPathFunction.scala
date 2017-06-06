@@ -71,35 +71,46 @@ class ValidateXPathFunction(conf: Configuration) extends ExtensionFunction {
 
   override def call(arguments: Array[XdmValue]): XdmValue = {
     val remoteNode: XdmNode = arguments(0).asInstanceOf[XdmNode]
-    val path = extractPathAttrib(remoteNode)
-    val nsmap = COMMON_NS_MAP ++ extractNamespaceAttribs(remoteNode)
-    val exp: Expression = parseXPath(path, getXPathContext(nsmap))
+    val nsmap = COMMON_NS_MAP ++ extractNamespaces(remoteNode)
+    val paths = extractPaths(remoteNode)
 
-    ExpressionProcessor(exp, e => {
-      if (e.isCallOnSystemFunction(DOC_FUNCTION_NAME) || e.isCallOnSystemFunction(DOC_AVAILABLE_FUNCTION_NAME)) {
-        throw new XPathException(s"`$DOC_FUNCTION_NAME` and `$DOC_AVAILABLE_FUNCTION_NAME` are not allowed in a policy path")
-      }
-    })
+    paths foreach { path =>
+      val expr = parseXPath(path, getXPathContext(nsmap))
+
+      ExpressionProcessor(expr, e => {
+        if (e.isCallOnSystemFunction(DOC_FUNCTION_NAME) || e.isCallOnSystemFunction(DOC_AVAILABLE_FUNCTION_NAME)) {
+          throw new XPathException(s"`$DOC_FUNCTION_NAME` and `$DOC_AVAILABLE_FUNCTION_NAME` are not allowed in a policy path")
+        }
+      })
+    }
 
     remoteNode
   }
 
   //
-  // Extracts the value of the path attribute from a node.
+  // Extracts all of the path attribute values for all remote nodes.
   //
-  private def extractPathAttrib(remoteNode: XdmNode): String = {
-    remoteNode.axisIterator(Axis.ATTRIBUTE).asScala
+  private def extractPaths(remoteNode: XdmNode): Seq[String] = {
+    remoteNode.axisIterator(Axis.CHILD).asScala
+      .map(_.asInstanceOf[XdmNode])
+      .filter(_.getNodeName.getLocalName == "remotes")
+      .flatMap(_.axisIterator(Axis.CHILD).asScala)
+      .map(_.asInstanceOf[XdmNode])
+      .flatMap(_.axisIterator(Axis.ATTRIBUTE).asScala)
       .map(_.asInstanceOf[XdmNode])
       .filter(_.getNodeName.getLocalName == "path")
       .map(_.getStringValue)
-      .next()
+      .toSeq
   }
 
   //
-  // Extracts the values of the prefix and uri attributes from every child node of a node.
+  // Extracts all of the namespaces defined in the root node.
   //
-  private def extractNamespaceAttribs(remoteNode: XdmNode): Map[String, String] = {
+  private def extractNamespaces(remoteNode: XdmNode): Map[String, String] = {
     remoteNode.axisIterator(Axis.CHILD).asScala
+      .map(_.asInstanceOf[XdmNode])
+      .filter(_.getNodeName.getLocalName == "namespaces")
+      .flatMap(_.axisIterator(Axis.CHILD).asScala)
       .map(_.asInstanceOf[XdmNode])
       .map(_.axisIterator(Axis.ATTRIBUTE).asScala)
       .map(attribs => {

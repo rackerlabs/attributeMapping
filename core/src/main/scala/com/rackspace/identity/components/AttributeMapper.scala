@@ -76,7 +76,7 @@ object AttributeMapper {
   private val mapperXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/mapping.xsl").toString))
   private lazy val mapper2JSONExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2JSON.xq"))
   private lazy val mapper2XMLExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2XML.xq"))
-  private lazy val extractNamespacesExec = internalXQueryCompiler.compile(getClass.getResourceAsStream("/xq/extract-namespaces.xq"))
+  private lazy val validateXPathExec = internalXQueryCompiler.compile(getClass.getResourceAsStream("/xq/validate-xpath.xq"))
 
   private lazy val mappingXSDSource = new StreamSource(getClass.getResource("/xsd/mapping.xsd").toString)
 
@@ -179,7 +179,7 @@ object AttributeMapper {
     // Pre-parse the source to verify that XPath expressions are acceptable.
     //
     val dest = new XdmDestination
-    val evaluator = getXQueryEvaluator(extractNamespacesExec)
+    val evaluator = getXQueryEvaluator(validateXPathExec)
     evaluator.setSource(xdmPolicy)
     evaluator.setDestination(dest)
     evaluator.run()
