@@ -1,6 +1,6 @@
 # Releases #
 
-## In Progress Work ##
+## Release 1.1.1 (2017-06-07) ##
 1. Fixed a bug where supported policy XPath functions were not properly declared
 
 ## Release 1.1.0 (2017-06-05) ##
