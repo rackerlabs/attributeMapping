@@ -1,5 +1,8 @@
 # Releases #
 
+## In Progress Work ##
+1. Fixed a bug where supported policy XPath functions were not properly declared
+
 ## Release 1.1.0 (2017-06-05) ##
 1. Clean up : Better reporting of failed tests
 1. Clean up : Reuse common assertions in test suite

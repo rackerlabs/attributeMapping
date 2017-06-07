@@ -18,7 +18,7 @@ package com.rackspace.identity.components
 import java.io.File
 import javax.xml.transform.stream.StreamSource
 
-import net.sf.saxon.s9api.SaxonApiException
+import net.sf.saxon.s9api.{SaxonApiException, XdmDestination}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
@@ -27,27 +27,88 @@ class ValidatePolicySuite extends AttributeMapperBase {
 
   val testDir = new File("src/test/resources/tests/validate-policy-tests")
 
-  val validPolicies = new File(testDir, "valid").listFiles.toList.filter { f =>
-    f.getName.endsWith("xml") || f.getName.endsWith("json")
+  val xmlValidPolicies = new File(testDir, "valid").listFiles.toList.filter { f =>
+    f.getName.endsWith("xml")
   }
-  val invalidPolicies = new File(testDir, "invalid").listFiles.toList.filter { f =>
-    f.getName.endsWith("xml") || f.getName.endsWith("json")
+  val xmlInvalidPolicies = new File(testDir, "invalid").listFiles.toList.filter { f =>
+    f.getName.endsWith("xml")
+  }
+
+  val jsonValidPolicies = new File(testDir, "valid").listFiles.toList.filter { f =>
+    f.getName.endsWith("json")
+  }
+  val jsonInvalidPolicies = new File(testDir, "invalid").listFiles.toList.filter { f =>
+    f.getName.endsWith("json")
   }
 
   validators foreach { validator =>
-    validPolicies foreach { policy =>
+    xmlValidPolicies foreach { policy =>
       test(s"A Valid Policy Validates ($policy validated with $validator)") {
         val source = new StreamSource(policy)
         AttributeMapper.validatePolicy(source, validator)
       }
     }
 
-    invalidPolicies foreach { policy =>
+    xmlInvalidPolicies foreach { policy =>
       test(s"An Invalid Policy Fails Validation ($policy validated with $validator)") {
         val source = new StreamSource(policy)
-        intercept[SaxonApiException] {
+        val e = intercept[SaxonApiException] {
           AttributeMapper.validatePolicy(source, validator)
         }
+        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+      }
+
+      test(s"An Invalid Policy Fails XSL Compilation ($policy compiled with $validator)") {
+        val source = new StreamSource(policy)
+        val e = intercept[SaxonApiException] {
+          AttributeMapper.generateXSL(source, new XdmDestination, isJSON = false, validate = true, validator)
+        }
+        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+      }
+
+      test(s"An Invalid Policy Fails XSLExec Compilation ($policy compiled with $validator)") {
+        val source = new StreamSource(policy)
+        val e = intercept[SaxonApiException] {
+          AttributeMapper.generateXSLExec(source, isJSON = false, validate = true, validator)
+        }
+        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+      }
+    }
+
+    jsonValidPolicies foreach { policy =>
+      test(s"A Valid Policy Validates ($policy validated with $validator)") {
+        val source = new StreamSource(policy)
+        val json = AttributeMapper.parseJsonNode(source)
+        AttributeMapper.validatePolicy(json, validator)
+      }
+    }
+
+    jsonInvalidPolicies foreach { policy =>
+      test(s"An Invalid Policy Fails Validation ($policy validated with $validator)") {
+        val source = new StreamSource(policy)
+        val json = AttributeMapper.parseJsonNode(source)
+        val e = intercept[SaxonApiException] {
+          AttributeMapper.validatePolicy(json, validator)
+        }
+        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+      }
+
+      test(s"An Invalid Policy Fails XSL Compilation ($policy compiled with $validator)") {
+        val source = new StreamSource(policy)
+        val json = AttributeMapper.parseJsonNode(source)
+        val e = intercept[SaxonApiException] {
+          AttributeMapper.generateXSL(json, new XdmDestination, validate = true, validator)
+        }
+        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+      }
+
+      test(s"An Invalid Policy Fails XSLExec Compilation ($policy compiled with $validator)") {
+        val source = new StreamSource(policy)
+        val json = AttributeMapper.parseJsonNode(source)
+        val e = intercept[SaxonApiException] {
+          AttributeMapper.generateXSLExec(json, validate = true, validator)
+        }
+        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
       }
     }
   }

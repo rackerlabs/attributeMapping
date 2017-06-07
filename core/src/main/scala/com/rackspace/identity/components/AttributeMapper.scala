@@ -49,6 +49,12 @@ object AttributeMapper {
   final val XQUERY_VERSION = 31
   final val XQUERY_VERSION_STRING = "3.1"
 
+  //
+  // The namespace components for the "mapping" namespace.
+  //
+  final val MAPPING_NS_PREFIX = "mapping"
+  final val MAPPING_NS_URI = "http://docs.rackspace.com/identity/api/ext/MappingRules"
+
   val processor = {
     val p = new Processor(true)
     val dynLoader = p.getUnderlyingConfiguration.getDynamicLoader
@@ -67,16 +73,22 @@ object AttributeMapper {
     c.setLanguageVersion(XQUERY_VERSION_STRING)
     c
   }
-  private val internalXQueryCompiler = {
-    val c = internalProcessor.newXQueryCompiler
+  private val internalXPathCompiler = {
+    val c = internalProcessor.newXPathCompiler()
     c.setLanguageVersion(XQUERY_VERSION_STRING)
+    c.declareNamespace(MAPPING_NS_PREFIX, MAPPING_NS_URI)
     c
   }
 
   private val mapperXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/mapping.xsl").toString))
   private lazy val mapper2JSONExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2JSON.xq"))
   private lazy val mapper2XMLExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2XML.xq"))
-  private lazy val extractNamespacesExec = internalXQueryCompiler.compile(getClass.getResourceAsStream("/xq/extract-namespaces.xq"))
+  private lazy val validateXPathExec = internalXPathCompiler.compile(
+    """
+      |for $path in //mapping:remote/mapping:attribute[@path]/@path
+      |return mapping:validate-xpath(/mapping:mapping, $path)
+    """.stripMargin
+  )
 
   private lazy val mappingXSDSource = new StreamSource(getClass.getResource("/xsd/mapping.xsd").toString)
 
@@ -173,18 +185,16 @@ object AttributeMapper {
 
   def validatePolicy (policy : Source, engineStr : String) : Source = {
     val docBuilder = processor.newDocumentBuilder
-    val xdmPolicy = docBuilder.build(policy).asSource()
+    val xdmPolicy = docBuilder.build(policy)
 
     //
     // Pre-parse the source to verify that XPath expressions are acceptable.
     //
-    val dest = new XdmDestination
-    val evaluator = getXQueryEvaluator(extractNamespacesExec)
-    evaluator.setSource(xdmPolicy)
-    evaluator.setDestination(dest)
-    evaluator.run()
+    val xpathSelector = validateXPathExec.load()
+    xpathSelector.setContextItem(xdmPolicy)
+    xpathSelector.evaluate()
 
-    validate(xdmPolicy, engineStr, mappingSchema, mappingSchemaManager)
+    validate(xdmPolicy.asSource, engineStr, mappingSchema, mappingSchemaManager)
   }
 
   def validatePolicy (policy : JsonNode, engineStr : String) : JsonNode = {

@@ -1,0 +1,18 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "\u0064oc('file:///example.xml')"
+          },
+          {
+            "path": "d\u006Fc-available('file:///example.xml')"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1"
+  }
+}
