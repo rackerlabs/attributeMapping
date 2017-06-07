@@ -15,7 +15,7 @@
   */
 package com.rackspace.identity.components
 
-import com.rackspace.identity.components.AttributeMapper.XQUERY_VERSION
+import com.rackspace.identity.components.AttributeMapper.{MAPPING_NS_PREFIX, MAPPING_NS_URI, XQUERY_VERSION}
 import net.sf.saxon.expr.instruct.UserFunctionParameter
 import net.sf.saxon.expr.parser.XPathParser
 import net.sf.saxon.expr.{Expression, StaticContext}
@@ -25,6 +25,7 @@ import net.sf.saxon.query.{XQueryFunction, XQueryFunctionLibrary}
 import net.sf.saxon.s9api._
 import net.sf.saxon.sxpath.{IndependentContext, XPathStaticContext}
 import net.sf.saxon.trans.XPathException
+import net.sf.saxon.tree.NamespaceNode
 import net.sf.saxon.{Configuration, value}
 
 import scala.collection.JavaConverters._
@@ -58,7 +59,10 @@ class ValidateXPathFunction(conf: Configuration) extends ExtensionFunction {
   }
 
   override def getArgumentTypes: Array[SequenceType] = {
-    Array(SequenceType.makeSequenceType(ItemType.ANY_NODE, OccurrenceIndicator.ONE))
+    Array(
+      SequenceType.makeSequenceType(ItemType.ANY_NODE, OccurrenceIndicator.ONE),
+      SequenceType.makeSequenceType(ItemType.STRING, OccurrenceIndicator.ONE)
+    )
   }
 
   override def getName: QName = {
@@ -66,59 +70,32 @@ class ValidateXPathFunction(conf: Configuration) extends ExtensionFunction {
   }
 
   override def getResultType: SequenceType = {
-    SequenceType.makeSequenceType(ItemType.ANY_NODE, OccurrenceIndicator.ONE)
+    SequenceType.makeSequenceType(ItemType.BOOLEAN, OccurrenceIndicator.ONE)
   }
 
   override def call(arguments: Array[XdmValue]): XdmValue = {
-    val remoteNode: XdmNode = arguments(0).asInstanceOf[XdmNode]
-    val nsmap = COMMON_NS_MAP ++ extractNamespaces(remoteNode)
-    val paths = extractPaths(remoteNode)
+    val rootNode = arguments(0).asInstanceOf[XdmNode]
+    val path = arguments(1).asInstanceOf[XdmAtomicValue].getStringValue
+    val nsmap = COMMON_NS_MAP ++ extractNamespaces(rootNode)
+    val expr = parseXPath(path, getXPathContext(nsmap))
 
-    paths foreach { path =>
-      val expr = parseXPath(path, getXPathContext(nsmap))
+    ExpressionProcessor(expr, e => {
+      if (e.isCallOnSystemFunction(DOC_FUNCTION_NAME) || e.isCallOnSystemFunction(DOC_AVAILABLE_FUNCTION_NAME)) {
+        throw new XPathException(s"`$DOC_FUNCTION_NAME` and `$DOC_AVAILABLE_FUNCTION_NAME` are not allowed in a policy path")
+      }
+    })
 
-      ExpressionProcessor(expr, e => {
-        if (e.isCallOnSystemFunction(DOC_FUNCTION_NAME) || e.isCallOnSystemFunction(DOC_AVAILABLE_FUNCTION_NAME)) {
-          throw new XPathException(s"`$DOC_FUNCTION_NAME` and `$DOC_AVAILABLE_FUNCTION_NAME` are not allowed in a policy path")
-        }
-      })
-    }
-
-    remoteNode
+    new XdmAtomicValue(true)
   }
 
   //
-  // Extracts all of the path attribute values for all remote nodes.
+  // Extracts all of the namespaces defined in the provided node.
   //
-  private def extractPaths(remoteNode: XdmNode): Seq[String] = {
-    remoteNode.axisIterator(Axis.CHILD).asScala
-      .map(_.asInstanceOf[XdmNode])
-      .filter(_.getNodeName.getLocalName == "remotes")
-      .flatMap(_.axisIterator(Axis.CHILD).asScala)
-      .map(_.asInstanceOf[XdmNode])
-      .flatMap(_.axisIterator(Axis.ATTRIBUTE).asScala)
-      .map(_.asInstanceOf[XdmNode])
-      .filter(_.getNodeName.getLocalName == "path")
-      .map(_.getStringValue)
-      .toSeq
-  }
-
-  //
-  // Extracts all of the namespaces defined in the root node.
-  //
-  private def extractNamespaces(remoteNode: XdmNode): Map[String, String] = {
-    remoteNode.axisIterator(Axis.CHILD).asScala
-      .map(_.asInstanceOf[XdmNode])
-      .filter(_.getNodeName.getLocalName == "namespaces")
-      .flatMap(_.axisIterator(Axis.CHILD).asScala)
-      .map(_.asInstanceOf[XdmNode])
-      .map(_.axisIterator(Axis.ATTRIBUTE).asScala)
-      .map(attribs => {
-        val attribNodes = attribs.map(_.asInstanceOf[XdmNode])
-        val prefix = attribNodes.filter(_.getNodeName.getLocalName == "prefix").map(_.getStringValue).next()
-        val uri = attribNodes.filter(_.getNodeName.getLocalName == "uri").map(_.getStringValue).next()
-        prefix -> uri
-      })
+  private def extractNamespaces(node: XdmNode): Map[String, String] = {
+    node.axisIterator(Axis.NAMESPACE).asScala
+      .map(_.getUnderlyingValue)
+      .map(_.asInstanceOf[NamespaceNode])
+      .map(ns => ns.getDisplayName -> ns.getStringValue)
       .toMap
   }
 
@@ -149,13 +126,11 @@ class ValidateXPathFunction(conf: Configuration) extends ExtensionFunction {
 
 object ValidateXPathFunction {
 
-  private final val MAPPING_NS_PREFIX = "mapping"
-  private final val MAPPING_NS_URI = "http://docs.rackspace.com/identity/api/ext/MappingRules"
   private final val LOCAL_NAME = "validate-xpath"
   private final val DOC_FUNCTION_NAME = "doc"
   private final val DOC_AVAILABLE_FUNCTION_NAME = "doc-available"
   private final val COMMON_NS_MAP = Map(
-    "mapping" -> MAPPING_NS_URI,
+    MAPPING_NS_PREFIX -> MAPPING_NS_URI,
     "saml2" -> "urn:oasis:names:tc:SAML:2.0:assertion",
     "saml2p" -> "urn:oasis:names:tc:SAML:2.0:protocol",
     "xs" -> "http://www.w3.org/2001/XMLSchema",
