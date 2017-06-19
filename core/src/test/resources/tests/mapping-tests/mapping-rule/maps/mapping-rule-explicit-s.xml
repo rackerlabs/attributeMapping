@@ -6,19 +6,16 @@
       <rule>
         <local>
             <user>
-                <name value="{0}" type="xs:string" multiValue="false"/>
+                <name value="{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}" type="xs:string" multiValue="false"/>
                 <email value="{At(email)}" type="xs:string" multiValue="false"/>
-                <expire value="{1}" type="xs:dateTime" multiValue="false"/>
+                <expire
+                    value="{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}"
+                    type="xs:dateTime"
+                    multiValue="false"/>
                 <domain value="{At(domain)}" type="xs:string" multiValue="false"/>
                 <roles value="{Ats(roles)}" type="xs:string" multiValue="true"/>
             </user>
         </local>
-        <remote>
-            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"
-                       multiValue="false"/>
-            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"
-                       multiValue="false"/>
-        </remote>
       </rule>
    </rules>
 </mapping>

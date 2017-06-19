@@ -1,0 +1,36 @@
+ {
+  "mapping": {
+    "rules": [
+       {
+        "local": {
+          "user": {
+            "ext": {
+              "value": [
+                  "{Ats(ext2)}",
+                  "value {Pts('with space3')}",
+                  "{Pts(('value4'))}"
+               ],
+              "multiValue":true
+             },
+            "domain":"{D}",
+            "name":"{D}",
+            "email":"{D}",
+              "roles": ["{Ats(roles)}", "role {Pts('with space3')}",
+                        "{Pts(('role4'))}"],
+            "expire":"{D}"
+           },
+          "extGroup": {
+            "ext2": {
+                "value": ["{Ats(ext2)}","{Pts(('value with space3', 'value4'))}"],
+                "multiValue":true
+             }
+           }
+         }
+       }
+     ],
+      "version":"RAX-1",
+      "namespaces" : {
+          "f" : "http://rackspace.com/foo"
+      }
+   }
+ }

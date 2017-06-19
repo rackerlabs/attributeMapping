@@ -1,0 +1,48 @@
+ {
+  "mapping": {
+    "rules": [
+       {
+        "local": {
+          "user": {
+            "ext": {
+                "value": ["{0}",
+                          "{2}"],
+              "multiValue":true
+             },
+            "domain":"{D}",
+            "name":"{D}",
+            "email":"{D}",
+              "roles": ["{D}", "{1}"],
+            "expire":"{D}"
+           },
+          "extGroup": {
+            "ext2": {
+              "value": [
+                  "{0}", "{2}"
+               ],
+              "multiValue":true
+             }
+           }
+        },
+           "remote" : [
+               {
+                   "name" : "ext2",
+                   "multiValue" : true
+               },
+               {
+                   "path" : "\/\/f:foo\/f:roles\/f:role",
+                   "multiValue" : true
+               },
+               {
+                   "path" : "\/\/f:foo\/f:extns\/f:ext",
+                   "multiValue" : true
+               }
+           ]
+       }
+    ],
+      "namespaces" : {
+          "f" : "http://rackspace.com/foo"
+      },
+    "version":"RAX-1"
+   }
+ }

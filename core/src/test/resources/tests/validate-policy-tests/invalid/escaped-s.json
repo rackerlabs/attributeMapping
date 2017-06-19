@@ -1,0 +1,19 @@
+{
+  "mapping": {
+    "rules": [
+       {
+        "local": {
+          "user": {
+              "domain":"{D}",
+              "name":"{D}",
+              "email":"{D}",
+              "expire" : "{D}",
+              "roles" : ["{Pts(\u0064oc('file:///example.xml'))}",
+                         "{Pts(d\u006Fc-available('file:///example.xml'))}"]
+          }
+        }
+       }
+     ],
+      "version":"RAX-1"
+  }
+}

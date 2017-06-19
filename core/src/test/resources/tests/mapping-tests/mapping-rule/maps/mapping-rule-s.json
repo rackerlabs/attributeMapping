@@ -2,21 +2,13 @@
   "mapping": {
     "rules": [
        {
-        "remote": [
-           {
-            "path":"\/saml2p:Response\/saml2:Assertion\/saml2:Subject\/saml2:NameID"
-           },
-           {
-            "path":"\/saml2p:Response\/saml2:Assertion\/saml2:Subject\/saml2:SubjectConfirmation\/saml2:SubjectConfirmationData\/@NotOnOrAfter"
-           }
-         ],
         "local": {
           "user": {
             "domain":"{At(domain)}",
-            "name":"{0}",
+            "name":"{Pt(\/saml2p:Response\/saml2:Assertion\/saml2:Subject\/saml2:NameID)}",
             "email":"{At(email)}",
             "roles":"{Ats(roles)}",
-            "expire":"{1}"
+            "expire":"{Pt(\/saml2p:Response\/saml2:Assertion\/saml2:Subject\/saml2:SubjectConfirmation\/saml2:SubjectConfirmationData\/@NotOnOrAfter)}"
            }
          }
        }

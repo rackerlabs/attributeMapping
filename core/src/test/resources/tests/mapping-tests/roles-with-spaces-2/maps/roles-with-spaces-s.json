@@ -1,0 +1,31 @@
+ {
+  "mapping": {
+    "rules": [
+       {
+        "local": {
+          "user": {
+            "ext": {
+              "value": [
+                  "{Ats(ext2)}",
+                  "{Ats(ext3)}"
+               ],
+              "multiValue":true
+             },
+            "domain":"{D}",
+            "name":"{D}",
+            "email":"{D}",
+              "roles": ["{Ats(roles)}", "{Ats(roles2)}"],
+            "expire":"{D}"
+           },
+          "extGroup": {
+            "ext2": {
+                "value": ["{Ats(ext2)}","{Ats(ext3)}"],
+                "multiValue":true
+             }
+           }
+         }
+       }
+     ],
+    "version":"RAX-1"
+   }
+ }
