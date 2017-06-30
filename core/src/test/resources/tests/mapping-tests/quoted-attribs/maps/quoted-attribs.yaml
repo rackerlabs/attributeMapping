@@ -1,0 +1,14 @@
+---
+mapping:
+  rules:
+  - remote:
+    - name: "'e'mail"
+    - name: '"do"ma''in'''
+    local:
+      user:
+        domain: "{1}"
+        name: "{D}"
+        email: "{0}"
+        roles: "{D}"
+        expire: "{D}"
+  version: RAX-1

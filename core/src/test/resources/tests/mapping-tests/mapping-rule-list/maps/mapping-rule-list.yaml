@@ -1,0 +1,21 @@
+---
+mapping:
+  rules:
+  - remote:
+    - path: "/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"
+    - name: email
+    - path: "/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"
+    - name: domain
+    - whitelist:
+      - nova:observer
+      - lbaas:observer
+      name: roles
+      multiValue: true
+    local:
+      user:
+        domain: "{3}"
+        name: "{0}"
+        email: "{1}"
+        roles: "{4}"
+        expire: "{2}"
+  version: RAX-1

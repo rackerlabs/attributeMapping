@@ -61,7 +61,7 @@ class ValidatePolicySuite extends AttributeMapperBase {
       test(s"An Invalid Policy Fails XSL Compilation ($policy compiled with $validator)") {
         val source = new StreamSource(policy)
         val e = intercept[SaxonApiException] {
-          AttributeMapper.generateXSL(source, new XdmDestination, isJSON = false, validate = true, validator)
+          AttributeMapper.generateXSL(source, PolicyFormat.XML, new XdmDestination, validate = true, validator)
         }
         assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
       }
@@ -69,10 +69,18 @@ class ValidatePolicySuite extends AttributeMapperBase {
       test(s"An Invalid Policy Fails XSLExec Compilation ($policy compiled with $validator)") {
         val source = new StreamSource(policy)
         val e = intercept[SaxonApiException] {
-          AttributeMapper.generateXSLExec(source, isJSON = false, validate = true, validator)
+          AttributeMapper.generateXSLExec(source, PolicyFormat.XML, validate = true, validator)
         }
         assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
       }
+    }
+
+    test(s"An Invalid Policy Format Fails Compilation with an exception (with $validator)") {
+      val source = new StreamSource()
+      val e = intercept[UnsupportedPolicyFormatException] {
+        AttributeMapper.generateXSL(source, null, new XdmDestination, validate = true, validator)
+      }
+      assert(e.getMessage.contains("is not supported"))
     }
 
     jsonValidPolicies foreach { policy =>

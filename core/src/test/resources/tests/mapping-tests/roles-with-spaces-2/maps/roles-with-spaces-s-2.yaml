@@ -1,0 +1,26 @@
+---
+mapping:
+  rules:
+  - local:
+      user:
+        ext:
+          value:
+          - "{Ats(ext2)}"
+          - "{Pts(//f:foo/f:extns/f:ext)}"
+          multiValue: true
+        domain: "{D}"
+        name: "{D}"
+        email: "{D}"
+        roles:
+        - "{Ats(roles)}"
+        - "{Pts(//f:foo/f:roles/f:role)}"
+        expire: "{D}"
+      extGroup:
+        ext2:
+          value:
+          - "{Ats(ext2)}"
+          - "{Pts(//f:foo/f:extns/f:ext)}"
+          multiValue: true
+  version: RAX-1
+  namespaces:
+    f: http://rackspace.com/foo

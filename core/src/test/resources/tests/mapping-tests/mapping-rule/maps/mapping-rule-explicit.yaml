@@ -1,0 +1,37 @@
+---
+mapping:
+  rules:
+  - remote:
+    - path: "/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"
+      multiValue: false
+    - name: email
+      multiValue: false
+    - path: "/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"
+      multiValue: false
+    - name: domain
+      multiValue: false
+    - name: roles
+      multiValue: true
+    local:
+      user:
+        domain:
+          value: "{3}"
+          multiValue: false
+          type: xs:string
+        name:
+          value: "{0}"
+          multiValue: false
+          type: xs:string
+        email:
+          value: "{1}"
+          multiValue: false
+          type: xs:string
+        roles:
+          value: "{4}"
+          multiValue: true
+          type: xs:string
+        expire:
+          value: "{2}"
+          multiValue: false
+          type: xs:dateTime
+  version: RAX-1

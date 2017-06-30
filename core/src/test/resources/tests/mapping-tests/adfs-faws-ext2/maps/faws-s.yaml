@@ -1,0 +1,26 @@
+---
+mapping:
+  rules:
+    - local:
+        user:
+          domain: '5821006'
+          name: "{D}"
+          email: "{At(http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress)}"
+          roles:
+            value: "{Ats(http://schemas.xmlsoap.org/claims/Group)}"
+            multiValue: true
+          expire: "{D}"
+    - remote:
+      - name: http://schemas.xmlsoap.org/claims/Group
+        anyOneOf:
+          - test_group_2
+      local:
+        faws:
+          canAddAWSAccount: true
+          991049284483:
+            - fanatical_aws:admin
+            - AdminstratorAccess
+          042423532529:
+            - fanatical_aws:observer
+            - RackspaceReadOnly
+  version: RAX-1

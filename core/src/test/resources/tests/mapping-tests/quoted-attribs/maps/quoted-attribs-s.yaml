@@ -1,0 +1,11 @@
+---
+mapping:
+  rules:
+  - local:
+      user:
+        domain: '{At("do"ma''in'')}'
+        name: "{D}"
+        email: "{At('e'mail)}"
+        roles: "{D}"
+        expire: "{D}"
+  version: RAX-1

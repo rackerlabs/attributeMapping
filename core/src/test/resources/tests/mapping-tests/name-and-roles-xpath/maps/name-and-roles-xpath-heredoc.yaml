@@ -1,0 +1,23 @@
+---
+mapping:
+  rules:
+    - remote:
+      - path: |
+         (:
+            If the number of seconds is even, then the role should be
+            nova:admin and lbaas:admin
+
+            Otherwise the roles should be nova:observe and lbaas:observer.
+         :)
+         if ((xs:integer(seconds-from-time(current-time())) mod 2) = 0)
+               then ('nova:admin','lbaas:admin')
+               else ('nova:observer','lbaas:observer')
+        multiValue: true
+      local:
+        user:
+          domain: '78334'
+          name: "{D}"
+          email: "{D}"
+          roles: "{0}"
+          expire: "{D}"
+  version: RAX-1

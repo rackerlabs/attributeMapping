@@ -1,0 +1,19 @@
+---
+mapping:
+  rules:
+  - remote:
+    - path: "/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"
+    - path: foo:get-attribute('email')
+    - path: foo:get-attribute('domain')
+    - path: foo:get-attributes('roles')
+      multiValue: true
+    local:
+      user:
+        domain: "{2}"
+        name: "{0}"
+        email: "{1}"
+        roles: "{3}"
+        expire: PT2H
+  version: RAX-1
+  namespaces:
+    foo: http://docs.rackspace.com/identity/api/ext/MappingRules

@@ -48,7 +48,7 @@ You'll need to have Maven and Java in the system path.  Next add the
 
 1. attribmap : given a Mapping Policy and a SAML Request -- displays
 standard attributes according to the mapping.  OR if the ```-s```
-flagged is used outputs a modified SAML Request with a new assertion.
+flag is used, then outputs a modified SAML Request with a new assertion.
 
 1. attribmap2xml : converts a JSON policy to XML, cus XML is
 beautiful.
@@ -110,14 +110,14 @@ beginning of the file like this:
 <saml2p:Response ID="_7fcd6173-e6e0-45a4-a2fd-74a4ef85bf30" 
 ````
 
-These assertions are made are on the converted SAML an the test passes
+These assertions are made on the converted SAML and the test passes
 only if they all validate to true.
 
-There are a number of built in functions that XPath implementation
+There are a number of built in functions the XPath implementation
 understands:
 
 1. ```mapping:get-attributes()```  : Takes a name of an attribute and
-returns sequence of all of its values -- only in the FIRST
+returns a sequence of all of its values -- only in the FIRST
 (translated) assertion.
 
 1. ```mapping:get-attribute()```  : Does the same as above but only
@@ -126,7 +126,8 @@ returns the first value.
 1. ```mapping:get-expire()``` : Gets the expiration time as an
 ```xs:dateTime`` so you can do assertions based on time. 
 
-If a test fails take a look in the directory ```core/target/surefire-reports/```.
+If a test fails, then take a look in the
+```core/target/surefire-reports/``` directory.
 
 That directory will contain txt files with a detailed explanation on
 why a test failed.

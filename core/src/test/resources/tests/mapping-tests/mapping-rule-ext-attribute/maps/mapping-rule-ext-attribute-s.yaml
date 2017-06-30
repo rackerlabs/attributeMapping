@@ -1,0 +1,18 @@
+---
+mapping:
+  rules:
+  - local:
+      user:
+        domain: "{D}"
+        foo: "{At(bar)}"
+        name: "{D}"
+        email: "{D}"
+        roles: "{D}"
+        expire: "{D}"
+      faws:
+        policy: "{Pt('AWSPolicy')}"
+  - local:
+      user: {}
+      faws:
+        policy: AWSPolicy2
+  version: RAX-1

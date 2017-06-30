@@ -1,0 +1,22 @@
+---
+mapping:
+  rules:
+  - local:
+      user:
+        ext:
+          value: "{0}"
+          multiValue: true
+        domain: "{D}"
+        name: "{D}"
+        email: "{D}"
+        roles: "{D}"
+        expire: "{D}"
+      extGroup:
+        ext2:
+          value:
+          - "{0}"
+          multiValue: true
+    remote:
+    - name: ext2
+      multiValue: true
+  version: RAX-1
