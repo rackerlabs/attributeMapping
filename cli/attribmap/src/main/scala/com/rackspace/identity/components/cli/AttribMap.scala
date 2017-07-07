@@ -22,7 +22,7 @@ import javax.xml.transform.stream.StreamSource
 
 import com.martiansoftware.nailgun.NGContext
 import com.rackspace.com.papi.components.checker.util.URLResolver
-import com.rackspace.identity.components.AttributeMapper
+import com.rackspace.identity.components.{AttributeMapper, PolicyFormat}
 import net.sf.saxon.s9api.Destination
 import org.clapper.argot.ArgotConverters._
 import org.clapper.argot.{ArgotParser, ArgotUsageException}
@@ -35,7 +35,7 @@ object AttribMap {
                 base: String,        // This method is longer than 50 lines due to locally defined methods.
                 in: InputStream,
                 out: PrintStream,
-                err: PrintStream): Option[(Source, Source, Destination, Boolean, Boolean, Boolean, String)] = {
+                err: PrintStream): Option[(Source, PolicyFormat.Value, Source, Destination, Boolean, Boolean, String)] = {
 
     val parser = new ArgotParser("attribmap", preUsage=Some(s"$title v$version"))
 
@@ -86,8 +86,12 @@ object AttribMap {
         err.println(s"$title v$version") // scalastyle:ignore
         None
       } else {
-        Some((policySource, assertionSource, destination, useSAML.value.getOrElse(false),
-              policy.value.get.endsWith("json"), !dontValidate.value.getOrElse(false),
+        Some((policySource,
+              PolicyFormat.fromPath(policy.value.get),
+              assertionSource,
+              destination,
+              useSAML.value.getOrElse(false),
+              !dontValidate.value.getOrElse(false),
               xsdEngine.value.getOrElse("auto")))
       }
     } catch {
@@ -108,9 +112,9 @@ object AttribMap {
   def main(args : Array[String]): Unit = {
     parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
                System.in, System.out, System.err) match {
-      case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean,
-                 isJSON : Boolean, validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML, isJSON, validate, xsdEngine)
+      case Some((policy : Source, policyFormat : PolicyFormat.Value, assertion : Source, dest : Destination,
+                 useSAML : Boolean, validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.convertAssertion (policy, policyFormat, assertion, dest, useSAML, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }
@@ -121,9 +125,9 @@ object AttribMap {
   def nailMain(context : NGContext): Unit = {
     parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
                context.in, context.out, context.err) match {
-      case Some((policy : Source, assertion : Source, dest : Destination, useSAML : Boolean,
-                 isJSON : Boolean, validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.convertAssertion (policy, assertion, dest, useSAML, isJSON, validate, xsdEngine)
+      case Some((policy : Source, policyFormat : PolicyFormat.Value, assertion : Source, dest : Destination,
+                 useSAML : Boolean, validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.convertAssertion (policy, policyFormat, assertion, dest, useSAML, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }

@@ -22,7 +22,7 @@ import javax.xml.transform.stream.StreamSource
 
 import com.martiansoftware.nailgun.NGContext
 import com.rackspace.com.papi.components.checker.util.URLResolver
-import com.rackspace.identity.components.AttributeMapper
+import com.rackspace.identity.components.{AttributeMapper, PolicyFormat}
 import net.sf.saxon.s9api.Destination
 import org.clapper.argot.ArgotConverters._
 import org.clapper.argot.{ArgotParser, ArgotUsageException}
@@ -35,7 +35,7 @@ object AttribMap2XSL {
                 base: String,        // This method is longer than 50 lines due to locally defined methods.
                 in: InputStream,
                 out: PrintStream,
-                err: PrintStream): Option[(Source, Destination, Boolean, Boolean, String)] = {
+                err: PrintStream): Option[(Source, PolicyFormat.Value, Destination, Boolean, String)] = {
 
     val parser = new ArgotParser("attribmap2xsl", preUsage=Some(s"$title v$version"))
 
@@ -79,7 +79,9 @@ object AttribMap2XSL {
         err.println(s"$title v$version") // scalastyle:ignore
         None
       } else {
-        Some((policySource, destination, policy.value.get.endsWith("json"),
+        Some((policySource,
+              PolicyFormat.fromPath(policy.value.get),
+              destination,
               !dontValidate.value.getOrElse(false),
               xsdEngine.value.getOrElse("auto")))
       }
@@ -101,9 +103,9 @@ object AttribMap2XSL {
   def main(args : Array[String]): Unit = {
     parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
                System.in, System.out, System.err) match {
-      case Some((policy : Source,  dest : Destination, isJSON : Boolean,
+      case Some((policy : Source, policyFormat : PolicyFormat.Value, dest : Destination,
                  validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.generateXSL (policy,  dest, isJSON, validate, xsdEngine)
+        AttributeMapper.generateXSL (policy, policyFormat, dest, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }
@@ -114,9 +116,9 @@ object AttribMap2XSL {
   def nailMain(context : NGContext): Unit = {
     parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
                context.in, context.out, context.err) match {
-      case Some((policy : Source,  dest : Destination, isJSON : Boolean,
-                 validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.generateXSL (policy, dest, isJSON, validate, xsdEngine)
+      case Some((policy : Source, policyFormat : PolicyFormat.Value, dest : Destination,
+      validate : Boolean, xsdEngine : String)) =>
+        AttributeMapper.generateXSL (policy, policyFormat, dest, validate, xsdEngine)
       case None => /* Bad args, Ignore */
     }
   }

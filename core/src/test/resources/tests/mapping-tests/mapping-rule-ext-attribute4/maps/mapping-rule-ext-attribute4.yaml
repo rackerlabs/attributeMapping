@@ -1,0 +1,27 @@
+---
+mapping:
+  rules:
+  - remote:
+    - path: "'PT'"
+      regex: false
+      multiValue: false
+    - path: "()"
+      regex: false
+      multiValue: false
+    local:
+      user:
+        domain: "{D}"
+        foo:
+          value: "{0}2H"
+          type: xs:dateTime
+        name: "{D}"
+        email: "{D}"
+        roles: "{D}"
+        expire: "{D}"
+      faws:
+        policy: "{1}"
+  - local:
+      user: {}
+      faws:
+        policy: AWSPolicy2
+  version: RAX-1

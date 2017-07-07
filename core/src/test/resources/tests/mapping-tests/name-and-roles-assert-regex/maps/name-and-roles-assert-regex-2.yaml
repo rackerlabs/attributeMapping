@@ -1,0 +1,31 @@
+---
+mapping:
+  rules:
+  - remote:
+    - name: UserName
+    - name: Email
+    - name: ExpireAfter
+    - path: "//saml2:Assertion/saml2:Subject/saml2:NameID"
+      regex: true
+      notAnyOf:
+      - ".*downer$"
+    - path: "//saml2:Assertion/saml2:Subject/saml2:NameID"
+      regex: true
+      anyOneOf:
+      - ".*upper$"
+    local:
+      user:
+        domain: '78334'
+        name: "{0}"
+        email: "{1}"
+        expire: "{2}"
+        roles:
+        - nova:admin
+        - lbaas:admin
+  version: RAX-1
+  description: |
+    This shows of the regex example.  Note, that this is a conditional rule.
+    It's a bit risky, because if zero permissions match, then we simply do
+    a direct copy of the assertion — that is we don't map at all.
+
+    This tests assertions rather than attributes.

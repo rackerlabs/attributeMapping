@@ -1,0 +1,16 @@
+---
+mapping:
+  rules:
+  - remote:
+    - name: FirstName
+    - name: LastName
+    local:
+      user:
+        domain: "{D}"
+        name: "{D}"
+        email: "{0} {1} <{D(name)}@{D(domain)}.rackspace.com>"
+        roles: "{D}"
+        expire: "{D}"
+  version: RAX-1
+  namespaces:
+    foo: bar

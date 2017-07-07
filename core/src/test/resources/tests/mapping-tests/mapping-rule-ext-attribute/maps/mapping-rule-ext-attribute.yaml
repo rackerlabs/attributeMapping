@@ -1,0 +1,21 @@
+---
+mapping:
+  rules:
+  - remote:
+    - name: bar
+    - path: "'AWSPolicy'"
+    local:
+      user:
+        domain: "{D}"
+        foo: "{0}"
+        name: "{D}"
+        email: "{D}"
+        roles: "{D}"
+        expire: "{D}"
+      faws:
+        policy: "{1}"
+  - local:
+      user: {}
+      faws:
+        policy: AWSPolicy2
+  version: RAX-1

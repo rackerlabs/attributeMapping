@@ -26,6 +26,7 @@ import javax.xml.validation.{Schema, SchemaFactory}
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper, SerializationFeature}
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.rackspace.cloud.api.wadl.util.LogErrorListener
 import com.rackspace.com.papi.components.checker.util.XMLParserPool
 import net.sf.saxon.Configuration.LicenseFeature._
@@ -33,13 +34,31 @@ import net.sf.saxon.s9api._
 import net.sf.saxon.serialize.MessageWarner
 import org.w3c.dom.Document
 
+import scala.util.Try
+
 object XSDEngine extends Enumeration {
   val AUTO = Value("auto")
   val SAXON = Value("saxon")
   val XERCES = Value("xerces")
 }
 
+object PolicyFormat extends Enumeration {
+  val XML = Value("xml")
+  val JSON = Value("json")
+  val YAML = Value("yaml")
+
+  def fromPath(policyPath: String): PolicyFormat.Value = {
+    Try {
+      val policyExtension = policyPath.substring(policyPath.lastIndexOf('.') + 1).toLowerCase
+      withName(policyExtension)
+    }.getOrElse(YAML)
+  }
+}
+
+class UnsupportedPolicyFormatException(message: String) extends Exception(message)
+
 import com.rackspace.identity.components.XSDEngine._
+import com.rackspace.identity.components.PolicyFormat._
 
 object AttributeMapper {
 
@@ -241,15 +260,20 @@ object AttributeMapper {
     parseJsonNode(new StreamSource(bin))
   }
 
-  def generateXSL (policy : Source, xsl : Destination, isJSON : Boolean, validate : Boolean, xsdEngine : String) : Unit = {
-    val policySourceConv1 = {
-      if (isJSON) {
+  def generateXSL (policy : Source, policyFormat : PolicyFormat.Value, xsl : Destination, validate : Boolean, xsdEngine : String) : Unit = {
+    val policySourceConv1 = policyFormat match {
+      case PolicyFormat.YAML =>
+        val outPolicyXML = new XdmDestination
+        policy2XML(parseYamlNode(policy.asInstanceOf[StreamSource]), outPolicyXML)
+        outPolicyXML.getXdmNode.asSource
+      case PolicyFormat.JSON =>
         val outPolicyXML = new XdmDestination
         policy2XML(policy.asInstanceOf[StreamSource], outPolicyXML)
         outPolicyXML.getXdmNode.asSource
-      } else {
+      case PolicyFormat.XML =>
         policy
-      }
+      case _ =>
+        throw new UnsupportedPolicyFormatException(s"The Policy Format $policyFormat is not supported at this time.")
     }
 
     val policySrc = {
@@ -270,13 +294,13 @@ object AttributeMapper {
     val outPolicyXML = new XdmDestination
     policy2XML(policy, outPolicyXML)
 
-    generateXSL(outPolicyXML.getXdmNode.asSource, xsl, false, validate, xsdEngine)
+    generateXSL(outPolicyXML.getXdmNode.asSource, PolicyFormat.XML, xsl, validate, xsdEngine)
   }
 
-  def generateXSLExec (policy : Source, isJSON : Boolean, validate : Boolean, xsdEngine : String) : XsltExecutable = {
+  def generateXSLExec (policy : Source, policyFormat : PolicyFormat.Value, validate : Boolean, xsdEngine : String) : XsltExecutable = {
     val outXSL = new XdmDestination
 
-    generateXSL (policy, outXSL, isJSON, validate, xsdEngine)
+    generateXSL (policy, policyFormat, outXSL, validate, xsdEngine)
     compiler.compile(outXSL.getXdmNode.asSource)
   }
 
@@ -288,11 +312,23 @@ object AttributeMapper {
   }
 
   def generateXSLExec (policy : Document, validate : Boolean, xsdEngine : String) : XsltExecutable = {
-    generateXSLExec (new DOMSource(policy), false, validate, xsdEngine)
+    generateXSLExec (new DOMSource(policy), PolicyFormat.XML, validate, xsdEngine)
   }
 
   def parseJsonNode (source : StreamSource) : JsonNode = {
     val om = new ObjectMapper()
+
+    if (source.getInputStream != null) {
+      om.readTree(source.getInputStream)
+    } else if (source.getReader != null) {
+      om.readTree(source.getReader)
+    } else {
+      om.readTree(new File(new URI(source.getSystemId)))
+    }
+  }
+
+  def parseYamlNode (source : StreamSource) : JsonNode = {
+    val om = new ObjectMapper(new YAMLFactory())
 
     if (source.getInputStream != null) {
       om.readTree(source.getInputStream)
@@ -330,17 +366,17 @@ object AttributeMapper {
     evaluator.run()
   }
 
-  def convertAssertion (policy : Source, assertion : Source, dest : Destination, outputSAML : Boolean, isJSON : Boolean,
-                        validate : Boolean, xsdEngine : String) : Unit = {
+  def convertAssertion (policy : Source, policyFormat : PolicyFormat.Value, assertion : Source, dest : Destination,
+                        outputSAML : Boolean, validate : Boolean, xsdEngine : String) : Unit = {
     //
     // Generate the XSLTExec
     //
-    val mapExec = generateXSLExec (policy, isJSON, validate, xsdEngine)
+    val mapExec = generateXSLExec (policy, policyFormat, validate, xsdEngine)
 
     //
     //  Run the generate XSL on the assertion
     //
-    convertAssertion(mapExec, assertion, dest, outputSAML, isJSON)
+    convertAssertion(mapExec, assertion, dest, outputSAML, !XML.equals(policyFormat))
   }
 
   def convertAssertion (policyExec : XsltExecutable, assertion : Source, dest : Destination, outputSAML : Boolean, toJSON : Boolean) : Unit = {

@@ -1,0 +1,30 @@
+---
+mapping:
+  rules:
+  - local:
+      user:
+        domain: '78334'
+        name: "{D}"
+        email: "{D}"
+        expire: "{D}"
+  - remote:
+    - name: roles
+      notAnyOf:
+      - Contractor
+      - SubContractor
+    local:
+      user:
+        roles:
+        - nova:admin
+        - lbaas:admin
+  - remote:
+    - name: roles
+      anyOneOf:
+      - Contractor
+      - SubContractor
+    local:
+      user:
+        roles:
+        - nova:observer
+        - lbaas:observer
+  version: RAX-1

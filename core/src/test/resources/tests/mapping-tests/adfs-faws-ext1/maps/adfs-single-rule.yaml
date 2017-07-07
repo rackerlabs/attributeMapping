@@ -1,0 +1,41 @@
+---
+mapping:
+  version: RAX-1
+  description: The example shows one method of setting up multiple FAWS account/policy/role
+    combinations.
+  rules:
+  - remote:
+    - name: http://schemas.xmlsoap.org/claims/Group
+      multiValue: true
+    - name: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+      multiValue: false
+    local:
+      user:
+        domain: '5821006'
+        name: "{D}"
+        email: "{1}"
+        roles:
+          value: "{0}"
+          multiValue: true
+        expire: "{D}"
+  - remote:
+    - path: if (mapping:get-attributes('http://schemas.xmlsoap.org/claims/Group')='Admin')
+        then ('12285/AWSPolicy','38839/AWSPolicy') else ()
+      multiValue: true
+    - path: if (not(mapping:get-attributes('http://schemas.xmlsoap.org/claims/Group')='Contractor'))
+        then ('12285/AWSPolicy','38839/AWSPolicy') else ()
+      multiValue: true
+    - path: if (mapping:get-attributes('http://schemas.xmlsoap.org/claims/Group')='Contractor')
+        then ('12285/AWSPolicy','38839/AWSPolicy') else ()
+      multiValue: true
+    local:
+      faws:
+        admins:
+          value: "{0}"
+          multiValue: true
+        observers:
+          value: "{1}"
+          multiValue: true
+        nones:
+          value: "{2}"
+          multiValue: true

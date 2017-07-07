@@ -1,0 +1,17 @@
+---
+mapping:
+  rules:
+  - remote:
+    - path: "/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"
+    - name: email
+    - name: domain
+    - name: roles
+      multiValue: true
+    local:
+      user:
+        domain: "{2}"
+        name: "{0}"
+        email: "{1}"
+        roles: "{3}"
+        expire: PT2H
+  version: RAX-1
