@@ -2,11 +2,6 @@
   "mapping": {
     "rules": [
        {
-        "remote": [
-           {
-            "path":"'AWSPolicy'"
-           }
-         ],
         "local": {
           "user": {
             "domain":"{D}",
@@ -17,7 +12,7 @@
             "expire":"{D}"
            },
           "faws": {
-            "policy":"{0}"
+            "policy":"{Pt('AWSPolicy')}"
            }
          }
        },

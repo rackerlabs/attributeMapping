@@ -1,5 +1,8 @@
 # Releases #
 
+## In Progress Work ##
+1. Added support for {Pt()} and {Pts()} which provides direct access to XPath in a template.
+
 ## Release 1.1.1 (2017-06-07) ##
 1. Fixed a bug where supported policy XPath functions were not properly declared
 

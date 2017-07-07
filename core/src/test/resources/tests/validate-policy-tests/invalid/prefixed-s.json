@@ -1,0 +1,22 @@
+{
+  "mapping": {
+    "rules": [
+       {
+        "local": {
+          "user": {
+              "domain":"{D}",
+              "name":"{D}",
+              "email":"{D}",
+              "expire" : "{D}",
+              "roles" : ["{Pts(foo:doc('file:///example.xml'))}",
+                         "{Pts(foo:doc-available('file:///example.xml'))}"]
+          }
+        }
+       }
+     ],
+      "version":"RAX-1",
+      "namespaces": {
+          "foo": "http://www.w3.org/2005/xpath-functions"
+      }
+  }
+}

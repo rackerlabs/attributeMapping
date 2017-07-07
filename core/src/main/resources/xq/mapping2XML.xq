@@ -6,6 +6,7 @@ declare namespace array = "http://www.w3.org/2005/xpath-functions/array";
 declare namespace mapping = "http://docs.rackspace.com/identity/api/ext/MappingRules";
 declare namespace xs = "http://www.w3.org/2001/XMLSchema";
 declare namespace xsi = "http://www.w3.org/2001/XMLSchema-instance";
+declare namespace fn = "http://www.w3.org/2005/xpath-functions";
 
 declare default element namespace "http://docs.rackspace.com/identity/api/ext/MappingRules";
 
@@ -18,15 +19,33 @@ declare variable $policyJSON := parse-json($__JSON__);
 declare variable $defaultAttributes as xs:string* := ('name','email','expire','domain','roles');
 declare variable $remoteMultiValues as xs:string* := ('whitelist','blacklist','notAnyOf','anyOneOf');
 
+declare function mapping:convertMatchValue($in as xs:string) as xs:string {
+ (:
+   Only the following should not be escaped :  {At(...)}, {Ats(...)}, {Pt(...)}, {Pts(...)}.
+ :)
+ if (matches($in,'^\{(A|P)ts?\(.*\)\}$')) then $in else mapping:convertNonMatchValue($in)
+};
+
+declare function mapping:convertNonMatchValue($in as xs:string) as xs:string {
+  replace($in,' ','&#xA0;')
+};
+
+declare function mapping:convertValue($in as xs:string) as xs:string {
+  let $strings as xs:string* :=
+    for $pm in analyze-string($in,'\{.*\}')//(fn:match|fn:non-match) return if (local-name($pm) = 'match') then mapping:convertMatchValue(string($pm))
+                                                                                                           else mapping:convertNonMatchValue(string($pm))
+  return string-join($strings,'')
+};
+
 declare function mapping:convertValue($name as xs:string, $in as xs:string, $multiValues as xs:string*) as xs:string {
-  if ($name = $multiValues) then replace($in,' ','&#xA0;') else $in
+  if ($name = $multiValues) then mapping:convertValue($in) else $in
 };
 
 
 declare function mapping:attributeFromValue ($attName as xs:string, $value as item(), $multiValues as xs:string*) as attribute()* {
   typeswitch ($value)
     case $s as xs:string return attribute {$attName} {mapping:convertValue($attName, $s, $multiValues)}
-    case $b as xs:boolean return attribute {$attName} {mapping:convertValue($attName, string($b), $multiValues)}
+    case $b as xs:boolean return attribute {$attName} {string($b)}
     case $a as array(*) return attribute {$attName} {string-join(for $i in $a?* return mapping:convertValue($attName, $i, $multiValues),' ')}
     case $o as map(*) return for $att in map:keys($o) return mapping:attributeFromValue($att, $o?($att),$multiValues)
     default return ()

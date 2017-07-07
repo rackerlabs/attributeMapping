@@ -33,12 +33,9 @@
             -->
 
             <faws xsi:type="LocalAttributeGroup">
-                <policy value="{0}" xsi:type="LocalAttribute"/>
+                <policy value="{Pt('AWSPolicy')}" xsi:type="LocalAttribute"/>
             </faws>
         </local>
-        <remote>
-            <attribute path="'AWSPolicy'"/>
-        </remote>
       </rule>
       <rule>
         <local>

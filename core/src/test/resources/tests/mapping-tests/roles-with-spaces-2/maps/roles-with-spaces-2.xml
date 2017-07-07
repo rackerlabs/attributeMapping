@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="RAX-1">
+   <rules>
+      <rule>
+        <local>
+            <user>
+                <name value="{D}"/>
+                <email value="{D}"/>
+                <expire value="{D}"/>
+                <domain value="{D}"/>
+                <roles value="{D} {1}"/>
+                <ext value="{0} {2}"
+                    multiValue="true"
+                    xsi:type="LocalAttribute"/>
+            </user>
+            <extGroup xsi:type="LocalAttributeGroup">
+                <ext2 value="{0} {2}"
+                     multiValue="true"
+                     xsi:type="LocalAttribute"/>
+            </extGroup>
+        </local>
+        <remote>
+            <attribute name="ext2" multiValue="true"/>
+            <attribute name="roles2" multiValue="true"/>
+            <attribute name="ext3" multiValue="true"/>
+        </remote>
+      </rule>
+   </rules>
+</mapping>
