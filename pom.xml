@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rackspace.identity.components</groupId>
     <artifactId>attribute-mapper</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Attribute Mapper</name>
@@ -17,7 +17,7 @@
 
     <scm>
         <connection>scm:git:git@github.com:rackerlabs/attributeMapping.git</connection>
-        <tag>attribute-mapper-1.2.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <repositories>
