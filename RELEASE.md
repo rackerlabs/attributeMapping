@@ -1,6 +1,6 @@
 # Releases #
 
-## In Progress Work ##
+## Release 1.2.0 (2017-07-10) ##
 1. Added support for {Pt()} and {Pts()} which provides direct access to XPath in a template.
 1. Added support for YAML policies
 
