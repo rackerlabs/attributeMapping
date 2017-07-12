@@ -1,0 +1,8 @@
+#!/bin/bash
+
+PROG=attribmap2yaml
+PROG_CLASS=com.rackspace.identity.components.cli.AttribMap2YAML
+
+MAPPER_JAVA_OPTS=$MAPPER_JAVA_OPTS
+
+. runmappercli.sh
