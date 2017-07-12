@@ -15,7 +15,7 @@
  */
 package com.rackspace.identity.components
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, OutputStream, Writer}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, InputStream, OutputStream, Writer}
 import java.net.URI
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.transform.Source
@@ -364,6 +364,21 @@ object AttributeMapper {
     val evaluator = getXQueryEvaluator(mapper2XMLExec, Map[QName, XdmValue](new QName("__JSON__") -> new XdmAtomicValue(om.writeValueAsString(node))))
     evaluator.setDestination(policyXML)
     evaluator.run()
+  }
+
+  def policy2YAML(policyJSON : StreamSource, policyYAML : OutputStream, validate : Boolean, xsdEngine : String) : Unit = {
+    val yamlMapper = new ObjectMapper(new YAMLFactory())
+    val policyJson = parseJsonNode(policyJSON)
+
+    val validatedPolicy = {
+      if (validate) {
+        validatePolicy(policyJson, xsdEngine)
+      } else {
+        policyJson
+      }
+    }
+
+    policyYAML.write(yamlMapper.writeValueAsBytes(validatedPolicy))
   }
 
   def convertAssertion (policy : Source, policyFormat : PolicyFormat.Value, assertion : Source, dest : Destination,

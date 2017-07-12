@@ -62,3 +62,6 @@
 ** TODO Document all!
 ** TODO Setup logger for CLI util (better error messages)
 ** TODO Cleanup all!
+** TODO YAML Support [0/1]
+   1. [ ] policy2YAML supports "translation" from YAML
+   1. [ ] policy2YAML supports translation from XML
