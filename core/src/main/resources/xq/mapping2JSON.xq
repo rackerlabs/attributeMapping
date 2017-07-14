@@ -5,19 +5,39 @@ declare namespace map = "http://www.w3.org/2005/xpath-functions/map";
 declare namespace array = "http://www.w3.org/2005/xpath-functions/array";
 declare namespace mapping = "http://docs.rackspace.com/identity/api/ext/MappingRules";
 declare namespace xs = "http://www.w3.org/2001/XMLSchema";
+declare namespace fn = "http://www.w3.org/2005/xpath-functions";
 
 declare option output:method "json";
 declare option output:indent "yes";
 
+declare variable $matchMarker as xs:string := "{Pts((:-))}";
 declare variable $knownPrefixes as xs:string* := ('saml2p','saml2','xs','xsi','mapping','xml','');
 
-declare function mapping:convertAttributeValue($name as xs:string, $in as xs:string, $flags as xs:string*) as xs:anyAtomicType {
-  let $retValue := replace($in,'&#xA0;',' ')
-  return if ($name = $flags) then xs:boolean($retValue) else $retValue
+declare function mapping:convertAttributeValue($name as xs:string, $in as xs:string, $flags as xs:string*) as xs:anyAtomicType? {
+  let $retValue := if ($in = '') then () else replace($in,'&#xA0;',' ')
+  return if ($name = $flags) then xs:boolean($retValue) else normalize-space($retValue)
+};
+
+
+declare function mapping:convertAttributeValues($tokenized as xs:string*, $matches as xs:string*,
+                                                $tokPos as xs:integer, $matchPos as xs:integer,
+                                                $name as xs:string, $flags as xs:string*) as xs:string* {
+   if ($tokPos > count($tokenized)) then () else
+     if(contains($tokenized[$tokPos],$matchMarker)) then mapping:convertAttributeValues(insert-before(remove($tokenized, $tokPos),$tokPos,concat(substring-before($tokenized[$tokPos],$matchMarker),
+                                                        $matches[$matchPos],substring-after($tokenized[$tokPos],$matchMarker))), $matches, $tokPos,$matchPos +1, $name, $flags) else
+     (mapping:convertAttributeValue($name, $tokenized[$tokPos], $flags),  mapping:convertAttributeValues($tokenized, $matches, $tokPos + 1,$matchPos, $name, $flags))
+};
+
+declare function mapping:tokenizeListValues($in as xs:string, $name as xs:string, $flags as xs:string*) as xs:string* {
+  let $asResult := analyze-string($in,'\{(A|P)ts?\(.*?\)\}')//(fn:match|fn:non-match)
+  let $matches := for $m in $asResult return if(local-name($m) = 'match') then string($m) else ()
+  let $tokenized := tokenize(normalize-space(string-join(for $pm in $asResult return
+     if (local-name($pm) = 'match') then $matchMarker else string($pm), '')),' ')
+  return mapping:convertAttributeValues($tokenized, $matches,1, 1, $name, $flags)
 };
 
 declare function mapping:convertAttributeList($name as xs:string, $in as xs:string, $flags as xs:string*) as item() {
-  let $inStrings := for $s in tokenize($in, ' ') return mapping:convertAttributeValue($name, $s, $flags)
+  let $inStrings := mapping:tokenizeListValues($in, $name, $flags)
   return if (count($inStrings) = 1) then $inStrings[1] else array {$inStrings}
 };
 

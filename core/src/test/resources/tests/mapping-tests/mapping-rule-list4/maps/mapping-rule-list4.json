@@ -16,7 +16,7 @@
             "name":"domain"
            },
            {
-            "path":"for $role in mapping:get-attributes('roles') return                               for $prod in ('nova', 'lbaas')                                 return concat($prod,':',lower-case($role))",
+            "path":"for $role in mapping:get-attributes('roles') return for $prod in ('nova', 'lbaas') return concat($prod,':',lower-case($role))",
             "multiValue":true
            }
          ],

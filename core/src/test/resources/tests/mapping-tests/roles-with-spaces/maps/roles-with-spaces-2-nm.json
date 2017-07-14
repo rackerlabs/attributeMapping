@@ -5,22 +5,30 @@
         "local": {
           "user": {
             "ext": {
-              "value":"{Ats(ext2)}",
+              "value": "{0}",
               "multiValue":true
              },
             "domain":"{D}",
             "name":"{D}",
             "email":"{D}",
-            "roles":"{Ats(roles)}",
+            "roles": "{D}",
             "expire":"{D}"
            },
           "extGroup": {
             "ext2": {
-              "value":"{Ats(ext2)}",
+              "value": [
+                "{0}"
+               ],
               "multiValue":true
              }
            }
-         }
+        },
+           "remote" : [
+               {
+                   "name" : "ext2",
+                   "multiValue" : true
+               }
+           ]
        }
      ],
     "version":"RAX-1"
