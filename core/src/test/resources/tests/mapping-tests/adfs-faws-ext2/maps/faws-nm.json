@@ -1,8 +1,8 @@
- {
+{
   "mapping": {
-    "rules": [
-       {
-        "remote": [
+      "rules": [
+          {
+          "remote": [
            {
             "name":"http:\/\/schemas.xmlsoap.org\/claims\/Group",
             "multiValue":true
@@ -22,34 +22,28 @@
              },
             "expire":"{D}"
            }
-         }
+        }
        },
        {
         "remote": [
            {
             "name":"http:\/\/schemas.xmlsoap.org\/claims\/Group",
-            "anyOneOf":"test_group_2"
+            "anyOneOf": ["test_group_2"]
            }
          ],
         "local": {
           "faws": {
-            "canAddAWSAccount":"true",
-            "991049284483": {
-              "value": [
-                "fanatical_aws:admin",
-                "AdminstratorAccess"
-               ],
-              "multiValue":true
-             },
-            "042423532529": {
-              "value": [
-                "fanatical_aws:observer",
-                "RackspaceReadOnly"
-               ],
-              "multiValue":true
-             }
-           }
-         }
+            "canAddAWSAccount":true,
+            "991049284483": [
+              "fanatical_aws:admin",
+              "AdminstratorAccess"
+            ],
+            "042423532529": [
+              "fanatical_aws:observer",
+              "RackspaceReadOnly"
+            ]
+          }
+        }
        }
      ],
     "version":"RAX-1"

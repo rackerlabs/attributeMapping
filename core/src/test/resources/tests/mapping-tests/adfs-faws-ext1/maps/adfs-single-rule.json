@@ -1,7 +1,5 @@
  {
   "mapping": {
-    "version":"RAX-1",
-    "description":"The example shows one method of setting up multiple FAWS account\/policy\/role combinations.",
     "rules": [
        {
         "remote": [
@@ -10,8 +8,7 @@
             "multiValue":true
            },
            {
-            "name":"http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/emailaddress",
-            "multiValue":false
+            "name":"http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/emailaddress"
            }
          ],
         "local": {
@@ -47,18 +44,20 @@
             "admins": {
               "value":"{0}",
               "multiValue":true
-            },
+             },
+            "nones": {
+              "value":"{2}",
+              "multiValue":true
+             },
             "observers": {
               "value":"{1}",
-              "multiValue":true
-            },
-           "nones": {
-              "value":"{2}",
               "multiValue":true
              }
            }
          }
        }
-     ]
+     ],
+    "version":"RAX-1",
+    "description":"\n        The example shows one method of setting up multiple FAWS\n        account\/policy\/role combinations.\n    "
    }
  }
