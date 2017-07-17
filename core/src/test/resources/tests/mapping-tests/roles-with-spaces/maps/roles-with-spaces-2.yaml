@@ -13,8 +13,7 @@ mapping:
         expire: "{D}"
       extGroup:
         ext2:
-          value:
-          - "{0}"
+          value: "{0}"
           multiValue: true
     remote:
     - name: ext2

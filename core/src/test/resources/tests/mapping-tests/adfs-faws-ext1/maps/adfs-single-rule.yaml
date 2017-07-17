@@ -1,14 +1,12 @@
 ---
 mapping:
   version: RAX-1
-  description: The example shows one method of setting up multiple FAWS account/policy/role
-    combinations.
+  description: "\n        The example shows one method of setting up multiple FAWS\n        account/policy/role combinations.\n    "
   rules:
   - remote:
     - name: http://schemas.xmlsoap.org/claims/Group
       multiValue: true
     - name: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
-      multiValue: false
     local:
       user:
         domain: '5821006'

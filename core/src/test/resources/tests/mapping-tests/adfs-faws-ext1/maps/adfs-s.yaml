@@ -47,6 +47,4 @@ mapping:
           - 38839/AWSPolicy
           multiValue: true
   version: RAX-1
-  description: |
-    The example shows one method of setting up multiple FAWS
-    account/policy/role combinations.
+  description: "\n        The example shows one method of setting up multiple FAWS\n        account/policy/role combinations.\n    "
