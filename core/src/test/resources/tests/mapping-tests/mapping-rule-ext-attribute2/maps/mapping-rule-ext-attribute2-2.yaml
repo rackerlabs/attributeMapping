@@ -34,6 +34,4 @@ mapping:
         - AWSPolicy3
         - AWSPolicy YEA!!
   version: RAX-1
-  description: |
-    This is an example of a multiValue extended attribute.
-    Here the faws/policy may contain multiple values.
+  description: "\n      This is an example of a multiValue extended attribute.\n      Here the faws/policy may contain multiple values.\n   "

@@ -12,15 +12,18 @@ mapping:
           expire: "{D}"
     - remote:
       - name: http://schemas.xmlsoap.org/claims/Group
-        anyOneOf:
-          - test_group_2
+        anyOneOf: test_group_2
       local:
         faws:
-          canAddAWSAccount: true
+          canAddAWSAccount: "true"
           991049284483:
-            - fanatical_aws:admin
-            - AdminstratorAccess
+            value:
+              - fanatical_aws:admin
+              - AdminstratorAccess
+            multiValue: true
           042423532529:
-            - fanatical_aws:observer
-            - RackspaceReadOnly
+            value:
+              - fanatical_aws:observer
+              - RackspaceReadOnly
+            multiValue: true
   version: RAX-1

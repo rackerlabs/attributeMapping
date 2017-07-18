@@ -7,14 +7,14 @@
         <version>1.2.1-SNAPSHOT</version>
     </parent>
 
-
     <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-    <artifactId>mapper-nailgun-server</artifactId>
+    <artifactId>attribmap2yaml</artifactId>
     <packaging>jar</packaging>
 
-    <name>Attribute Mapper Nailgun Server</name>
+    <name>Attribute Mapper CLI (attribmap2yaml)</name>
     <description>
-        A nailgun server application to launch mapper cli tools.
+        A command line utility to convert an attribute map policy to
+        its YAML equivalent.
     </description>
 
     <dependencies>
@@ -22,41 +22,6 @@
             <groupId>com.martiansoftware</groupId>
             <artifactId>nailgun-server</artifactId>
             <version>${nailgun.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>attribmap</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>attribmap2xsl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>attribmap2json</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>attribmap2xml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>attribmap2yaml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>saml2ext</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rackspace.identity.components.attribute-mapper.cli</groupId>
-            <artifactId>addext</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -103,7 +68,7 @@
                             <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.rackspace.identity.components.cli.NailgunServer</mainClass>
+                                    <mainClass>com.rackspace.identity.components.cli.AttribMap2YAML</mainClass>
                                 </transformer>
                             </transformers>
                             <filters>

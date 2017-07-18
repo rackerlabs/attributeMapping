@@ -4,8 +4,7 @@ mapping:
   - local:
       user:
         ext:
-          value:
-          - "{Ats(ext2)}"
+          value: "{Ats(ext2)}"
           multiValue: true
         domain: "{D}"
         name: "{D}"

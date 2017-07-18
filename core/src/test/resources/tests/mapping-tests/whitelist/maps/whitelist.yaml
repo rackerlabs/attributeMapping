@@ -17,6 +17,4 @@ mapping:
         roles: "{0}"
         expire: "{D}"
   version: RAX-1
-  description: |
-    This is an example of a whitelist...note that because we didn't mention
-    user, domain — then default values will be used for those.
+  description: " \n  This is an example of a whitelist...note that because we didn't mention\n  user, domain — then default values will be used for those.\n"

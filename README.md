@@ -59,6 +59,8 @@ beautiful.
 that can be used to efficiently translate SAML Request so that it
 contains a new assertion with the mapped attributes.
 
+1. attribmap2yaml : converts a JSON policy to YAML.
+
 ## Differences from OpenStack Policy
 
 TODO

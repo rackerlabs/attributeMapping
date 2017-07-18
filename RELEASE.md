@@ -2,6 +2,7 @@
 
 ## In Progress Work ##
 1. Fixed a bug when converting values with {(P|A)ts()} from XML to JSON
+1. Added JSON to YAML conversion with CLI support.
 
 ## Release 1.2.0 (2017-07-10) ##
 1. Added support for {Pt()} and {Pts()} which provides direct access to XPath in a template.
