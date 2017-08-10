@@ -15,10 +15,10 @@
   */
 package com.rackspace.identity.components
 
-import com.rackspace.identity.components.AttributeMapper.{MAPPING_NS_PREFIX, MAPPING_NS_URI, XQUERY_VERSION}
+import com.rackspace.identity.components.AttributeMapper.{FN_NS_URI, MAPPING_NS_PREFIX, MAPPING_NS_URI, XQUERY_VERSION}
 import net.sf.saxon.expr.instruct.UserFunctionParameter
 import net.sf.saxon.expr.parser.XPathParser
-import net.sf.saxon.expr.{Expression, StaticContext}
+import net.sf.saxon.expr.{Expression, FunctionCall, StaticContext}
 import net.sf.saxon.functions.FunctionLibraryList
 import net.sf.saxon.om.StructuredQName
 import net.sf.saxon.query.{XQueryFunction, XQueryFunctionLibrary}
@@ -79,10 +79,13 @@ class ValidateXPathFunction(conf: Configuration) extends ExtensionFunction {
     val nsmap = COMMON_NS_MAP ++ extractNamespaces(rootNode)
     val expr = parseXPath(path, getXPathContext(nsmap))
 
-    ExpressionProcessor(expr, e => {
-      if (e.isCallOnSystemFunction(DOC_FUNCTION_NAME) || e.isCallOnSystemFunction(DOC_AVAILABLE_FUNCTION_NAME)) {
-        throw new XPathException(s"`$DOC_FUNCTION_NAME` and `$DOC_AVAILABLE_FUNCTION_NAME` are not allowed in a policy path")
-      }
+    ExpressionProcessor(expr, {
+      case functionCall: FunctionCall =>
+        val functionName = functionCall.getFunctionName
+        if (!LEGAL_FUNCTION_NAMESPACE_SET.contains(functionName.getURI) || ILLEGAL_SYSTEM_FUNCTION_SET.exists(functionCall.isCallOnSystemFunction)) {
+          throw new XPathException(s"${functionName.getLocalPart} function in the ${functionName.getURI} namespace is not allowed in a policy path")
+        }
+      case _ => // Intentional no-op
     })
 
     new XdmAtomicValue(true)
@@ -127,8 +130,35 @@ class ValidateXPathFunction(conf: Configuration) extends ExtensionFunction {
 object ValidateXPathFunction {
 
   private final val LOCAL_NAME = "validate-xpath"
+  private final val AVAILABLE_ENVIRONMENT_VARIABLES_FUNCTION_NAME = "available-environment-variables"
+  private final val COLLECTION_FUNCTION_NAME = "collection"
   private final val DOC_FUNCTION_NAME = "doc"
   private final val DOC_AVAILABLE_FUNCTION_NAME = "doc-available"
+  private final val DOCUMENT_FUNCTION_NAME = "document"
+  private final val ENVIRONMENT_VARIABLE_FUNCTION_NAME = "environment-variable"
+  private final val UNPARSED_TEXT_AVAILABLE_FUNCTION_NAME = "unparsed-text-available"
+  private final val UNPARSED_TEXT_FUNCTION_NAME = "unparsed-text"
+  private final val UNPARSED_TEXT_LINES_FUNCTION_NAME = "unparsed-text-lines"
+  private final val URI_COLLECTION_FUNCTION_NAME = "uri-collection"
+  private final val ILLEGAL_SYSTEM_FUNCTION_SET = Set(
+    AVAILABLE_ENVIRONMENT_VARIABLES_FUNCTION_NAME,
+    COLLECTION_FUNCTION_NAME,
+    DOC_FUNCTION_NAME,
+    DOC_AVAILABLE_FUNCTION_NAME,
+    DOCUMENT_FUNCTION_NAME,
+    ENVIRONMENT_VARIABLE_FUNCTION_NAME,
+    UNPARSED_TEXT_AVAILABLE_FUNCTION_NAME,
+    UNPARSED_TEXT_FUNCTION_NAME,
+    UNPARSED_TEXT_LINES_FUNCTION_NAME,
+    URI_COLLECTION_FUNCTION_NAME
+  )
+  private final val LEGAL_FUNCTION_NAMESPACE_SET = Set(
+    FN_NS_URI,
+    s"$FN_NS_URI/math",
+    s"$FN_NS_URI/map",
+    s"$FN_NS_URI/array",
+    MAPPING_NS_URI
+  )
   private final val COMMON_NS_MAP = Map(
     MAPPING_NS_PREFIX -> MAPPING_NS_URI,
     "saml2" -> "urn:oasis:names:tc:SAML:2.0:assertion",

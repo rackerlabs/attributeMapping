@@ -1,0 +1,18 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "local": {
+          "user": {
+            "domain":"{D}",
+            "name":"{Pt(collection('file:///example.xml'))}",
+            "email":"{D}",
+            "expire" : "{D}",
+            "roles" : "{D}"
+          }
+        }
+      }
+    ],
+    "version":"RAX-1"
+  }
+}

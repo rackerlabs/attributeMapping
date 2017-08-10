@@ -1,0 +1,15 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "uri-collection('file:///example.xml')"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1"
+  }
+}

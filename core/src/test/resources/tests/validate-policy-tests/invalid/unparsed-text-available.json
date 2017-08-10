@@ -1,0 +1,15 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "unparsed-text-available('file:///example.xml')"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1"
+  }
+}

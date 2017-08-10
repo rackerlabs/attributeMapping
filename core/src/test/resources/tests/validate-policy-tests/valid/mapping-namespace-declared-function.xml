@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         version="RAX-1">
+    <rules>
+        <rule>
+            <local>
+                <user>
+                    <name value="{D}"/>
+                    <email value="{D}"/>
+                    <expire value="{D}"/>
+                    <domain value="{D}"/>
+                    <roles value="{D}"/>
+                </user>
+            </local>
+            <remote>
+                <attribute path="mapping:get-attribute('email')"/>
+            </remote>
+        </rule>
+    </rules>
+</mapping>

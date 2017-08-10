@@ -55,7 +55,12 @@ class ValidatePolicySuite extends AttributeMapperBase {
         val e = intercept[SaxonApiException] {
           AttributeMapper.validatePolicy(source, validator)
         }
-        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+        val m = e.getCause.getMessage
+        assert(
+          m.contains("is not allowed in a policy path") ||
+            m.contains("is not available with this host-language/version/license") ||
+            m.matches("Cannot find a matching \\d-argument function .*"),
+          "A function in a policy path is illegal")
       }
 
       test(s"An Invalid Policy Fails XSL Compilation ($policy compiled with $validator)") {
@@ -63,7 +68,12 @@ class ValidatePolicySuite extends AttributeMapperBase {
         val e = intercept[SaxonApiException] {
           AttributeMapper.generateXSL(source, PolicyFormat.XML, new XdmDestination, validate = true, validator)
         }
-        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+        val m = e.getCause.getMessage
+        assert(
+          m.contains("is not allowed in a policy path") ||
+            m.contains("is not available with this host-language/version/license") ||
+            m.matches("Cannot find a matching \\d-argument function .*"),
+          "A function in a policy path is illegal")
       }
 
       test(s"An Invalid Policy Fails XSLExec Compilation ($policy compiled with $validator)") {
@@ -71,7 +81,12 @@ class ValidatePolicySuite extends AttributeMapperBase {
         val e = intercept[SaxonApiException] {
           AttributeMapper.generateXSLExec(source, PolicyFormat.XML, validate = true, validator)
         }
-        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+        val m = e.getCause.getMessage
+        assert(
+          m.contains("is not allowed in a policy path") ||
+            m.contains("is not available with this host-language/version/license") ||
+            m.matches("Cannot find a matching \\d-argument function .*"),
+          "A function in a policy path is illegal")
       }
     }
 
@@ -98,7 +113,12 @@ class ValidatePolicySuite extends AttributeMapperBase {
         val e = intercept[SaxonApiException] {
           AttributeMapper.validatePolicy(json, validator)
         }
-        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+        val m = e.getCause.getMessage
+        assert(
+          m.contains("is not allowed in a policy path") ||
+            m.contains("is not available with this host-language/version/license") ||
+            m.matches("Cannot find a matching \\d-argument function .*"),
+          "A function in a policy path is illegal")
       }
 
       test(s"An Invalid Policy Fails XSL Compilation ($policy compiled with $validator)") {
@@ -107,7 +127,12 @@ class ValidatePolicySuite extends AttributeMapperBase {
         val e = intercept[SaxonApiException] {
           AttributeMapper.generateXSL(json, new XdmDestination, validate = true, validator)
         }
-        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+        val m = e.getCause.getMessage
+        assert(
+          m.contains("is not allowed in a policy path") ||
+            m.contains("is not available with this host-language/version/license") ||
+            m.matches("Cannot find a matching \\d-argument function .*"),
+          "A function in a policy path is illegal")
       }
 
       test(s"An Invalid Policy Fails XSLExec Compilation ($policy compiled with $validator)") {
@@ -116,7 +141,12 @@ class ValidatePolicySuite extends AttributeMapperBase {
         val e = intercept[SaxonApiException] {
           AttributeMapper.generateXSLExec(json, validate = true, validator)
         }
-        assert(e.getCause.getMessage.contains("are not allowed in a policy path"))
+        val m = e.getCause.getMessage
+        assert(
+          m.contains("is not allowed in a policy path") ||
+            m.contains("is not available with this host-language/version/license") ||
+            m.matches("Cannot find a matching \\d-argument function .*"),
+          "A function in a policy path is illegal")
       }
     }
   }
