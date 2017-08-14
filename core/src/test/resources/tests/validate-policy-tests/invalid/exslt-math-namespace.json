@@ -1,0 +1,18 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "exslt-math:abs(10)"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1",
+    "namespaces": {
+      "exslt-math": "http://exslt.org/math"
+    }
+  }
+}

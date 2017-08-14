@@ -1,0 +1,15 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "environment-variable('foo')"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1"
+  }
+}

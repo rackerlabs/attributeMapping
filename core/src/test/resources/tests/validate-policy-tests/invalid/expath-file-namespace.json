@@ -1,0 +1,18 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "expath-file:exists('file:///example.xml')"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1",
+    "namespaces": {
+      "expath-file": "http://expath.org/ns/file"
+    }
+  }
+}
