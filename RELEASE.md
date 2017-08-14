@@ -1,6 +1,6 @@
 # Releases #
 
-## In Progress Work ##
+## Release 1.3.0 (2017-08-14) ##
 1. Fixed a bug when converting values with {(P|A)ts()} from XML to JSON
 1. Added JSON to YAML conversion with CLI support.
 1. Disallowing available-environment-variables, collection, document, environment-variable, unparsed-text-available, unparsed-text, unparsed-text-lines, and uri-collection functions in policy path expressions.
