@@ -35,6 +35,6 @@ class ExpressionProcessorTest extends FunSuite {
       count += 1
     })
 
-    assert(count == 4)
+    assert(count == 3)
   }
 }

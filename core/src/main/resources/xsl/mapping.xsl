@@ -6,7 +6,7 @@
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
     xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    version="2.0">
+    version="3.0">
     
     <xsl:namespace-alias stylesheet-prefix="xslout" result-prefix="xsl"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -17,7 +17,7 @@
             -  THIS IS A GENERATED TRANSFORM  DON'T EDIT BY HAND    -
             -                                                       -
         </xsl:comment>
-        <xslout:transform version="2.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+        <xslout:transform version="3.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
             <xsl:copy-of select="/mapping:mapping/namespace::*"/>
             <xslout:param name="outputSAML" as="xs:boolean" select="false()"/>
             <xslout:param name="issuer" as="xs:string" select="'http://openrepose.org/filters/SAMLTranslation'"/>

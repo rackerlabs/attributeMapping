@@ -47,9 +47,9 @@
         <scala.minor>11</scala.minor>
         <scala.patch>7</scala.patch>
         <scala.MajDotMin>${scala.major}.${scala.minor}</scala.MajDotMin>
-        <saxon-ee.version>9.7.0-8</saxon-ee.version>
+        <saxon-ee.version>9.8.0-4</saxon-ee.version>
         <scala.test.version>2.2.6</scala.test.version>
-        <wadl-tools.version>1.0.33</wadl-tools.version>
+        <wadl-tools.version>1.0.37</wadl-tools.version>
         <xerces.version>2.12.1-rax</xerces.version>
         <scala-logging.version>2.1.2</scala-logging.version>
         <slf4j.version>1.7.7</slf4j.version>
@@ -58,7 +58,7 @@
         <json-schema-validator.version>2.1.7</json-schema-validator.version>
         <junit.version>4.10</junit.version>
         <mockito.version>1.9.0</mockito.version>
-        <checker-util.version>2.1.1</checker-util.version>
+        <checker-util.version>2.4.0</checker-util.version>
     </properties>
 
     <dependencies>
