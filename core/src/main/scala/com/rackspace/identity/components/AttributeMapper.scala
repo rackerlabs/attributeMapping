@@ -95,7 +95,6 @@ object AttributeMapper {
   val compiler = processor.newXsltCompiler
   val xqueryCompiler = {
     val c = processor.newXQueryCompiler
-    c.setLanguageVersion(XQUERY_VERSION_STRING)
     c
   }
   private val internalXPathCompiler = {

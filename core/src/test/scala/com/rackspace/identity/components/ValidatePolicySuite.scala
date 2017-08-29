@@ -59,7 +59,7 @@ class ValidatePolicySuite extends AttributeMapperBase {
         assert(
           m.contains("is not allowed in a policy path") ||
             m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a matching \\d-argument function .*"),
+            m.matches("Cannot find a \\d-argument function .*"),
           "A function in a policy path is illegal")
       }
 
@@ -72,7 +72,7 @@ class ValidatePolicySuite extends AttributeMapperBase {
         assert(
           m.contains("is not allowed in a policy path") ||
             m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a matching \\d-argument function .*"),
+            m.matches("Cannot find a \\d-argument function .*"),
           "A function in a policy path is illegal")
       }
 
@@ -85,7 +85,7 @@ class ValidatePolicySuite extends AttributeMapperBase {
         assert(
           m.contains("is not allowed in a policy path") ||
             m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a matching \\d-argument function .*"),
+            m.matches("Cannot find a \\d-argument function .*"),
           "A function in a policy path is illegal")
       }
     }
@@ -117,7 +117,7 @@ class ValidatePolicySuite extends AttributeMapperBase {
         assert(
           m.contains("is not allowed in a policy path") ||
             m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a matching \\d-argument function .*"),
+            m.matches("Cannot find a \\d-argument function .*"),
           "A function in a policy path is illegal")
       }
 
@@ -131,7 +131,7 @@ class ValidatePolicySuite extends AttributeMapperBase {
         assert(
           m.contains("is not allowed in a policy path") ||
             m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a matching \\d-argument function .*"),
+            m.matches("Cannot find a \\d-argument function .*"),
           "A function in a policy path is illegal")
       }
 
@@ -145,7 +145,7 @@ class ValidatePolicySuite extends AttributeMapperBase {
         assert(
           m.contains("is not allowed in a policy path") ||
             m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a matching \\d-argument function .*"),
+            m.matches("Cannot find a \\d-argument function .*"),
           "A function in a policy path is illegal")
       }
     }

@@ -1,4 +1,10 @@
 # Releases #
+## In Progress Work ##
+1. Updated Dependencies
+    1. saxon: 9.7.0-8 → 9.8.0-4
+    1. wadl-tools: 1.0.33 → 1.0.37
+    1. checker-util: 2.1.1 → 2.4.0
+1. Fixed a bug where we checked XPath syntax against XPath 3.1 but only supported 2.0 -- we now support XPath 3.1 fully.
 
 ## Release 1.3.0 (2017-08-14) ##
 1. Fixed a bug when converting values with {(P|A)ts()} from XML to JSON
