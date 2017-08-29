@@ -1,5 +1,5 @@
 # Releases #
-## In Progress Work ##
+## Release 1.3.1 (2017-08-29) ##
 1. Updated Dependencies
     1. saxon: 9.7.0-8 → 9.8.0-4
     1. wadl-tools: 1.0.33 → 1.0.37
