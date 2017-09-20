@@ -7,6 +7,7 @@ mapping:
     - name: domain
     - name: roles
       multiValue: true
+    - path: "/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"
     local:
       user:
         domain: "{2}"
@@ -14,5 +15,5 @@ mapping:
         email: "{1}"
         roles:
           - "{3}"
-        expire: PT2H
+        expire: "{4}"
   version: RAX-1

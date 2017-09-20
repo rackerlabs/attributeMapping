@@ -1,5 +1,6 @@
 ---
 mapping:
+  version: RAX-1
   rules:
   - local:
       user:
@@ -9,6 +10,3 @@ mapping:
         roles:
           - "{D}"
         expire: "{D}"
-  version: RAX-1
-  namespaces:
-    foo: bar

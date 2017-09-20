@@ -19,5 +19,5 @@ mapping:
                 :)
                  mapping:get-attributes('roles')
              )}
-        expire: PT2H
+        expire: "{D}"
   version: RAX-1

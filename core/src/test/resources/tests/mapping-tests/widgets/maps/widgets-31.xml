@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         version="RAX-1">
+   <description>The following is an attribute mapping for Widgets.com.</description>
+   <rules>
+      <rule>
+         <local>
+            <user>
+               <domain value="{D}"/>
+               <name value="{D}"/>
+               <email value="{At(mail)}"/>
+               <roles value="{0}" multiValue="true"/>
+               <expire value="{D}"/>
+            </user>
+         </local>
+         <remote>
+             <attribute
+                 multiValue="true"
+                 path="
+                       (:
+                         The following describes the rules for assigning roles to
+                         users.
+
+                         We start by setting up a couple of variables:
+
+                         $groups : The sequence of all groups the user belongs to.
+                         $projects : The sequence of all projects the user belongs to.
+                         $projectMap : A map from a project to an account number
+                       :)
+
+                       let $groups := mapping:get-attributes('groups'),
+                           $projects := mapping:get-attributes('manager_projects'),
+                           $projectMap := map {
+                               'widgets_ui'       : '777654',
+                               'widgets_mobile'   : '887655',
+                               'widgets_platform' : '779956'
+                           } return (
+                       (:
+                           Rules for assigning roles to managers
+                       :)
+                       if ($groups = 'managers') then
+                       (
+                          (: All managers get the ticketing admin role :)
+                          'ticketing:admin',
+
+                          (: If the manager is not a contractor they get the billing:observer role :)
+                          if (not($groups='contractors')) then 'billing:observer' else (),
+
+                          (: All managers get full admin on the project account they belong to
+                             for example if they belong to the widgets_ui project they should
+                             get the role admin/777654 note that || is string concatination in
+                             XPath :)
+                          for $project in $projects return
+                              if ($projectMap($project)) then 'admin/' || $projectMap($project)  else ()
+                       ) else (),
+                       (:
+                           If a user is a member of the linux_user group they get the
+                           nova:observer role.
+                       :)
+                       if ($groups = 'linux_user') then 'nova:observer' else ())
+             "/>
+         </remote>
+      </rule>
+   </rules>
+</mapping>

@@ -10,9 +10,9 @@
             <user>
                <name value="{0}"/>
                <email value="{1}"/>
-               <expire value="PT2H"/>
                <domain value="{2}"/>
                <roles value="{3}"/>
+               <expire value="{4}"/>
             </user>
          </local>
         <remote>
@@ -20,6 +20,7 @@
             <attribute name="email"/>
             <attribute name="domain"/>
             <attribute multiValue="true" name="roles"/>
+            <attribute path="/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter"/>
         </remote>
       </rule>
    </rules>

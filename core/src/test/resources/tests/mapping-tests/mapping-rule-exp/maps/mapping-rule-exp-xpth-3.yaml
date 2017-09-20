@@ -1,0 +1,15 @@
+---
+mapping:
+  version: RAX-1
+  description: |-
+    Simple policy where we select required attributes via an
+    XPath. Here we use the mapping:get-attributes call to return
+    attribute values.
+  rules:
+  - local:
+      user:
+        domain: "{Pt(mapping:get-attributes('domain'))}"
+        name:   "{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}"
+        email:  "{Pt(mapping:get-attributes('email'))}"
+        roles:  "{Pts(mapping:get-attributes('roles'))}"
+        expire: "{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}"

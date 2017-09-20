@@ -15,6 +15,9 @@
            {
             "path":"mapping:get-attributes('roles')",
             "multiValue":true
+           },
+           {
+             "path" : "\/saml2p:Response\/saml2:Assertion\/saml2:Subject\/saml2:SubjectConfirmation\/saml2:SubjectConfirmationData\/@NotOnOrAfter"
            }
          ],
         "local": {
@@ -23,7 +26,7 @@
             "name":"{0}",
             "email":"{1}",
             "roles": ["{3}"],
-            "expire":"PT2H"
+            "expire":"{4}"
            }
          }
        }
