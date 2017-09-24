@@ -1,0 +1,65 @@
+<!--
+  defaults.xml
+
+  This file defines what happens when attribmap sees a Squiggly-D
+  ({D}) in the mapping policy file.  Squiggly-D is essentailly asking
+  the policy to look for a value in a default place, and this defines
+  the default places to search for a value.
+
+  Defaults are always searched in order.  The location of the default
+  value may be a SAML attribute name or an XPath but cannot be both.
+  The first to correctly evaluate to a value will be used as the
+  default.
+
+  For now, namespaces available to XPaths must be defined in the root
+  element of this file.
+
+  For now, you are allowed to set defaults only for standard
+  attributes.
+
+  For now, this configuration is not dynamic, it is examined when
+  attribute mapping library itself is compiled.
+
+  Copyright 2017 Rackspace US, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<attribute-defaults
+    xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+    xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol"
+    xmlns:foo="bar"
+    xmlns:x="yz">
+
+    <attribute name="name">
+        <location xpath="(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)[1]"/>
+    </attribute>
+
+    <attribute name="expire">
+        <location
+            xpath="(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)[1]"/>
+    </attribute>
+
+    <attribute name="email">
+        <location saml-attribute="email"/>
+    </attribute>
+
+    <attribute name="domain">
+        <location saml-attribute="domain"/>
+    </attribute>
+
+    <attribute name="roles" multiValue="true">
+        <location saml-attribute="roles"/>
+    </attribute>
+</attribute-defaults>

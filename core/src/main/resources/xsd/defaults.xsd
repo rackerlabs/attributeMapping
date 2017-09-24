@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:saxon="http://saxon.sf.net/" xmlns:xerces="http://xerces.apache.org"
+    targetNamespace="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning">
+
+    <xs:element name="attribute-defaults" type="mapping:AttributeDefaults"/>
+
+    <xs:complexType name="AttributeDefaults">
+        <xs:sequence>
+            <xs:element name="attribute" type="mapping:AttributeDefaultDef" minOccurs="1"
+                maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:assert test="every $att in ('name','email','domain','expire', 'roles') satisfies mapping:attribute[@name=$att]"
+                   saxon:message="Every standard attribute (name, email, domain, expire, and roles) must have a default"
+                   xerces:message="Every standard attribute (name, email, domain, expire, and roles) must have a default"
+                   />
+        <xs:assert test="count(mapping:attribute/@name) = count(distinct-values(mapping:attribute/@name))"
+                   saxon:message="Attributes should not be listed more than once"
+                   xerces:message="Attributes should not be listed more than once"
+                   />
+    </xs:complexType>
+
+    <xs:complexType name="AttributeDefaultDef">
+        <xs:sequence>
+            <xs:element name="location" type="mapping:AttributeLocation" minOccurs="1"
+                maxOccurs="unbounded">
+                <xs:alternative test="@xpath" type="mapping:AttributeLocationXPath"/>
+                <xs:alternative test="@saml-attribute" type="mapping:AttributeLocationSAMLAttribute"/>
+                <xs:alternative test="@param" type="mapping:AttributeLocationParameter"/>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="mapping:AllowedAttributes" use="required"/>
+        <xs:attribute name="multiValue" type="xs:boolean" use="optional" default="false"/>
+    </xs:complexType>
+
+    <xs:complexType name="AttributeLocation" abstract="true"/>
+
+    <xs:complexType name="AttributeLocationXPath">
+        <xs:complexContent>
+            <xs:extension base="mapping:AttributeLocation">
+                <xs:attribute name="xpath" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="AttributeLocationSAMLAttribute">
+        <xs:complexContent>
+            <xs:extension base="mapping:AttributeLocation">
+                <xs:attribute name="saml-attribute" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="AttributeLocationParameter">
+        <xs:complexContent>
+            <xs:extension base="mapping:AttributeLocation">
+                <xs:attribute name="param" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+
+    <xs:simpleType name="AllowedAttributes">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="name"/>
+            <xs:enumeration value="expire"/>
+            <xs:enumeration value="email"/>
+            <xs:enumeration value="domain"/>
+            <xs:enumeration value="roles"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
