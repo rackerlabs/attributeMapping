@@ -10,8 +10,8 @@
 <?include ../../../include/defaults-asserts.xml#email?>
 <?include ../../../include/defaults-asserts.xml#roles?>
 
-<!-- If no dates are given the expire should be no longer than 1 hour in the future  -->
-<?assert (mapping:get-expire() - current-dateTime()) <= xs:dayTimeDuration('PT1H')?>
+<!-- If no dates are given the expire should be no longer than 15 mins in the future  -->
+<?assert (mapping:get-expire() - current-dateTime()) <= xs:dayTimeDuration('PT15M')?>
 
 <saml2p:Response ID="_7fcd6173-e6e0-45a4-a2fd-74a4ef85bf30" IssueInstant="2015-12-04T15:47:15.057Z" Version="2.0" xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <saml2:Issuer xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">http://test.rackspace.com</saml2:Issuer>
