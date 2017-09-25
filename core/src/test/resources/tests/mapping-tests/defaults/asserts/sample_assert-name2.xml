@@ -10,8 +10,8 @@
 <?include ../../../include/defaults-asserts.xml#expire?>
 <?include ../../../include/defaults-asserts.xml#roles?>
 
-<!-- If the format is transient use email address instead of name -->
-<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID =  'no-reply@rackspace.com'?>
+<!-- If nameId is missing prefer claim name over email -->
+<?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID =  'no-foo-2@rackspace.com'?>
 
 
 <saml2p:Response ID="_7fcd6173-e6e0-45a4-a2fd-74a4ef85bf30" IssueInstant="2015-12-04T15:47:15.057Z" Version="2.0" xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -25,7 +25,6 @@
     Version="2.0">
     <saml2:Issuer>http://my.rackspace.com</saml2:Issuer>
     <saml2:Subject>
-        <saml2:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">john.doe</saml2:NameID>
         <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
             <saml2:SubjectConfirmationData
                 NotOnOrAfter="2013-11-17T16:19:06.298Z" />
@@ -53,6 +52,10 @@
         <saml2:Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress">
             <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:type="xs:string">no-foo@rackspace.com</saml2:AttributeValue>
+        </saml2:Attribute>
+        <saml2:Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name">
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:type="xs:string">no-foo-2@rackspace.com</saml2:AttributeValue>
         </saml2:Attribute>
         <saml2:Attribute Name="bar">
             <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

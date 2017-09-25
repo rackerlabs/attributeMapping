@@ -10,7 +10,7 @@
 <?include ../../../include/defaults-asserts.xml#expire?>
 <?include ../../../include/defaults-asserts.xml#roles?>
 
-<!-- If the format is persistent use email address instead of name -->
+<!-- If nameId is missing use email address instead of name -->
 <?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID =  'no-reply@rackspace.com'?>
 
 
@@ -25,7 +25,6 @@
     Version="2.0">
     <saml2:Issuer>http://my.rackspace.com</saml2:Issuer>
     <saml2:Subject>
-        <saml2:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">john.doe</saml2:NameID>
         <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
             <saml2:SubjectConfirmationData
                 NotOnOrAfter="2013-11-17T16:19:06.298Z" />
