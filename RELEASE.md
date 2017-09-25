@@ -1,8 +1,8 @@
 # Releases #
-## In Progress Work ##
+## Release 2.0.0 (2017-09-25) ##
 1. Added the ability to specify default values ({D}) via configuration (defaults.xml) for standard attributes. Several places may be searched for values via XPath, SAML attribute name, or via passed in parameters.
 1. Updated Dependency
-    1. checker-util: 2.4.0 → 2.5.0
+    1. checker-util: 2.4.0 → 2.4.1
 
 ## Release 1.3.1 (2017-08-29) ##
 1. Updated Dependencies
