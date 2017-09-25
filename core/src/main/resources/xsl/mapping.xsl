@@ -6,11 +6,20 @@
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
     xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     version="3.0">
     
     <xsl:namespace-alias stylesheet-prefix="xslout" result-prefix="xsl"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
-    
+
+    <!--
+        Don't expect the location of defaults to change, but
+        specifying as a param will be useful for testing.
+    -->
+    <xsl:param name="defaults-config" as="xs:string">defaults.xml</xsl:param>
+
+    <xsl:variable name="defaults" as="node()" select="doc($defaults-config)"/>
+
     <xsl:template match="/">
         <xsl:comment>
             -                                                       -
@@ -19,8 +28,14 @@
         </xsl:comment>
         <xslout:transform version="3.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
             <xsl:copy-of select="/mapping:mapping/namespace::*"/>
+            <xsl:copy-of select="$defaults/mapping:attribute-defaults/namespace::*"/>
             <xslout:param name="outputSAML" as="xs:boolean" select="false()"/>
-            <xslout:param name="issuer" as="xs:string" select="'http://openrepose.org/filters/SAMLTranslation'"/>
+            <xslout:param name="params" as="map(xs:string, xs:string)">
+                <xslout:map/>
+            </xslout:param>
+            <xslout:param name="issuer" as="xs:string"
+                          select="if (map:contains($params,'issuer')) then $params('issuer') else
+                                  'http://openrepose.org/filters/SAMLTranslation'"/>
             <xslout:output method="xml" encoding="UTF-8" indent="yes"/>
             <xslout:variable name="locals" as="node()*">
                 <xsl:for-each select="/mapping:mapping/mapping:rules/mapping:rule">
@@ -498,17 +513,58 @@
 
     <xsl:function name="mapping:defaultForName" as="node()*">
         <xsl:param name="name" as="xs:string"/>
-        <xsl:choose>
-            <xsl:when test="$name='name'"><xslout:value-of select="(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)[1]"/></xsl:when>
-            <xsl:when test="$name='expire'"><xslout:value-of select="(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)[1]"/></xsl:when>
-            <xsl:when test="$name='email'"><xslout:value-of select="{mapping:attribute('email')}"/></xsl:when>
-            <xsl:when test="$name='domain'"><xslout:value-of select="{mapping:attribute('domain')}"/></xsl:when>
-            <xsl:when test="$name='roles'"><xslout:value-of select="for $c in {mapping:attributes('roles')} return mapping:transformToNBSP($c)" separator=" "/></xsl:when>
-            <xsl:otherwise>
-                <xsl:message terminate="yes">[ERROR] No default value for attribute <xsl:value-of select="$name"/></xsl:message>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:variable name="attribDefault" as="element()?" select="$defaults/mapping:attribute-defaults/mapping:attribute[@name=$name]"/>
+        <xsl:if test="empty($attribDefault)">
+            <xsl:message terminate="yes">[ERROR] No default value for attribute <xsl:value-of select="$name"/></xsl:message>
+        </xsl:if>
+        <xslout:choose>
+            <xsl:apply-templates select="$attribDefault/mapping:location" mode="attributeDefaults"/>
+            <!-- Empty sequence 'cus default not found -->
+            <xslout:otherwise></xslout:otherwise>
+        </xslout:choose>
     </xsl:function>
+
+    <!--
+        Templates for setting attribute defaults
+    -->
+    <xsl:template match="mapping:location[@xpath]" mode="attributeDefaults">
+        <xslout:when test="exists({@xpath})">
+            <xsl:choose>
+                <xsl:when test="xs:boolean(../@multiValue)">
+                    <xslout:value-of select="for $c in {@xpath} return mapping:transformToNBSP($c)" separator=" "/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xslout:value-of select="{@xpath}"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xslout:when>
+    </xsl:template>
+
+    <xsl:template match="mapping:location[@saml-attribute]" mode="attributeDefaults">
+        <xslout:when test="exists({mapping:attribute(@saml-attribute)})">
+            <xsl:choose>
+                <xsl:when test="xs:boolean(../@multiValue)">
+                    <xslout:value-of select="for $c in {mapping:attributes(@saml-attribute)} return mapping:transformToNBSP($c)" separator=" "/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xslout:value-of select="{mapping:attribute(@saml-attribute)}"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xslout:when>
+    </xsl:template>
+
+    <xsl:template match="mapping:location[@param]" mode="attributeDefaults">
+        <xslout:when test="map:contains($params,'{@param}')">
+            <xsl:choose>
+                <xsl:when test="xs:boolean(../@multiValue)">
+                    <xslout:value-of select="for $c in $params('{@param}') return mapping:transformToNBSP($c)" separator=" "/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xslout:value-of select="$params('{@param}')[1]"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xslout:when>
+    </xsl:template>
     
     <xsl:function name="mapping:attributeByNumber" as="node()*">
         <xsl:param name="parent" as="element()"/>

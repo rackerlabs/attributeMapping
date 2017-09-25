@@ -82,7 +82,7 @@ class AttributeMapperSuite extends AttributeMapperBase {
       dest,
       true,
       true,
-      v)
+      v, Map("domain"->"foo:999-882"))
     dest.getXdmNode.asSource
   })
 
@@ -110,7 +110,7 @@ class AttributeMapperSuite extends AttributeMapperBase {
           AttributeMapper.generateXSLExec (docBuilder.parse(map), true, v)
       }
 
-      val resultDoc = AttributeMapper.convertAssertion (policyExec, docBuilder.parse(assertFile))
+      val resultDoc = AttributeMapper.convertAssertion (policyExec, docBuilder.parse(assertFile), Map("domain"->"foo:999-882"))
       new DOMSource(resultDoc)
     } finally {
       if (docBuilder != null) returnParser(docBuilder)

@@ -1,0 +1,118 @@
+<!--
+  defaults.xml
+
+  This file defines what happens when attribmap sees a Squiggly-D
+  ({D}) in the mapping policy file.  Squiggly-D is essentailly asking
+  the policy to look for a value in a default place, and this defines
+  the default places to search for a value.
+
+  Defaults are always searched in order.  The location of the default
+  value may be a SAML attribute name, an XPath, or a parameter.
+  The first to correctly evaluate to a value will be used as the
+  default.
+
+  Paramaters are passed to attribmap as a collection
+  of name value pairs, they work like other locations (names, xpaths)
+  if a param exists the value will be used, if not, the next location
+  will be tried.
+
+  For now, namespaces available to XPaths must be defined in the root
+  element of this file.
+
+  For now, you are allowed to set defaults only for standard
+  attributes.  Setting defaults for extended attributes is not
+  supported.
+
+  For now, this configuration is not dynamic, it is examined when
+  attribute mapping library itself is compiled.
+
+  Copyright 2017 Rackspace US, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE attribute-defaults [
+<!ENTITY emailLocations '
+    <location saml-attribute="email"/>
+    <location saml-attribute="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"/>
+    <location saml-attribute="urn:oid:1.2.840.113549.1.9.1.1"/>
+    <location saml-attribute="0.9.2342.19200300100.1.3"/>
+  '>
+]>
+<attribute-defaults
+    xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+    xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol">
+
+    <attribute name="name">
+        <!--
+            A Subject's NameID who's type is not persistant or
+            transient, can be used as the default name.
+
+            We don't allow persistent because these names must not be
+            shared in the clear and we make no such protections.
+
+            We don't allow transient because these change from one
+            response to the next.
+
+            Attribmap will always send the name over as unspecified.
+        -->
+        <location
+            xpath="(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID[not(@Format=('urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+                   'urn:oasis:names:tc:SAML:2.0:nameid-format:transient'))])[1]"/>
+        <!--
+            If that doesn't work try various places for name and email
+            address.
+        -->
+        <location saml-attribute="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"/>
+        <!-- Principal Name -->
+        <location saml-attribute="urn:oid:1.3.6.1.4.1.5923.1.1.1.6"/>
+        <!-- Defined Above -->
+        &emailLocations;
+    </attribute>
+
+    <attribute name="email">
+        <!-- Defined Above -->
+        &emailLocations;
+    </attribute>
+
+    <attribute name="expire">
+        <location
+            xpath="
+                   (:
+                      Get all the relevant dates and convert to dateTimes. If there
+                      are multiple assertions in the response, this looks at all dates
+                      in all assertions.
+                   :)
+                   let $dates :=  for $d in (/saml2p:Response/saml2:Assertion/saml2:AuthnStatement/@SessionNotOnOrAfter,
+                                             /saml2p:Response/saml2:Assertion/saml2:Conditions/@NotOnOrAfter,
+                                             /saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)
+                                             return xs:dateTime($d)
+
+                   (:
+                     If for some strange reason we couldn't find a single date
+                     return an hour duration, otherwise return the date that's
+                     closest to now.
+                   :)
+                   return if (empty($dates)) then 'PT1H' else min($dates)
+                   "/>
+    </attribute>
+
+    <attribute name="domain">
+        <location saml-attribute="domain"/>
+        <location param="domain"/>
+    </attribute>
+
+    <attribute name="roles" multiValue="true">
+        <location saml-attribute="roles"/>
+    </attribute>
+</attribute-defaults>

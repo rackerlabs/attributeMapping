@@ -36,6 +36,8 @@ import org.w3c.dom.Document
 
 import scala.util.Try
 
+import collection.JavaConverters._
+
 object XSDEngine extends Enumeration {
   val AUTO = Value("auto")
   val SAXON = Value("saxon")
@@ -381,7 +383,8 @@ object AttributeMapper {
   }
 
   def convertAssertion (policy : Source, policyFormat : PolicyFormat.Value, assertion : Source, dest : Destination,
-                        outputSAML : Boolean, validate : Boolean, xsdEngine : String) : Unit = {
+                        outputSAML : Boolean, validate : Boolean, xsdEngine : String,
+                         params : Map[String,String]=Map[String,String]()) : Unit = {
     //
     // Generate the XSLTExec
     //
@@ -390,10 +393,11 @@ object AttributeMapper {
     //
     //  Run the generate XSL on the assertion
     //
-    convertAssertion(mapExec, assertion, dest, outputSAML, !XML.equals(policyFormat))
+    convertAssertion(mapExec, assertion, dest, outputSAML, !XML.equals(policyFormat), params)
   }
 
-  def convertAssertion (policyExec : XsltExecutable, assertion : Source, dest : Destination, outputSAML : Boolean, toJSON : Boolean) : Unit = {
+  def convertAssertion (policyExec : XsltExecutable, assertion : Source, dest : Destination, outputSAML : Boolean, toJSON : Boolean,
+                        params : Map[String,String]) : Unit = {
     val assertionDest = {
       if (toJSON && !outputSAML) {
         new XdmDestination
@@ -405,7 +409,8 @@ object AttributeMapper {
     //
     //  Run the generate XSL on the assertion
     //
-    val mapTrans = getXsltTransformer (policyExec, Map(new QName("outputSAML") -> new XdmAtomicValue(outputSAML)))
+    val mapTrans = getXsltTransformer (policyExec, Map(new QName("outputSAML") -> new XdmAtomicValue(outputSAML),
+                                                       new QName("params") -> XdmMap.makeMap(params.asJava)))
     mapTrans.setSource(assertion)
     mapTrans.setDestination(assertionDest)
     mapTrans.transform()
@@ -415,7 +420,7 @@ object AttributeMapper {
     }
   }
 
-  def convertAssertion (policyExec : XsltExecutable, assertion : Source) : Document = {
+  def convertAssertion (policyExec : XsltExecutable, assertion : Source, params : Map[String,String]) : Document = {
     var docBuilder : DocumentBuilder = null
     var outDoc : Document = null
     try {
@@ -426,12 +431,12 @@ object AttributeMapper {
     }
 
     val dest = new DOMDestination(outDoc)
-    convertAssertion (policyExec, assertion, dest, true, false)
+    convertAssertion (policyExec, assertion, dest, true, false, params)
     outDoc
   }
 
-  def convertAssertion (policyExec : XsltExecutable, assertion : Document) : Document = {
-    convertAssertion (policyExec, new DOMSource(assertion))
+  def convertAssertion (policyExec : XsltExecutable, assertion : Document, params : Map[String,String]) : Document = {
+    convertAssertion (policyExec, new DOMSource(assertion), params)
   }
 
   def validateExtAttributes (extAttribs : Source, engineStr : String) : Source = {
