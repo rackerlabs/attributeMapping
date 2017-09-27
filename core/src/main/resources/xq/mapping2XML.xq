@@ -20,10 +20,11 @@ declare variable $defaultAttributes as xs:string* := ('name','email','expire','d
 declare variable $remoteMultiValues as xs:string* := ('whitelist','blacklist','notAnyOf','anyOneOf');
 
 declare function mapping:convertMatchValue($in as xs:string) as xs:string {
+
  (:
    Only the following should not be escaped :  {At(...)}, {Ats(...)}, {Pt(...)}, {Pts(...)}.
  :)
- if (matches($in,'^\{(A|P)ts?\(.*\)\}$')) then $in else mapping:convertNonMatchValue($in)
+ if (matches($in,'\{(A|P)ts?\(.*?\)\}','ms')) then $in else mapping:convertNonMatchValue($in)
 };
 
 declare function mapping:convertNonMatchValue($in as xs:string) as xs:string {
@@ -32,8 +33,8 @@ declare function mapping:convertNonMatchValue($in as xs:string) as xs:string {
 
 declare function mapping:convertValue($in as xs:string) as xs:string {
   let $strings as xs:string* :=
-    for $pm in analyze-string($in,'\{.*\}')//(fn:match|fn:non-match) return if (local-name($pm) = 'match') then mapping:convertMatchValue(string($pm))
-                                                                                                           else mapping:convertNonMatchValue(string($pm))
+    for $pm in analyze-string($in,'\{.*?\}','ms')//(fn:match|fn:non-match) return if (local-name($pm) = 'match') then mapping:convertMatchValue(string($pm))
+                                                                                                                            else mapping:convertNonMatchValue(string($pm))
   return string-join($strings,'')
 };
 

@@ -1,0 +1,27 @@
+---
+mapping:
+  version: RAX-1
+  rules:
+  - local:
+      user:
+        domain: "{D}"
+        email:  "{D}"
+        expire: "{D}"
+        name:   "{D}"
+        roles:
+        - foo bar biz
+        - baz
+        - "{0}"
+      faws:
+        groups:
+          multiValue: true
+          value: "{Ats(http://schemas.xmlsoap.org/claims/Group)}"
+    remote:
+      - path : |-
+             let $groups := mapping:get-attributes('http://schemas.xmlsoap.org/claims/Group')
+             return (
+                  if ($groups='aws.rackspace.admin')     then ('billing:admin', 'ticketing:admin','admin') else (),
+                  if ($groups='aws.rackspace.billing')   then 'billing:admin' else (),
+                  if ($groups='aws.rackspace.ticketing') then 'ticketing:admin' else ()
+                 )
+        multiValue: true
