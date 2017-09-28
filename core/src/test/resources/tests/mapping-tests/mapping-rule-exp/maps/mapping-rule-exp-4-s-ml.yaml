@@ -1,0 +1,23 @@
+---
+mapping:
+  rules:
+  - remote:
+    - path: "/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID"
+    - path: mapping:get-attribute('email')
+    - path: mapping:get-attribute('domain')
+    local:
+      user:
+        domain: "{2}"
+        name: "{0}"
+        email: "{1}"
+        roles:
+          - |-
+             {Pts(
+                (:
+                   Get the roles by making a call to the XPath
+                   function mapping:get-attributes
+                :)
+                 mapping:get-attributes('roles')
+             )}
+        expire: PT2H
+  version: RAX-1

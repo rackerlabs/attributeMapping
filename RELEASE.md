@@ -1,4 +1,7 @@
 # Releases #
+## Release 2.0.1 (2017-09-28) ##
+1. Fixed a number of parsing bugs when using {(P|A)ts?()} in a template that spans multiple lines.
+
 ## Release 2.0.0 (2017-09-25) ##
 1. Added the ability to specify default values ({D}) via configuration (defaults.xml) for standard attributes. Several places may be searched for values via XPath, SAML attribute name, or via passed in parameters.
 1. Updated Dependency

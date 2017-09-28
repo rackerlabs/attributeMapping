@@ -29,7 +29,7 @@ declare function mapping:convertAttributeValues($tokenized as xs:string*, $match
 };
 
 declare function mapping:tokenizeListValues($in as xs:string, $name as xs:string, $flags as xs:string*) as xs:string* {
-  let $asResult := analyze-string($in,'\{(A|P)ts?\(.*?\)\}')//(fn:match|fn:non-match)
+  let $asResult := analyze-string($in,'\{(A|P)ts?\(.*?\)\}','ms')//(fn:match|fn:non-match)
   let $matches := for $m in $asResult return if(local-name($m) = 'match') then string($m) else ()
   let $tokenized := tokenize(normalize-space(string-join(for $pm in $asResult return
      if (local-name($pm) = 'match') then $matchMarker else string($pm), '')),' ')

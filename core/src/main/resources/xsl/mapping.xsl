@@ -317,28 +317,8 @@
         <xsl:param name="parent" as="element()"/>
         <xsl:param name="in" as="xs:string"/>
         <xsl:param name="remoteMappers" as="node()*"/>
-        <xsl:analyze-string select="$in" regex="(.*)?(\{{.*\}})(.*)?">
-            <xsl:matching-substring>
-                <xsl:if test="not(empty(regex-group(1)))">
-                    <xsl:call-template name="mapping:handleAttribute">
-                        <xsl:with-param name="parent" select="$parent"/>
-                        <xsl:with-param name="in" select="regex-group(1)"/>
-                        <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
-                    </xsl:call-template>
-                </xsl:if>
-                <xsl:sequence select="mapping:mapAttribute($parent,regex-group(2),$remoteMappers)"/>
-                <xsl:if test="not(empty(regex-group(3)))">
-                    <xsl:call-template name="mapping:handleAttribute">
-                        <xsl:with-param name="parent" select="$parent"/>
-                        <xsl:with-param name="in" select="regex-group(3)"/>
-                        <xsl:with-param name="remoteMappers" select="$remoteMappers"/>
-                    </xsl:call-template>
-                </xsl:if>
-            </xsl:matching-substring>
-            <xsl:non-matching-substring>
-                <xsl:sequence select="mapping:mapAttribute($parent,$in,$remoteMappers)"/>
-            </xsl:non-matching-substring>
-        </xsl:analyze-string>
+
+        <xsl:sequence select="mapping:mapAttribute($parent,$in,$remoteMappers)"/>
     </xsl:template>
 
     <xsl:template match="mapping:attribute[@name and @value]" mode="genLocal" priority="20">
@@ -436,54 +416,83 @@
             <xsl:when test="not(contains($part,'{'))">
                 <xslout:text><xsl:value-of select="$part"/></xslout:text>
             </xsl:when>
-            <xsl:when test="$part='{D}'">
-                <xsl:choose>
-                    <xsl:when test="(local-name($parent/..) = 'user') and
-                                    (namespace-uri($parent/..)='http://docs.rackspace.com/identity/api/ext/MappingRules') ">
-                        <xsl:sequence select="mapping:defaultForName(local-name($parent))"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:message terminate="yes">[ERROR] The attribute <xsl:value-of select="concat(name($parent/..),'/',name($parent))"/> does not have a default value.</xsl:message>
-                    </xsl:otherwise>
-                </xsl:choose>
+            <xsl:when test="matches($part,'\{D\}','ms')">
+                <xsl:analyze-string select="$part" regex="\{{D\}}" flags="ms">
+                    <xsl:matching-substring>
+                        <xsl:choose>
+                            <xsl:when test="(local-name($parent/..) = 'user') and
+                                            (namespace-uri($parent/..)='http://docs.rackspace.com/identity/api/ext/MappingRules') ">
+                                <xsl:sequence select="mapping:defaultForName(local-name($parent))"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:message terminate="yes">[ERROR] The attribute <xsl:value-of select="concat(name($parent/..),'/',name($parent))"/> does not have a default value.</xsl:message>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:sequence select="mapping:mapAttribute($parent,.,$remoteMappers)"/>
+                    </xsl:non-matching-substring>
+                </xsl:analyze-string>
             </xsl:when>
-            <xsl:when test="matches($part,'\{D\(.*\)\}')">
-                <xsl:analyze-string select="$part" regex="\{{D\((.*)\)\}}">
+            <xsl:when test="matches($part,'\{D\(.*?\)\}')">
+                <xsl:analyze-string select="$part" regex="\{{D\((.*?)\)\}}">
                     <xsl:matching-substring>
                         <xsl:sequence select="mapping:defaultForName(regex-group(1))"/>
                     </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:sequence select="mapping:mapAttribute($parent,.,$remoteMappers)"/>
+                    </xsl:non-matching-substring>
                 </xsl:analyze-string>
             </xsl:when>
-            <xsl:when test="matches($part,'\{At\(.*\)\}')">
-                <xsl:analyze-string select="$part" regex="\{{At\((.*)\)\}}">
+            <xsl:when test="matches($part,'\{At\(.*?\)\}', 'ms')">
+                <xsl:analyze-string select="$part" regex="\{{At\((.*?)\)\}}" flags="ms">
                     <xsl:matching-substring>
                         <xsl:sequence select="mapping:attributeByName(regex-group(1))"/>
                     </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:sequence select="mapping:mapAttribute($parent,.,$remoteMappers)"/>
+                    </xsl:non-matching-substring>
                 </xsl:analyze-string>
             </xsl:when>
-            <xsl:when test="matches($part,'\{Ats\(.*\)\}')">
-                <xsl:analyze-string select="$part" regex="\{{Ats\((.*)\)\}}">
+            <xsl:when test="matches($part,'\{Ats\(.*?\)\}', 'ms')">
+                <xsl:analyze-string select="$part" regex="\{{Ats\((.*?)\)\}}" flags="ms">
                     <xsl:matching-substring>
                         <xsl:sequence select="mapping:attributesByName(regex-group(1))"/>
                     </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:sequence select="mapping:mapAttribute($parent,.,$remoteMappers)"/>
+                    </xsl:non-matching-substring>
                 </xsl:analyze-string>
             </xsl:when>
-            <xsl:when test="matches($part,'\{Pt\(.*\)\}')">
-                <xsl:analyze-string select="$part" regex="\{{Pt\((.*)\)\}}">
+            <xsl:when test="matches($part,'\{Pt\(.*?\)\}', 'ms')">
+                <xsl:analyze-string select="$part" regex="\{{Pt\((.*?)\)\}}" flags="ms">
                     <xsl:matching-substring>
                         <xsl:sequence select="mapping:attributeByPath(regex-group(1))"/>
                     </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:sequence select="mapping:mapAttribute($parent,.,$remoteMappers)"/>
+                    </xsl:non-matching-substring>
                 </xsl:analyze-string>
             </xsl:when>
-            <xsl:when test="matches($part,'\{Pts\(.*\)\}')">
-                <xsl:analyze-string select="$part" regex="\{{Pts\((.*)\)\}}">
+            <xsl:when test="matches($part,'\{Pts\(.*?\)\}','ms')">
+                <xsl:analyze-string select="$part" regex="\{{Pts\((.*?)\)\}}" flags="ms">
                     <xsl:matching-substring>
                         <xsl:sequence select="mapping:attributesByPath(regex-group(1))"/>
                     </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:sequence select="mapping:mapAttribute($parent,.,$remoteMappers)"/>
+                    </xsl:non-matching-substring>
                 </xsl:analyze-string>
             </xsl:when>
-            <xsl:when test="matches($part,'\{[0-9]*\}')">
-                <xsl:sequence select="mapping:attributeByNumber($parent, $part, $remoteMappers)"/>
+            <xsl:when test="matches($part,'\{[0-9]*\}', 'ms')">
+                <xsl:analyze-string select="$part" regex="\{{[0-9]*\}}" flags="ms">
+                    <xsl:matching-substring>
+                        <xsl:sequence select="mapping:attributeByNumber($parent, ., $remoteMappers)"/>
+                    </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:sequence select="mapping:mapAttribute($parent,.,$remoteMappers)"/>
+                    </xsl:non-matching-substring>
+                </xsl:analyze-string>
             </xsl:when>
             <xsl:otherwise>
                 <xslout:text><xsl:value-of select="$part"/></xslout:text>
@@ -515,7 +524,7 @@
         <xsl:param name="name" as="xs:string"/>
         <xsl:variable name="attribDefault" as="element()?" select="$defaults/mapping:attribute-defaults/mapping:attribute[@name=$name]"/>
         <xsl:if test="empty($attribDefault)">
-            <xsl:message terminate="yes">[ERROR] No default value for attribute <xsl:value-of select="$name"/></xsl:message>
+            <xsl:message terminate="yes">[ERROR] No default value for attribute   '<xsl:value-of select="$name"/>'</xsl:message>
         </xsl:if>
         <xslout:choose>
             <xsl:apply-templates select="$attribDefault/mapping:location" mode="attributeDefaults"/>

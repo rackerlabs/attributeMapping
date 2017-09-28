@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         version="RAX-1">
+   <rules>
+      <rule>
+         <local>
+            <user>
+               <domain value="{D}"/>
+               <name value="{D}"/>
+               <email value="{D}"/>
+               <roles value="foo bar biz baz {0}" multiValue="true"/>
+               <expire value="{D}"/>
+            </user>
+            <faws xsi:type="LocalAttributeGroup">
+               <groups value="{Ats(http://schemas.xmlsoap.org/claims/Group)}"
+                       multiValue="true"
+                       xsi:type="LocalAttribute"/>
+            </faws>
+         </local>
+         <remote>
+            <attribute path="
+                             let $groups := mapping:get-attributes('http://schemas.xmlsoap.org/claims/Group')
+                             return (
+                                        if ($groups='aws.rackspace.admin')     then ('billing:admin', 'ticketing:admin','admin') else (),
+                                        if ($groups='aws.rackspace.billing')   then 'billing:admin' else (),
+                                        if ($groups='aws.rackspace.ticketing') then 'ticketing:admin' else ())"
+                       multiValue="true"/>
+         </remote>
+      </rule>
+   </rules>
+</mapping>

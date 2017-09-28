@@ -1,0 +1,54 @@
+---
+mapping:
+  version: RAX-1
+  description: >-
+             This is an example of a multiValue extended attribute.
+             Here the faws/policy may contain multiple values.
+  rules:
+  - remote:
+    - path: "'PT2H'"
+    - path: "'AWSPolicy'"
+    local:
+      user:
+        domain: "{D}"
+        foo:
+          value: "{0}"
+          type: xs:dateTime
+        name: "{D}"
+        email: "{D}"
+        roles: "{D}"
+        expire: "{D}"
+      faws:
+        policy:
+          value:
+          - "{1}"
+          multiValue: true
+  - local:
+      user: {}
+      faws:
+        policy:
+          #
+          # Shows off an array where one value is a literal and the
+          # other is derived from an XPath.
+          #
+          value:
+          - AWSPolicy2
+          - |-
+            {Pts(
+                 (: Okay this is silly but let's just return
+                    a simple string :)
+                 'AWSPolicy YEA!' )}
+          multiValue: true
+  - local:
+      user: {}
+      faws:
+        policy:
+        #
+        # XPath as a first item, we use Pt instead of Pts because we are
+        # really just returning 1 item
+        #
+        - |-
+          {Pt(
+               'AWSPolicy3'
+          )}
+        - AWSPolicy YEA!!
