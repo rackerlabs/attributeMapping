@@ -29,14 +29,14 @@ SAML 2.0
     SAML protocol is required, although this document concentrates
     soely on SAML Responses and SAML Assertions.
 
-XPath 3.1
+XPath 2.0
     XPath is a W3C standard expression language for extracting
-    information from structured data (XML and JSON). The language is
-    desgined to be embeded in a host language and it is used in this
-    way by the mapping policy language. The datatypes and function
-    libraries defined by the XPath standard are used in other policy
-    languages such as XACML. In most cases, only basic understanding of
-    XPath is required, see :doc:`xpath` for a quick overview.
+    information from structured data. The language is desgined to be
+    embeded in a host language and it is used in this way by the
+    mapping policy language. The datatypes and function libraries
+    defined by the XPath standard are used in other policy languages
+    such as XACML. In most cases, only basic understanding of XPath is
+    required, see :doc:`xpath` for a quick overview.
 
 YAML 1.1
     YAML is a simple data serialization language that is designed to be
