@@ -1,0 +1,35 @@
+========================
+Attribute Mapping Basics
+========================
+
+.. See index.rst for info on attribmap, saml, and map directives.
+
+The SAML Assertion
+==================
+
+Required Attributes
+===================
+
+Domain
+------
+
+Name and Email
+--------------
+
+Expire
+------
+
+Roles
+-----
+
+Attribute Mapping Rules
+=======================
+
+Local
+-----
+
+Remote
+------
+
+XPath vs Attribute Names
+========================
