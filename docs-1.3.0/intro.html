@@ -341,22 +341,22 @@ for writing such polices.</p>
 43
 44
 45
-46</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+46</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
+  <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
     <span class="no">The following is an attribute mapping for Widgets.com.   </span>
-  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
-        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{At(mail)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{0}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-    <span class="l l-Scalar l-Scalar-Plain">remote</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">multiValue</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-        <span class="l l-Scalar l-Scalar-Plain">path</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="s">&quot;{At(mail)}&quot;</span>
+        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span> <span class="s">&quot;{0}&quot;</span>
+        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+    <span class="l-Scalar-Plain">remote</span><span class="p-Indicator">:</span>
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">multiValue</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+        <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
              <span class="no">(:</span>
                 <span class="no">The following describes the rules for assigning roles to</span>
                 <span class="no">users.</span>

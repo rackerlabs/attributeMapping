@@ -296,7 +296,7 @@ below:</p>
 90
 91
 92
-93</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+93</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;saml2p:Response</span> <span class="na">xmlns:saml2p=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot;</span>
                  <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
                  <span class="na">xmlns:ds=</span><span class="s">&quot;http://www.w3.org/2000/09/xmldsig#&quot;</span>
@@ -494,7 +494,7 @@ email, in which case the email will be located in the Subject section.</p>
 <p>Another attribute expected by Rackspace Identity is the list of roles
 that should be assigned to the federated user.  Rackspace Identity
 only allows roles that it recognizes to be assigned.  See the
-<a class="reference external" href="http://developer.rackspace.com/docs/rackspace-federation">Rackspace Identity Federation User Guide</a> for the most current <a class="reference external" href="http://developer.rackspace.com/docs/rackspace-federation/docs/attribmapping-basics/full-roles.html">list
+<a class="reference external" href="http://developer.rackspace.com/docs/rackspace-federation">Rackspace Identity Federation User Guide</a> for the most current <a class="reference external" href="https://developer.rackspace.com/docs/rackspace-federation/attribmapping-basics/full-roles/">list
 of allowed roles</a>.</p>
 <p>In the SAML Assertion above the list of roles is specified in an
 attribute named <code class="docutils literal"><span class="pre">roles</span></code> on lines 71–73.  Note that this is a
@@ -646,19 +646,19 @@ Assertion.</p>
 10
 11
 12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
+  <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
     <span class="no">Simple policy where we select required attributes via an XPath.</span>
-  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
-        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;domain&#39;]/saml2:AttributeValue[1])}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>   <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;email&#39;]/saml2:AttributeValue[1])}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;roles&#39;]/saml2:AttributeValue)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
+  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;domain&#39;]/saml2:AttributeValue[1])}&quot;</span>
+        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span>   <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
+        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span>  <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;email&#39;]/saml2:AttributeValue[1])}&quot;</span>
+        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span>  <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;roles&#39;]/saml2:AttributeValue)}&quot;</span>
+        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
 </pre></div>
 </td></tr></table></div>
 <p>Let’s walk through the policy above in detail and examine how XPath is
@@ -801,21 +801,21 @@ will produce the exact same result.</p>
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
+  <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
     <span class="no">Simple policy where we select required attributes via an XPath.</span>
-  <span class="l l-Scalar l-Scalar-Plain">namespaces</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">foo</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">urn:oasis:names:tc:SAML:2.0:protocol</span>
-  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
-        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;domain&#39;]/saml2:AttributeValue[1])}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>   <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;email&#39;]/saml2:AttributeValue[1])}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;roles&#39;]/saml2:AttributeValue)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
+  <span class="l-Scalar-Plain">namespaces</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">foo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">urn:oasis:names:tc:SAML:2.0:protocol</span>
+  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;domain&#39;]/saml2:AttributeValue[1])}&quot;</span>
+        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span>   <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
+        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span>  <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;email&#39;]/saml2:AttributeValue[1])}&quot;</span>
+        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span>  <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;roles&#39;]/saml2:AttributeValue)}&quot;</span>
+        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{Pts(/foo:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -850,21 +850,21 @@ follows:</p>
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
+  <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
     <span class="no">Simple policy where we select required attributes via an XPath.</span>
     <span class="no">We use {Pt()} instead of {Pts()} in single value attributes to</span>
     <span class="no">avoid having to select the first attribute value in XPath.</span>
-  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
-        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;domain&#39;]/saml2:AttributeValue)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>   <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;email&#39;]/saml2:AttributeValue)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;roles&#39;]/saml2:AttributeValue)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
+  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;domain&#39;]/saml2:AttributeValue)}&quot;</span>
+        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span>   <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
+        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span>  <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;email&#39;]/saml2:AttributeValue)}&quot;</span>
+        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span>  <span class="s">&quot;{Pts(/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=&#39;roles&#39;]/saml2:AttributeValue)}&quot;</span>
+        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -892,21 +892,21 @@ a string, and returns the attribute values associated with that name.</p>
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
+  <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
     <span class="no">Simple policy where we select required attributes via an</span>
     <span class="no">XPath. Here we use the mapping:get-attributes call to return</span>
     <span class="no">attribute values.</span>
-  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
-        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{Pt(mapping:get-attributes(&#39;domain&#39;))}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>   <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{Pt(mapping:get-attributes(&#39;email&#39;))}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{Pts(mapping:get-attributes(&#39;roles&#39;))}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
+  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{Pt(mapping:get-attributes(&#39;domain&#39;))}&quot;</span>
+        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span>   <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
+        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span>  <span class="s">&quot;{Pt(mapping:get-attributes(&#39;email&#39;))}&quot;</span>
+        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span>  <span class="s">&quot;{Pts(mapping:get-attributes(&#39;roles&#39;))}&quot;</span>
+        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -935,21 +935,21 @@ substitution returns all values for a specific attribute name and the
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
+  <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
     <span class="no">Simple policy where we select required attributes. We use At</span>
     <span class="no">instead of Pts as a simple means of accessing an name SAML</span>
     <span class="no">attribute.</span>
-  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
-        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{At(domain)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>   <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{At(email)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{Ats(roles)}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
+  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{At(domain)}&quot;</span>
+        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span>   <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}&quot;</span>
+        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span>  <span class="s">&quot;{At(email)}&quot;</span>
+        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span>  <span class="s">&quot;{Ats(roles)}&quot;</span>
+        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}&quot;</span>
 </pre></div>
 </td></tr></table></div>
 <p>Notice that in this case the name of the attribute is not in single
@@ -986,20 +986,20 @@ like this:</p>
 11
 12
 13
-14</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
-<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
+  <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
     <span class="no">The default policy.  All attributes are in the expected location</span>
     <span class="no">in the SAML assertion.</span>
-  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
-        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>   <span class="s">&quot;{D}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{D}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{D}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span>   <span class="s">&quot;{D}&quot;</span>
+        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span>  <span class="s">&quot;{D}&quot;</span>
+        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span>  <span class="s">&quot;{D}&quot;</span>
+        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
 </pre></div>
 </td></tr></table></div>
 </div>

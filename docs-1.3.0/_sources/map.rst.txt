@@ -440,7 +440,7 @@ perfectly.
 
 .. _rackspace identity federation user guide: http://developer.rackspace.com/docs/rackspace-federation
 
-.. _list of allowed roles: http://developer.rackspace.com/docs/rackspace-federation/docs/attribmapping-basics/full-roles.html
+.. _list of allowed roles: https://developer.rackspace.com/docs/rackspace-federation/attribmapping-basics/full-roles/
 
 .. _iso 8601: https://en.wikipedia.org/wiki/ISO_8601
 
