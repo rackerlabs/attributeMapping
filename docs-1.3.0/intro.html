@@ -107,6 +107,7 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Attribute Mapping Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="xpath.html">XPath Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="yaml.html">YAML Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="common/common-end.html">Document history and additional information</a></li>
 </ul>
 
             
@@ -157,8 +158,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/intro.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -179,7 +178,7 @@ provides a declarative means of extracting and transforming
 information produced by your identity system so that it may seamlessly
 inter-operate with Rackspace.</p>
 <p>This document describes the attribute mapping policy language in
-detail. It is intended as a guide to assist in the writting of mapping
+detail. It is intended as a guide to assist in the writing of mapping
 policies as well as a reference for the features of the policy
 language.</p>
 <div class="section" id="technology-background">
@@ -192,11 +191,11 @@ a basic understanding of the following technologies:</p>
 defining XML-encoded assertions about authentication,
 authorization, and related attributes. A basic understanding of the
 SAML protocol is required, although this document concentrates
-soely on SAML Responses and SAML Assertions.</dd>
+solely on SAML Responses and SAML Assertions.</dd>
 <dt>XPath 2.0</dt>
 <dd>XPath is a W3C standard expression language for extracting
-information from structured data. The language is desgined to be
-embeded in a host language and it is used in this way by the
+information from structured data. The language is designed to be
+embedded in a host language and it is used in this way by the
 mapping policy language. The datatypes and function libraries
 defined by the XPath standard are used in other policy languages
 such as XACML. In most cases, only basic understanding of XPath is
@@ -213,89 +212,184 @@ see <a class="reference internal" href="yaml.html"><span class="doc">YAML Basics
 <h2>What is Attribute Mapping?<a class="headerlink" href="#what-is-attribute-mapping" title="Permalink to this headline">#</a></h2>
 <p>Your identity provider contains information about every user in your
 organization.  For example, it maintains that Jane Doe is a
-development manager whose username is <code class="docutils literal highlight highlight-default"><span></span><span class="n">janed</span></code>. Jane’s email address
+development manager whose username is <code class="docutils literal"><span class="pre">janed</span></code>. Jane’s email address
 is <a class="reference external" href="mailto:janed&#37;&#52;&#48;widgets&#46;com">janed<span>&#64;</span>widgets<span>&#46;</span>com</a>, and as a development manager she is a member of
-the <code class="docutils literal highlight highlight-default"><span></span><span class="n">engineering</span></code>, <code class="docutils literal highlight highlight-default"><span></span><span class="n">managers</span></code>, and <code class="docutils literal highlight highlight-default"><span></span><span class="n">linux_user</span></code>
-groups. Additonally, Jane is managing the <code class="docutils literal highlight highlight-default"><span></span><span class="n">widgets_ui</span></code> project.</p>
+the <code class="docutils literal"><span class="pre">engineering</span></code>, <code class="docutils literal"><span class="pre">managers</span></code>, and <code class="docutils literal"><span class="pre">linux_user</span></code>
+groups. Additionally, Jane is managing the <code class="docutils literal"><span class="pre">widgets_ui</span></code> project.</p>
 <p>When Jane logs into Rackspace your organization’s identity provider
 submits to Rackspace a cryptographically signed SAML response that
 contains (among other things) the <em>attributes</em> described
 above. Rackspace (the service provider) needs these attributes in
 order to grant Jane access to Rackspace services.</p>
-<p>Attribute mapping allows the extraction and transformaiton of the
+<p>Attribute mapping allows the extraction and transformation of the
 attributes in the SAML response so they can be processed by
 Rackspace. There are three major reasons why attribute mapping is
 required:</p>
 <div class="section" id="attribute-name-alignment">
 <h3>Attribute Name Alignment<a class="headerlink" href="#attribute-name-alignment" title="Permalink to this headline">#</a></h3>
 <p>Rackspace expects that Jane’s email is supplied in an attribute named
-<code class="docutils literal highlight highlight-default"><span></span><span class="n">email</span></code>, but your organization’s identity provider by default
-submits a user’s email in an attribute named <code class="docutils literal highlight highlight-default"><span></span><span class="n">mail</span></code>. This is not an
+<code class="docutils literal"><span class="pre">email</span></code>, but your organization’s identity provider by default
+submits a user’s email in an attribute named <code class="docutils literal"><span class="pre">mail</span></code>. This is not an
 atypical situation because several competing standards exist for
-attribute names. In this case the attribute <code class="docutils literal highlight highlight-default"><span></span><span class="n">mail</span></code> must be mapped to
-the attribute <code class="docutils literal highlight highlight-default"><span></span><span class="n">email</span></code>.</p>
+attribute names. In this case the attribute <code class="docutils literal"><span class="pre">mail</span></code> must be mapped to
+the attribute <code class="docutils literal"><span class="pre">email</span></code>.</p>
 <p>The mapping is simple and can be summarized as follows:</p>
-<p><code class="docutils literal highlight highlight-default"><span></span><span class="n">mail</span></code> → <code class="docutils literal highlight highlight-default"><span></span><span class="n">email</span></code></p>
+<p><code class="docutils literal"><span class="pre">mail</span></code> → <code class="docutils literal"><span class="pre">email</span></code></p>
 </div>
 <div class="section" id="role-and-group-alignment">
 <h3>Role and Group Alignment<a class="headerlink" href="#role-and-group-alignment" title="Permalink to this headline">#</a></h3>
-<p>The groups <code class="docutils literal highlight highlight-default"><span></span><span class="n">engineering</span></code>, <code class="docutils literal highlight highlight-default"><span></span><span class="n">managers</span></code>, and <code class="docutils literal highlight highlight-default"><span></span><span class="n">linux_user</span></code> are
+<p>The groups <code class="docutils literal"><span class="pre">engineering</span></code>, <code class="docutils literal"><span class="pre">managers</span></code>, and <code class="docutils literal"><span class="pre">linux_user</span></code> are
 entirely meaningless to Rackspace.  Rackspace organizes its roles
-according to the services it provides. For example, the <code class="docutils literal highlight highlight-default"><span></span><span class="n">nova</span><span class="p">:</span><span class="n">admin</span></code>
+according to the services it provides. For example, the <code class="docutils literal"><span class="pre">nova:admin</span></code>
 role grants administration access to our OpenStack compute service and
-the <code class="docutils literal highlight highlight-default"><span></span><span class="n">ticketing</span><span class="p">:</span><span class="n">observer</span></code> role grants view only access to Rackspace
+the <code class="docutils literal"><span class="pre">ticketing:observer</span></code> role grants view only access to Rackspace
 tickets.</p>
-<p>In this case, we want the <code class="docutils literal highlight highlight-default"><span></span><span class="n">managers</span></code> group to map to the
-<code class="docutils literal highlight highlight-default"><span></span><span class="n">ticketing</span><span class="p">:</span><span class="n">admin</span></code> role because any manager should be able to create
+<p>In this case, we want the <code class="docutils literal"><span class="pre">managers</span></code> group to map to the
+<code class="docutils literal"><span class="pre">ticketing:admin</span></code> role because any manager should be able to create
 and edit tickets. We also want to map managers to the
-<code class="docutils literal highlight highlight-default"><span></span><span class="n">billing</span><span class="p">:</span><span class="n">observer</span></code> role because all managers can see invoices.
-Additionally, we want to map the <code class="docutils literal highlight highlight-default"><span></span><span class="n">linux_user</span></code> group to
-<code class="docutils literal highlight highlight-default"><span></span><span class="n">nova</span><span class="p">:</span><span class="n">observer</span></code> because all linux users should be able to query the
+<code class="docutils literal"><span class="pre">billing:observer</span></code> role because all managers can see invoices.
+Additionally, we want to map the <code class="docutils literal"><span class="pre">linux_user</span></code> group to
+<code class="docutils literal"><span class="pre">nova:observer</span></code> because all linux users should be able to query the
 Compute API.</p>
-<p>The mapping described above can be summerized as follows:</p>
-<p><code class="docutils literal highlight highlight-default"><span></span><span class="n">managers</span></code>    → <code class="docutils literal highlight highlight-default"><span></span><span class="n">ticketing</span><span class="p">:</span><span class="n">admin</span></code>,  <code class="docutils literal highlight highlight-default"><span></span><span class="n">billing</span><span class="p">:</span><span class="n">observer</span></code></p>
-<p><code class="docutils literal highlight highlight-default"><span></span><span class="n">linux_user</span></code>  → <code class="docutils literal highlight highlight-default"><span></span><span class="n">nova</span><span class="p">:</span><span class="n">observer</span></code></p>
+<p>The mapping described above can be summarized as follows:</p>
+<p><code class="docutils literal"><span class="pre">managers</span></code>    → <code class="docutils literal"><span class="pre">ticketing:admin</span></code>,  <code class="docutils literal"><span class="pre">billing:observer</span></code></p>
+<p><code class="docutils literal"><span class="pre">linux_user</span></code>  → <code class="docutils literal"><span class="pre">nova:observer</span></code></p>
 </div>
 <div class="section" id="implementation-of-access-policies">
 <h3>Implementation of Access Policies<a class="headerlink" href="#implementation-of-access-policies" title="Permalink to this headline">#</a></h3>
-<p>The mapping above is fairly simple.  All users in the <code class="docutils literal highlight highlight-default"><span></span><span class="n">managers</span></code>
-group will obtain the <code class="docutils literal highlight highlight-default"><span></span><span class="n">ticketing</span><span class="p">:</span><span class="n">admin</span></code> and <code class="docutils literal highlight highlight-default"><span></span><span class="n">billing</span><span class="p">:</span><span class="n">observer</span></code>
+<p>The mapping above is fairly simple.  All users in the <code class="docutils literal"><span class="pre">managers</span></code>
+group will obtain the <code class="docutils literal"><span class="pre">ticketing:admin</span></code> and <code class="docutils literal"><span class="pre">billing:observer</span></code>
 roles. Unfortunately, things are often more complicated than this. For
 example, some managers are actually contractors, and contractors
 should not be allowed to view invoices so these contractors should not
-recive the <code class="docutils literal highlight highlight-default"><span></span><span class="n">billing</span><span class="p">:</span><span class="n">observer</span></code> role. You can tell that a user is a
-contractor by looking at membership in the <code class="docutils literal highlight highlight-default"><span></span><span class="n">contractors</span></code> group.</p>
+receive the <code class="docutils literal"><span class="pre">billing:observer</span></code> role. You can tell that a user is a
+contractor by looking at membership in the <code class="docutils literal"><span class="pre">contractors</span></code> group.</p>
 <p>Additionally, there are separate Rackspace accounts for each project
-managed by a manager. A manager involved with the <code class="docutils literal highlight highlight-default"><span></span><span class="n">widgets_ui</span></code>
-project should have full administrator rights (via the <code class="docutils literal highlight highlight-default"><span></span><span class="n">admin</span></code> role)
-to account <code class="docutils literal highlight highlight-default"><span></span><span class="mi">777654</span></code> – which is the account associated with that
+managed by a manager. A manager involved with the <code class="docutils literal"><span class="pre">widgets_ui</span></code>
+project should have full administrator rights (via the <code class="docutils literal"><span class="pre">admin</span></code> role)
+to account <code class="docutils literal"><span class="pre">777654</span></code> – which is the account associated with that
 project.  The identity provider passes an attribute named
-<code class="docutils literal highlight highlight-default"><span></span><span class="n">manager_projects</span></code> that contains the list of all of the projects
+<code class="docutils literal"><span class="pre">manager_projects</span></code> that contains the list of all of the projects
 managed by a user.</p>
-<p>There are two other projects to consider: <code class="docutils literal highlight highlight-default"><span></span><span class="n">widgets_moble</span></code> is
-associated with project <code class="docutils literal highlight highlight-default"><span></span><span class="mi">887655</span></code>, and <code class="docutils literal highlight highlight-default"><span></span><span class="n">widgets_platform</span></code> which
-should have admin access to account <code class="docutils literal highlight highlight-default"><span></span><span class="mi">779966</span></code>.</p>
+<p>There are two other projects to consider: <code class="docutils literal"><span class="pre">widgets_moble</span></code> is
+associated with account <code class="docutils literal"><span class="pre">887655</span></code>, and <code class="docutils literal"><span class="pre">widgets_platform</span></code> which
+should have admin access to account <code class="docutils literal"><span class="pre">779966</span></code>.</p>
 <p>Note that by performing this mapping, you are implementing an access
-policy that is executed whenever a user logs in. As long as relevent
+policy that is executed whenever a user logs in. As long as relevant
 information is provided by the identity provider in a SAML response
 you can implement similar policies for your organization.</p>
-<p>The mapping rules above can be summerized as follows:</p>
-<p><code class="docutils literal highlight highlight-default"><span></span><span class="n">managers</span></code> → <code class="docutils literal highlight highlight-default"><span></span><span class="n">ticketing</span><span class="p">:</span><span class="n">admin</span></code>,  <code class="docutils literal highlight highlight-default"><span></span><span class="n">billing</span><span class="p">:</span><span class="n">observer</span></code> unless the
-user is also a member of <code class="docutils literal highlight highlight-default"><span></span><span class="n">contractors</span></code>.</p>
-<p><code class="docutils literal highlight highlight-default"><span></span><span class="n">contractors</span></code>  → <code class="docutils literal highlight highlight-default"><span></span><span class="n">ticketing</span><span class="p">:</span><span class="n">admin</span></code></p>
-<p><code class="docutils literal highlight highlight-default"><span></span><span class="n">manager_projects</span></code> contains <code class="docutils literal highlight highlight-default"><span></span><span class="n">widgets_ui</span></code>    → <code class="docutils literal highlight highlight-default"><span></span><span class="n">admin</span></code> on
-<code class="docutils literal highlight highlight-default"><span></span><span class="mi">777654</span></code></p>
-<p><code class="docutils literal highlight highlight-default"><span></span><span class="n">manager_projects</span></code> contains <code class="docutils literal highlight highlight-default"><span></span><span class="n">widgets_moble</span></code> → <code class="docutils literal highlight highlight-default"><span></span><span class="n">admin</span></code> on
-<code class="docutils literal highlight highlight-default"><span></span><span class="mi">887655</span></code></p>
-<p><code class="docutils literal highlight highlight-default"><span></span><span class="n">manager_projects</span></code> contains <code class="docutils literal highlight highlight-default"><span></span><span class="n">widgets_platform</span></code> → <code class="docutils literal highlight highlight-default"><span></span><span class="n">admin</span></code> on
-<code class="docutils literal highlight highlight-default"><span></span><span class="mi">779956</span></code></p>
+<p>The mapping rules above can be summarized as follows:</p>
+<p><code class="docutils literal"><span class="pre">managers</span></code> → <code class="docutils literal"><span class="pre">ticketing:admin</span></code>,  <code class="docutils literal"><span class="pre">billing:observer</span></code> unless the
+user is also a member of <code class="docutils literal"><span class="pre">contractors</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">manager_projects</span></code> contains <code class="docutils literal"><span class="pre">widgets_ui</span></code>    → <code class="docutils literal"><span class="pre">admin</span></code> on
+<code class="docutils literal"><span class="pre">777654</span></code></p>
+<p><code class="docutils literal"><span class="pre">manager_projects</span></code> contains <code class="docutils literal"><span class="pre">widgets_moble</span></code> → <code class="docutils literal"><span class="pre">admin</span></code> on
+<code class="docutils literal"><span class="pre">887655</span></code></p>
+<p><code class="docutils literal"><span class="pre">manager_projects</span></code> contains <code class="docutils literal"><span class="pre">widgets_platform</span></code> → <code class="docutils literal"><span class="pre">admin</span></code> on
+<code class="docutils literal"><span class="pre">779956</span></code></p>
 </div>
 </div>
 <div class="section" id="mapping-policy-for-widget-com">
 <h2>Mapping Policy for Widget.com<a class="headerlink" href="#mapping-policy-for-widget-com" title="Permalink to this headline">#</a></h2>
 <p>The following attribute mapping policy implements the rules described
 in the previous section. The rest of this document provides a guide
-for writting such polices.</p>
+for writing such polices.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Mapping policy for Widget.com</span><a class="headerlink" href="#id1" title="Permalink to this code">#</a></div>
+<div class="highlight-yaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
+  <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+    <span class="no">The following is an attribute mapping for Widgets.com.   </span>
+  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{At(mail)}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{0}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">remote</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">multiValue</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">path</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+             <span class="no">(:</span>
+                <span class="no">The following describes the rules for assigning roles to</span>
+                <span class="no">users.</span>
+             <span class="no">:)</span>
+              <span class="no">for $group in mapping:get-attributes(&#39;groups&#39;) return</span>
+                  <span class="no">(:</span>
+                    <span class="no">If a user is a manager they get ticketing:admin,</span>
+                    <span class="no">If they are not a contractor then they also get billing:observer</span>
+                    <span class="no">Managers become admin based on the project that they are working</span>
+                    <span class="no">on</span>
+                  <span class="no">:)</span>
+                <span class="no">if ($group = &#39;managers&#39;) then</span>
+                     <span class="no">(</span>
+                      <span class="no">&#39;ticketing:admin&#39;,</span>
+                      <span class="no">if (not(mapping:get-attributes(&#39;groups&#39;)=&#39;contractors&#39;)) then &#39;billing:observer&#39; else</span>
+                      <span class="no">(),</span>
+                      <span class="no">for $project in mapping:get-attributes(&#39;manager_projects&#39;) return</span>
+                      <span class="no">(</span>
+                         <span class="no">if ($project = &#39;widgets_ui&#39;)       then &#39;admin/777654&#39; else</span>
+                         <span class="no">if ($project = &#39;widgets_mobile&#39;)   then &#39;admin/887655&#39; else</span>
+                         <span class="no">if ($project = &#39;widgets_platform&#39;) then &#39;admin/779956&#39; else</span>
+                         <span class="no">()</span>
+                      <span class="no">)</span>
+                     <span class="no">) else</span>
+                <span class="no">(:</span>
+                   <span class="no">If a user is a member of the linux_user group they get the</span>
+                   <span class="no">nova:observer role.</span>
+                <span class="no">:)</span>
+                <span class="no">if ($group = &#39;linux_user&#39;) then &#39;nova:observer&#39; else</span>
+                <span class="no">()</span>
+</pre></div>
+</td></tr></table></div>
+</div>
 </div>
 </div>
 
