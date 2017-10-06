@@ -19,22 +19,6 @@ for your product.
      - |product name| |version| release
 
 
-
-
-Additional resources
-~~~~~~~~~~~~~~~~~~~~
-
-Provide links to any information about the product outside of this user guide.
-They can be links to other Rackspace documents or to third-party documents or
-websites, as appropriate.
-
-Use the following resources to learn more about |product name|:
-
-- reference
-- reference
-
-
-
 Copyright and disclaimer
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

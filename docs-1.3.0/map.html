@@ -505,6 +505,16 @@ of allowed roles</a>.</p>
 attribute named <code class="docutils literal"><span class="pre">roles</span></code> on lines 71–73.  Note that this is a
 good use case for a multi-value attribute, but in this case we only
 assign the <code class="docutils literal"><span class="pre">nova:admin</span></code> role.</p>
+<p>We are assigning <code class="docutils literal"><span class="pre">nova:admin</span></code> at the domain level. This
+means that the user will have the role on all accounts (sometimes
+referred to as tenants) that are associated with the domain.  For
+example, if accounts <code class="docutils literal"><span class="pre">12873</span></code> and <code class="docutils literal"><span class="pre">33987</span></code> are associated with the
+domain the user will have the <code class="docutils literal"><span class="pre">nova:admin</span></code> role on both of those
+accounts.</p>
+<p>It is possible to restrict the role to a specific account.  For
+example, to grant <code class="docutils literal"><span class="pre">nova:admin</span></code> on account <code class="docutils literal"><span class="pre">12873</span></code> and
+<code class="docutils literal"><span class="pre">nova:observer</span></code> on account <code class="docutils literal"><span class="pre">33987</span></code>, you should specify the roles
+as <code class="docutils literal"><span class="pre">nova:admin/33987</span></code> and <code class="docutils literal"><span class="pre">nova:observer/33987</span></code>.</p>
 </div>
 <div class="section" id="expire">
 <h3>Expire<a class="headerlink" href="#expire" title="Permalink to this headline">#</a></h3>

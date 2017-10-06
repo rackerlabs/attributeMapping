@@ -149,6 +149,18 @@ attribute named ``roles`` on lines 71 |--| 73.  Note that this is a
 good use case for a multi-value attribute, but in this case we only
 assign the ``nova:admin`` role.
 
+We are assigning ``nova:admin`` at the domain level. This
+means that the user will have the role on all accounts (sometimes
+referred to as tenants) that are associated with the domain.  For
+example, if accounts ``12873`` and ``33987`` are associated with the
+domain the user will have the ``nova:admin`` role on both of those
+accounts.
+
+It is possible to restrict the role to a specific account.  For
+example, to grant ``nova:admin`` on account ``12873`` and
+``nova:observer`` on account ``33987``, you should specify the roles
+as ``nova:admin/33987`` and ``nova:observer/33987``.
+
 Expire
 ------
 

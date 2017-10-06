@@ -115,39 +115,6 @@ Resulting Attributes:
 Working with expiration
 =======================
 
-Hard coding a 2 hour expiration date
-------------------------------------
-
-
-.. highlight:: xml
-   :linenothreshold: 5
-
-
-.. literalinclude::  ../../../../core/target/map-results/mapping-rule-exp/sample_assert.xml/sample_assert.xml
-   :linenos: 
-
-
-.. highlight:: yaml
-   :linenothreshold: 5
-
-
-.. literalinclude::  ../../../../core/src/test/resources/tests/mapping-tests/mapping-rule-exp/maps/mapping-rule-exp.yaml
-   :linenos: 
-
-Resulting Attributes:
-
-+--------+--------------------------+
-| domain | 323676                   |
-+--------+--------------------------+
-| name   | john.doe                 |
-+--------+--------------------------+
-| email  | john.doe@rackspace.com   |
-+--------+--------------------------+
-| roles  | - nova:admin             |
-+--------+--------------------------+
-| expire | 2017-11-17T16:19:06.298Z |
-+--------+--------------------------+
-
 Working with lists
 ==================
 
