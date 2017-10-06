@@ -112,7 +112,7 @@ Resulting Attributes:
 | expire | 2013-11-17T16:19:06.298Z                 |
 +--------+------------------------------------------+
 
-Working with exirations
+Working with expiration
 =======================
 
 Hard coding a 2 hour expiration date

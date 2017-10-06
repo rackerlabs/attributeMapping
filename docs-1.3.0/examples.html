@@ -101,7 +101,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#mixing-in-non-default-attributes">Mixing in non-default attributes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#working-with-exirations">Working with exirations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-expiration">Working with expiration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#hard-coding-a-2-hour-expiration-date">Hard coding a 2 hour expiration date</a></li>
 </ul>
 </li>
@@ -176,7 +176,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="attribute-mapping-examples">
+  <div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">This document in a <strong>DRAFT</strong>. The information contained herein is
+subject to change.</p>
+</div>
+<div class="section" id="attribute-mapping-examples">
 <h1>Attribute Mapping Examples<a class="headerlink" href="#attribute-mapping-examples" title="Permalink to this headline">#</a></h1>
 <div class="section" id="working-with-defaults">
 <h2>Working with defaults<a class="headerlink" href="#working-with-defaults" title="Permalink to this headline">#</a></h2>
@@ -228,7 +233,7 @@
 46
 47
 48
-49</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+49</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;saml2p:Response</span> <span class="na">xmlns:saml2p=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot;</span>
                  <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
                  <span class="na">ID=</span><span class="s">&quot;_7fcd6173-e6e0-45a4-a2fd-74a4ef85bf30&quot;</span>
@@ -289,17 +294,17 @@
  8
  9
 10
-11</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
-        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
 </pre></div>
 </td></tr></table></div>
 <p>Resulting Attributes:</p>
@@ -343,19 +348,19 @@
 10
 11
 12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
-        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="s">&quot;{D(name)}@rackspace.com&quot;</span>
-        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
-  <span class="l-Scalar-Plain">namespaces</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">foo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bar</span>
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D(name)}@rackspace.com&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
+  <span class="l l-Scalar l-Scalar-Plain">namespaces</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">foo</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bar</span>
 </pre></div>
 </td></tr></table></div>
 <p>Resulting Attributes:</p>
@@ -400,19 +405,19 @@
 10
 11
 12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
-        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="s">&quot;{D(name)}</span><span class="nv"> </span><span class="s">&lt;{D(name)}@{D(domain)}.rackspace.com&gt;&quot;</span>
-        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
-  <span class="l-Scalar-Plain">namespaces</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">foo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bar</span>
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D(name)}</span><span class="nv"> </span><span class="s">&lt;{D(name)}@{D(domain)}.rackspace.com&gt;&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
+  <span class="l l-Scalar l-Scalar-Plain">namespaces</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">foo</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bar</span>
 </pre></div>
 </td></tr></table></div>
 <p>Resulting Attributes:</p>
@@ -457,19 +462,19 @@
 10
 11
 12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
-        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="s">&quot;{At(FirstName)}</span><span class="nv"> </span><span class="s">{At(LastName)}</span><span class="nv"> </span><span class="s">&lt;{D(name)}@{D(domain)}.rackspace.com&gt;&quot;</span>
-        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
-  <span class="l-Scalar-Plain">namespaces</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">foo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bar</span>
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{At(FirstName)}</span><span class="nv"> </span><span class="s">{At(LastName)}</span><span class="nv"> </span><span class="s">&lt;{D(name)}@{D(domain)}.rackspace.com&gt;&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
+  <span class="l l-Scalar l-Scalar-Plain">namespaces</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">foo</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bar</span>
 </pre></div>
 </td></tr></table></div>
 <p>Resulting Attributes:</p>
@@ -501,8 +506,8 @@
 </table>
 </div>
 </div>
-<div class="section" id="working-with-exirations">
-<h2>Working with exirations<a class="headerlink" href="#working-with-exirations" title="Permalink to this headline">#</a></h2>
+<div class="section" id="working-with-expiration">
+<h2>Working with expiration<a class="headerlink" href="#working-with-expiration" title="Permalink to this headline">#</a></h2>
 <div class="section" id="hard-coding-a-2-hour-expiration-date">
 <h3>Hard coding a 2 hour expiration date<a class="headerlink" href="#hard-coding-a-2-hour-expiration-date" title="Permalink to this headline">#</a></h3>
 <div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -597,7 +602,7 @@
 90
 91
 92
-93</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+93</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="nt">&lt;saml2p:Response</span> <span class="na">xmlns:saml2p=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot;</span>
                  <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
                  <span class="na">xmlns:ds=</span><span class="s">&quot;http://www.w3.org/2000/09/xmldsig#&quot;</span>
@@ -709,24 +714,24 @@
 15
 16
 17
-18</pre></div></td><td class="code"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">mapping</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">rules</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">remote</span><span class="p-Indicator">:</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span> <span class="s">&quot;/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID&quot;</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">email</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">domain</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">roles</span>
-      <span class="l-Scalar-Plain">multiValue</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
-    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span> <span class="s">&quot;/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter&quot;</span>
-    <span class="l-Scalar-Plain">local</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
-        <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;{2}&quot;</span>
-        <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="s">&quot;{0}&quot;</span>
-        <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="s">&quot;{1}&quot;</span>
-        <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span> <span class="s">&quot;{3}&quot;</span>
-        <span class="l-Scalar-Plain">expire</span><span class="p-Indicator">:</span> <span class="s">&quot;{4}&quot;</span>
-  <span class="l-Scalar-Plain">version</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAX-1</span>
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">remote</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">path</span><span class="p p-Indicator">:</span> <span class="s">&quot;/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">email</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">domain</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">roles</span>
+      <span class="l l-Scalar l-Scalar-Plain">multiValue</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">path</span><span class="p p-Indicator">:</span> <span class="s">&quot;/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{2}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;{0}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{1}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{3}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{4}&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
 </pre></div>
 </td></tr></table></div>
 <p>Resulting Attributes:</p>
@@ -765,6 +770,11 @@
 </div>
 <div class="section" id="white-lists">
 <h3>White lists<a class="headerlink" href="#white-lists" title="Permalink to this headline">#</a></h3>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">This document in a <strong>DRAFT</strong>. The information contained herein is
+subject to change.</p>
+</div>
 </div>
 </div>
 </div>
