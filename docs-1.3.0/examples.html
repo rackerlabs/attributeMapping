@@ -234,7 +234,7 @@ subject to change.</p>
 <span class="nt">&lt;saml2p:Response</span> <span class="na">xmlns:saml2p=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot;</span>
                  <span class="na">xmlns:xs=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
                  <span class="na">ID=</span><span class="s">&quot;_7fcd6173-e6e0-45a4-a2fd-74a4ef85bf30&quot;</span>
-                 <span class="na">IssueInstant=</span><span class="s">&quot;2015-12-04T15:47:15.057Z&quot;</span>
+                 <span class="na">IssueInstant=</span><span class="s">&quot;2017-11-15T16:19:06.310Z&quot;</span>
                  <span class="na">Version=</span><span class="s">&quot;2.0&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;saml2:Issuer</span> <span class="na">xmlns:saml2=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot;</span><span class="nt">&gt;</span>http://test.rackspace.com<span class="nt">&lt;/saml2:Issuer&gt;</span>
     <span class="nt">&lt;saml2p:Status&gt;</span>
@@ -242,16 +242,16 @@ subject to change.</p>
     <span class="nt">&lt;/saml2p:Status&gt;</span>
     <span class="nt">&lt;saml2:Assertion</span> <span class="na">xmlns:saml2=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot;</span>
                     <span class="na">ID=</span><span class="s">&quot;_406fb7fe-a519-4919-a42c-f67794a670a5&quot;</span>
-                    <span class="na">IssueInstant=</span><span class="s">&quot;2013-11-15T16:19:06.310Z&quot;</span>
+                    <span class="na">IssueInstant=</span><span class="s">&quot;2017-11-15T16:19:06.310Z&quot;</span>
                     <span class="na">Version=</span><span class="s">&quot;2.0&quot;</span><span class="nt">&gt;</span>
       <span class="nt">&lt;saml2:Issuer&gt;</span>http://my.rackspace.com<span class="nt">&lt;/saml2:Issuer&gt;</span>
       <span class="nt">&lt;saml2:Subject&gt;</span>
         <span class="nt">&lt;saml2:NameID</span> <span class="na">Format=</span><span class="s">&quot;urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified&quot;</span><span class="nt">&gt;</span>john.doe<span class="nt">&lt;/saml2:NameID&gt;</span>
         <span class="nt">&lt;saml2:SubjectConfirmation</span> <span class="na">Method=</span><span class="s">&quot;urn:oasis:names:tc:SAML:2.0:cm:bearer&quot;</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;saml2:SubjectConfirmationData</span> <span class="na">NotOnOrAfter=</span><span class="s">&quot;2013-11-17T16:19:06.298Z&quot;</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;saml2:SubjectConfirmationData</span> <span class="na">NotOnOrAfter=</span><span class="s">&quot;2017-11-17T16:19:06.298Z&quot;</span><span class="nt">/&gt;</span>
         <span class="nt">&lt;/saml2:SubjectConfirmation&gt;</span>
       <span class="nt">&lt;/saml2:Subject&gt;</span>
-      <span class="nt">&lt;saml2:AuthnStatement</span> <span class="na">AuthnInstant=</span><span class="s">&quot;2013-11-15T16:19:04.055Z&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;saml2:AuthnStatement</span> <span class="na">AuthnInstant=</span><span class="s">&quot;2017-11-15T16:19:04.055Z&quot;</span><span class="nt">&gt;</span>
         <span class="nt">&lt;saml2:AuthnContext&gt;</span>
             <span class="nt">&lt;saml2:AuthnContextClassRef&gt;</span>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
             <span class="nt">&lt;/saml2:AuthnContextClassRef&gt;</span>
@@ -293,15 +293,15 @@ subject to change.</p>
 10
 11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
 <span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
   <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
       <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
         <span class="l l-Scalar l-Scalar-Plain">domain</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span>   <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{D}&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span>  <span class="s">&quot;{D}&quot;</span>
         <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
 </pre></div>
 </td></tr></table></div>
 <p>Resulting Attributes:</p>
@@ -327,7 +327,7 @@ subject to change.</p>
 </td>
 </tr>
 <tr class="row-odd"><td>expire</td>
-<td>2013-11-17T16:19:06.298Z</td>
+<td>2017-11-17T16:19:06.298Z</td>
 </tr>
 </tbody>
 </table>
@@ -343,10 +343,9 @@ subject to change.</p>
  8
  9
 10
-11
-12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
 <span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
   <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
       <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
@@ -355,9 +354,6 @@ subject to change.</p>
         <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D(name)}@rackspace.com&quot;</span>
         <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
         <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">namespaces</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">foo</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bar</span>
 </pre></div>
 </td></tr></table></div>
 <p>Resulting Attributes:</p>
@@ -383,7 +379,7 @@ subject to change.</p>
 </td>
 </tr>
 <tr class="row-odd"><td>expire</td>
-<td>2013-11-17T16:19:06.298Z</td>
+<td>2017-11-17T16:19:06.298Z</td>
 </tr>
 </tbody>
 </table>
@@ -400,10 +396,9 @@ subject to change.</p>
  8
  9
 10
-11
-12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
 <span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
   <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
       <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
@@ -412,9 +407,6 @@ subject to change.</p>
         <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D(name)}</span><span class="nv"> </span><span class="s">&lt;{D(name)}@{D(domain)}.rackspace.com&gt;&quot;</span>
         <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
         <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">namespaces</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">foo</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bar</span>
 </pre></div>
 </td></tr></table></div>
 <p>Resulting Attributes:</p>
@@ -440,7 +432,7 @@ subject to change.</p>
 </td>
 </tr>
 <tr class="row-odd"><td>expire</td>
-<td>2013-11-17T16:19:06.298Z</td>
+<td>2017-11-17T16:19:06.298Z</td>
 </tr>
 </tbody>
 </table>
@@ -457,10 +449,9 @@ subject to change.</p>
  8
  9
 10
-11
-12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
 <span class="l l-Scalar l-Scalar-Plain">mapping</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
   <span class="l l-Scalar l-Scalar-Plain">rules</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">local</span><span class="p p-Indicator">:</span>
       <span class="l l-Scalar l-Scalar-Plain">user</span><span class="p p-Indicator">:</span>
@@ -469,9 +460,6 @@ subject to change.</p>
         <span class="l l-Scalar l-Scalar-Plain">email</span><span class="p p-Indicator">:</span> <span class="s">&quot;{At(FirstName)}</span><span class="nv"> </span><span class="s">{At(LastName)}</span><span class="nv"> </span><span class="s">&lt;{D(name)}@{D(domain)}.rackspace.com&gt;&quot;</span>
         <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
         <span class="l l-Scalar l-Scalar-Plain">expire</span><span class="p p-Indicator">:</span> <span class="s">&quot;{D}&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">RAX-1</span>
-  <span class="l l-Scalar l-Scalar-Plain">namespaces</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">foo</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bar</span>
 </pre></div>
 </td></tr></table></div>
 <p>Resulting Attributes:</p>
@@ -497,7 +485,7 @@ subject to change.</p>
 </td>
 </tr>
 <tr class="row-odd"><td>expire</td>
-<td>2013-11-17T16:19:06.298Z</td>
+<td>2017-11-17T16:19:06.298Z</td>
 </tr>
 </tbody>
 </table>

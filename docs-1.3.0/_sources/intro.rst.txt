@@ -118,7 +118,7 @@ contractor by looking at membership in the ``contractors`` group.
 Additionally, there are separate Rackspace accounts for each project
 managed by a manager. A manager involved with the ``widgets_ui``
 project should have full administrator rights (via the ``admin`` role)
-to account ``777654`` -- which is the account associated with that
+to account ``777654`` |---| which is the account associated with that
 project.  The identity provider passes an attribute named
 ``manager_projects`` that contains the list of all of the projects
 managed by a user.
