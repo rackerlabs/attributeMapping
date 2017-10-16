@@ -1,0 +1,15 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "let $addSome := function($i as xs:int, $f as function(xs:int, function(*)) as xs:int) as xs:int\n{\n  if ($i > 3) then $i\n  else $f($i + 1, $f)\n}\nreturn $addSome(1, $addSome)"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1"
+  }
+}

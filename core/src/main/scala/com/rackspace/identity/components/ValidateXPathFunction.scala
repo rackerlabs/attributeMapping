@@ -16,10 +16,13 @@
 package com.rackspace.identity.components
 
 import com.rackspace.identity.components.AttributeMapper.{FN_NS_URI, MAPPING_NS_PREFIX, MAPPING_NS_URI, XQUERY_VERSION}
+import com.saxonica.expr.HofParserExtension
+import com.saxonica.functions.hof.UserFunctionReference
 import net.sf.saxon.expr.instruct.UserFunctionParameter
 import net.sf.saxon.expr.parser.XPathParser
 import net.sf.saxon.expr.{Expression, FunctionCall, StaticContext}
 import net.sf.saxon.functions.FunctionLibraryList
+import net.sf.saxon.lib.NamespaceConstant
 import net.sf.saxon.om.StructuredQName
 import net.sf.saxon.query.{XQueryFunction, XQueryFunctionLibrary}
 import net.sf.saxon.s9api._
@@ -82,9 +85,13 @@ class ValidateXPathFunction(conf: Configuration) extends ExtensionFunction {
     ExpressionProcessor(expr, {
       case functionCall: FunctionCall =>
         val functionName = functionCall.getFunctionName
-        if (!LEGAL_FUNCTION_NAMESPACE_SET.contains(functionName.getURI) || ILLEGAL_SYSTEM_FUNCTION_SET.exists(functionCall.isCallOnSystemFunction)) {
+        if (!EXCEPTION_FUNCTION_MAP.exists(_ == functionName.getURI -> functionName.getLocalPart) &&
+          !LEGAL_FUNCTION_NAMESPACE_SET.contains(functionName.getURI) ||
+          ILLEGAL_SYSTEM_FUNCTION_SET.exists(functionCall.isCallOnSystemFunction)) {
           throw new XPathException(s"${functionName.getLocalPart} function in the ${functionName.getURI} namespace is not allowed in a policy path")
         }
+      case _: UserFunctionReference =>
+        throw new XPathException("Inline functions are not allowed in a policy path")
       case _ => // Intentional no-op
     })
 
@@ -122,6 +129,7 @@ class ValidateXPathFunction(conf: Configuration) extends ExtensionFunction {
   //
   private def parseXPath(expression: String, context: StaticContext): Expression = {
     val xpathParser = new XPathParser
+    xpathParser.setParserExtension(new HofParserExtension)
     xpathParser.setLanguage(XPathParser.XPATH, XQUERY_VERSION)
     xpathParser.parse(expression, 0, 0, context)
   }
@@ -131,6 +139,7 @@ object ValidateXPathFunction {
 
   private final val LOCAL_NAME = "validate-xpath"
   private final val AVAILABLE_ENVIRONMENT_VARIABLES_FUNCTION_NAME = "available-environment-variables"
+  private final val APPLY_FUNCTION_NAME = "apply"
   private final val COLLECTION_FUNCTION_NAME = "collection"
   private final val DOC_FUNCTION_NAME = "doc"
   private final val DOC_AVAILABLE_FUNCTION_NAME = "doc-available"
@@ -158,6 +167,10 @@ object ValidateXPathFunction {
     s"$FN_NS_URI/map",
     s"$FN_NS_URI/array",
     MAPPING_NS_URI
+  )
+  private final val EXCEPTION_FUNCTION_MAP = Map(
+    // Enables dynamic function application
+    NamespaceConstant.SAXON -> APPLY_FUNCTION_NAME
   )
   private final val COMMON_NS_MAP = Map(
     MAPPING_NS_PREFIX -> MAPPING_NS_URI,

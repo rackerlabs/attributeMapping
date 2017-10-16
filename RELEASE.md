@@ -1,4 +1,7 @@
 # Releases #
+## In Progress Work ##
+1. Disallowing inline functions in policy path expressions.
+
 ## Release 2.0.1 (2017-09-28) ##
 1. Fixed a number of parsing bugs when using {(P|A)ts?()} in a template that spans multiple lines.
 
