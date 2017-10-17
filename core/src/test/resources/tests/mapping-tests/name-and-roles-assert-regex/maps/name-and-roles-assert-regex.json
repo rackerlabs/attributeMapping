@@ -15,12 +15,12 @@
            {
             "path":"\/\/saml2:Assertion\/saml2:Subject\/saml2:NameID",
             "regex":true,
-            "notAnyOf":".*downer$"
+            "notAnyOf": [".*downer$"]
            },
            {
             "path":"\/\/saml2:Assertion\/saml2:Subject\/saml2:NameID",
             "regex":true,
-            "anyOneOf":".*upper$"
+            "anyOneOf": [".*upper$"]
            }
          ],
         "local": {

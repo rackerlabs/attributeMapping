@@ -16,7 +16,7 @@
            {
             "regex":true,
             "name":"roles",
-            "notAnyOf":"C.*"
+            "notAnyOf": ["C.*"]
            }
          ],
         "local": {
@@ -33,7 +33,7 @@
            {
             "regex":true,
             "name":"roles",
-            "anyOneOf":"U.*"
+            "anyOneOf": ["U.*"]
            }
          ],
         "local": {

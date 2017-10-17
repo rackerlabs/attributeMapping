@@ -9,7 +9,8 @@ mapping:
         name: "{D}"
         email: "{At(http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress)}"
         roles:
-          value: "{Ats(http://schemas.xmlsoap.org/claims/Group)}"
+          value:
+            - "{Ats(http://schemas.xmlsoap.org/claims/Group)}"
           multiValue: true
         expire: "{D}"
   - remote:
@@ -22,11 +23,14 @@ mapping:
     local:
       faws:
         admins:
-          value: "{0}"
+          value:
+            - "{0}"
           multiValue: true
         observers:
-          value: "{1}"
+          value:
+            - "{1}"
           multiValue: true
         nones:
-          value: "{2}"
+          value:
+            - "{2}"
           multiValue: true

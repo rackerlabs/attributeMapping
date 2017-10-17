@@ -8,7 +8,7 @@
             "name":"{D}",
             "email":"{At(http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/emailaddress)}",
             "roles": {
-              "value":"{Ats(http:\/\/schemas.xmlsoap.org\/claims\/Group)}",
+              "value": ["{Ats(http:\/\/schemas.xmlsoap.org\/claims\/Group)}"],
               "multiValue":true
              },
             "expire":"{D}"

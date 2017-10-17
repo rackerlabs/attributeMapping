@@ -38,7 +38,7 @@ declare function mapping:tokenizeListValues($in as xs:string, $name as xs:string
 
 declare function mapping:convertAttributeList($name as xs:string, $in as xs:string, $flags as xs:string*) as item() {
   let $inStrings := mapping:tokenizeListValues($in, $name, $flags)
-  return if (count($inStrings) = 1) then $inStrings[1] else array {$inStrings}
+  return array {$inStrings}
 };
 
 declare function mapping:convertAttributeMap($elem as element(),

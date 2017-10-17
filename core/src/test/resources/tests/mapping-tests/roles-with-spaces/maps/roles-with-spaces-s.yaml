@@ -4,15 +4,18 @@ mapping:
   - local:
       user:
         ext:
-          value: "{Ats(ext2)}"
+          value:
+           - "{Ats(ext2)}"
           multiValue: true
         domain: "{D}"
         name: "{D}"
         email: "{D}"
-        roles: "{Ats(roles)}"
+        roles:
+          - "{Ats(roles)}"
         expire: "{D}"
       extGroup:
         ext2:
-          value: "{Ats(ext2)}"
+          value:
+           - "{Ats(ext2)}"
           multiValue: true
   version: RAX-1

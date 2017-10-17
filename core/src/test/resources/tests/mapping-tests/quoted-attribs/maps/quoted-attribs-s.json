@@ -7,7 +7,7 @@
             "domain":"{At(\"do\"ma'in')}",
             "name":"{D}",
             "email":"{At('e'mail)}",
-            "roles":"{D}",
+            "roles": ["{D}"],
             "expire":"{D}"
            }
          }

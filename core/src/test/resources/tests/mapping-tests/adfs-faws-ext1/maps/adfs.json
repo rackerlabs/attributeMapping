@@ -20,7 +20,7 @@
             "name":"{D}",
             "email":"{1}",
             "roles": {
-              "value":"{0}",
+              "value": ["{0}"],
               "multiValue":true
              },
             "expire":"{D}"
@@ -32,12 +32,12 @@
            {
             "regex":false,
             "name":"http:\/\/schemas.xmlsoap.org\/claims\/Group",
-            "anyOneOf":"Admin"
+            "anyOneOf": ["Admin"]
            },
            {
             "regex":false,
             "name":"http:\/\/schemas.xmlsoap.org\/claims\/Group",
-            "notAnyOf":"Contractor"
+            "notAnyOf": ["Contractor"]
            }
          ],
         "local": {
@@ -57,7 +57,7 @@
            {
             "regex":false,
             "name":"http:\/\/schemas.xmlsoap.org\/claims\/Group",
-            "notAnyOf":"Contractor"
+            "notAnyOf":["Contractor"]
            }
          ],
         "local": {
@@ -77,7 +77,7 @@
            {
             "regex":false,
             "name":"http:\/\/schemas.xmlsoap.org\/claims\/Group",
-            "anyOneOf":"Contractor"
+            "anyOneOf":["Contractor"]
            }
          ],
         "local": {

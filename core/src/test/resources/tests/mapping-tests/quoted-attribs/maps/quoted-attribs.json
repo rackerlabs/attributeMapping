@@ -15,7 +15,7 @@
             "domain":"{1}",
             "name":"{D}",
             "email":"{0}",
-            "roles":"{D}",
+            "roles": ["{D}"],
             "expire":"{D}"
            }
          }

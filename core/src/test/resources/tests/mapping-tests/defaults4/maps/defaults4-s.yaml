@@ -6,7 +6,8 @@ mapping:
         domain: "{D}"
         name: "{D}"
         email: "{At(FirstName)} {At(LastName)} <{D(name)}@{D(domain)}.rackspace.com>"
-        roles: "{D}"
+        roles:
+          - "{D}"
         expire: "{D}"
   version: RAX-1
   namespaces:

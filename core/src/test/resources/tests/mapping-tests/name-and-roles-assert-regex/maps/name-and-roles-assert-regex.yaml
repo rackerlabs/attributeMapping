@@ -7,10 +7,12 @@ mapping:
     - name: ExpireAfter
     - path: "//saml2:Assertion/saml2:Subject/saml2:NameID"
       regex: true
-      notAnyOf: ".*downer$"
+      notAnyOf:
+       - ".*downer$"
     - path: "//saml2:Assertion/saml2:Subject/saml2:NameID"
       regex: true
-      anyOneOf: ".*upper$"
+      anyOneOf:
+       - ".*upper$"
     local:
       user:
         domain: '78334'

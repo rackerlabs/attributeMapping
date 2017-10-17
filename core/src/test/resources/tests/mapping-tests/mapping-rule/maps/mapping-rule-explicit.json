@@ -42,7 +42,7 @@
               "type":"xs:string"
              },
             "roles": {
-              "value":"{4}",
+              "value": ["{4}"],
               "multiValue":true,
               "type":"xs:string"
              },

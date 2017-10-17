@@ -12,6 +12,7 @@ mapping:
         domain: "{2}"
         name: "{0}"
         email: "{1}"
-        roles: "{3}"
+        roles:
+          - "{3}"
         expire: PT2H
   version: RAX-1
