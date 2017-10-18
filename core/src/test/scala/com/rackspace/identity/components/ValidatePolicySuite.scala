@@ -20,88 +20,49 @@ import javax.xml.transform.stream.StreamSource
 
 import net.sf.saxon.s9api.{SaxonApiException, XdmDestination}
 import org.junit.runner.RunWith
+import org.scalatest.Matchers
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ValidatePolicySuite extends AttributeMapperBase {
+class ValidatePolicySuite extends AttributeMapperBase with Matchers {
 
-  val testDir = new File("src/test/resources/tests/validate-policy-tests")
+  val testDir: File = new File("src/test/resources/tests/validate-policy-tests")
+  val validTestDir: File = new File(testDir, "valid")
+  val invalidTestDir: File = new File(testDir, "invalid")
 
-  val xmlValidPolicies = new File(testDir, "valid").listFiles.toList.filter { f =>
-    f.getName.endsWith("xml")
-  }
-  val xmlInvalidPolicies = new File(testDir, "invalid").listFiles.toList.filter { f =>
-    f.getName.endsWith("xml")
+  // todo: add -s variants to invalid tests
+  // todo: need license for HOF?
+  val validPolicies: Array[File] = validTestDir.listFiles
+  val blacklistedPolicies: Array[File] = new File(invalidTestDir, "blacklisted").listFiles
+  val blacklistedHofPolicies: Array[File] = new File(invalidTestDir, "blacklisted-hof").listFiles
+  val unsupportedPolicies: Array[File] = new File(invalidTestDir, "unsupported").listFiles
+
+  def filterXmlFiles(files: Array[File]): Array[File] = {
+    files.filter(f => f.getName.endsWith("xml"))
   }
 
-  val jsonValidPolicies = new File(testDir, "valid").listFiles.toList.filter { f =>
-    f.getName.endsWith("json")
-  }
-  val jsonInvalidPolicies = new File(testDir, "invalid").listFiles.toList.filter { f =>
-    f.getName.endsWith("json")
+  def filterJsonFiles(files: Array[File]): Array[File] = {
+    files.filter(f => f.getName.endsWith("json"))
   }
 
   validators foreach { validator =>
-    xmlValidPolicies foreach { policy =>
+    test(s"An Invalid Policy Format Fails Compilation with an exception (with $validator)") {
+      val source = new StreamSource()
+      val e = intercept[UnsupportedPolicyFormatException] {
+        AttributeMapper.generateXSL(source, null, new XdmDestination, validate = true, validator)
+      }
+      val m = e.getMessage
+      m should include("is not supported")
+    }
+
+    filterXmlFiles(validPolicies) foreach { policy =>
       test(s"A Valid Policy Validates ($policy validated with $validator)") {
         val source = new StreamSource(policy)
         AttributeMapper.validatePolicy(source, validator)
       }
     }
 
-    xmlInvalidPolicies foreach { policy =>
-      test(s"An Invalid Policy Fails Validation ($policy validated with $validator)") {
-        val source = new StreamSource(policy)
-        val e = intercept[SaxonApiException] {
-          AttributeMapper.validatePolicy(source, validator)
-        }
-        val m = e.getCause.getMessage
-        assert(
-          m.contains("is not allowed in a policy path") ||
-            m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a \\d-argument function .*") ||
-            m.matches("Inline functions are not allowed in a policy path"),
-          "A function in a policy path is illegal")
-      }
-
-      test(s"An Invalid Policy Fails XSL Compilation ($policy compiled with $validator)") {
-        val source = new StreamSource(policy)
-        val e = intercept[SaxonApiException] {
-          AttributeMapper.generateXSL(source, PolicyFormat.XML, new XdmDestination, validate = true, validator)
-        }
-        val m = e.getCause.getMessage
-        assert(
-          m.contains("is not allowed in a policy path") ||
-            m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a \\d-argument function .*") ||
-            m.matches("Inline functions are not allowed in a policy path"),
-          "A function in a policy path is illegal")
-      }
-
-      test(s"An Invalid Policy Fails XSLExec Compilation ($policy compiled with $validator)") {
-        val source = new StreamSource(policy)
-        val e = intercept[SaxonApiException] {
-          AttributeMapper.generateXSLExec(source, PolicyFormat.XML, validate = true, validator)
-        }
-        val m = e.getCause.getMessage
-        assert(
-          m.contains("is not allowed in a policy path") ||
-            m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a \\d-argument function .*") ||
-            m.matches("Inline functions are not allowed in a policy path"),
-          "A function in a policy path is illegal")
-      }
-    }
-
-    test(s"An Invalid Policy Format Fails Compilation with an exception (with $validator)") {
-      val source = new StreamSource()
-      val e = intercept[UnsupportedPolicyFormatException] {
-        AttributeMapper.generateXSL(source, null, new XdmDestination, validate = true, validator)
-      }
-      assert(e.getMessage.contains("is not supported"))
-    }
-
-    jsonValidPolicies foreach { policy =>
+    filterJsonFiles(validPolicies) foreach { policy =>
       test(s"A Valid Policy Validates ($policy validated with $validator)") {
         val source = new StreamSource(policy)
         val json = AttributeMapper.parseJsonNode(source)
@@ -109,50 +70,70 @@ class ValidatePolicySuite extends AttributeMapperBase {
       }
     }
 
-    jsonInvalidPolicies foreach { policy =>
-      test(s"An Invalid Policy Fails Validation ($policy validated with $validator)") {
-        val source = new StreamSource(policy)
-        val json = AttributeMapper.parseJsonNode(source)
-        val e = intercept[SaxonApiException] {
-          AttributeMapper.validatePolicy(json, validator)
+    Seq(
+      blacklistedPolicies -> ".+ function in the .+ namespace is not allowed in a policy path",
+      blacklistedHofPolicies -> "Inline functions are not allowed in a policy path",
+      unsupportedPolicies -> "Cannot find a \\d+-argument function .*"
+    ) foreach { case (policies, causeMessage) =>
+      filterXmlFiles(policies) foreach { policy =>
+        test(s"An Invalid Policy Fails Validation ($policy validated with $validator)") {
+          val source = new StreamSource(policy)
+          val e = intercept[SaxonApiException] {
+            AttributeMapper.validatePolicy(source, validator)
+          }
+          val m = e.getCause.getMessage
+          m should fullyMatch regex causeMessage
         }
-        val m = e.getCause.getMessage
-        assert(
-          m.contains("is not allowed in a policy path") ||
-            m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a \\d-argument function .*") ||
-            m.matches("Inline functions are not allowed in a policy path"),
-          "A function in a policy path is illegal")
+
+        test(s"An Invalid Policy Fails XSL Compilation ($policy compiled with $validator)") {
+          val source = new StreamSource(policy)
+          val e = intercept[SaxonApiException] {
+            AttributeMapper.generateXSL(source, PolicyFormat.XML, new XdmDestination, validate = true, validator)
+          }
+          val m = e.getCause.getMessage
+          m should fullyMatch regex causeMessage
+        }
+
+        test(s"An Invalid Policy Fails XSLExec Compilation ($policy compiled with $validator)") {
+          val source = new StreamSource(policy)
+          val e = intercept[SaxonApiException] {
+            AttributeMapper.generateXSLExec(source, PolicyFormat.XML, validate = true, validator)
+          }
+          val m = e.getCause.getMessage
+          m should fullyMatch regex causeMessage
+        }
       }
 
-      test(s"An Invalid Policy Fails XSL Compilation ($policy compiled with $validator)") {
-        val source = new StreamSource(policy)
-        val json = AttributeMapper.parseJsonNode(source)
-        val e = intercept[SaxonApiException] {
-          AttributeMapper.generateXSL(json, new XdmDestination, validate = true, validator)
+      filterJsonFiles(policies) foreach { policy =>
+        test(s"An Invalid Policy Fails Validation ($policy validated with $validator)") {
+          val source = new StreamSource(policy)
+          val json = AttributeMapper.parseJsonNode(source)
+          val e = intercept[SaxonApiException] {
+            AttributeMapper.validatePolicy(json, validator)
+          }
+          val m = e.getCause.getMessage
+          m should fullyMatch regex causeMessage
         }
-        val m = e.getCause.getMessage
-        assert(
-          m.contains("is not allowed in a policy path") ||
-            m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a \\d-argument function .*") ||
-            m.matches("Inline functions are not allowed in a policy path"),
-          "A function in a policy path is illegal")
-      }
 
-      test(s"An Invalid Policy Fails XSLExec Compilation ($policy compiled with $validator)") {
-        val source = new StreamSource(policy)
-        val json = AttributeMapper.parseJsonNode(source)
-        val e = intercept[SaxonApiException] {
-          AttributeMapper.generateXSLExec(json, validate = true, validator)
+        test(s"An Invalid Policy Fails XSL Compilation ($policy compiled with $validator)") {
+          val source = new StreamSource(policy)
+          val json = AttributeMapper.parseJsonNode(source)
+          val e = intercept[SaxonApiException] {
+            AttributeMapper.generateXSL(json, new XdmDestination, validate = true, validator)
+          }
+          val m = e.getCause.getMessage
+          m should fullyMatch regex causeMessage
         }
-        val m = e.getCause.getMessage
-        assert(
-          m.contains("is not allowed in a policy path") ||
-            m.contains("is not available with this host-language/version/license") ||
-            m.matches("Cannot find a \\d-argument function .*") ||
-            m.matches("Inline functions are not allowed in a policy path"),
-          "A function in a policy path is illegal")
+
+        test(s"An Invalid Policy Fails XSLExec Compilation ($policy compiled with $validator)") {
+          val source = new StreamSource(policy)
+          val json = AttributeMapper.parseJsonNode(source)
+          val e = intercept[SaxonApiException] {
+            AttributeMapper.generateXSLExec(json, validate = true, validator)
+          }
+          val m = e.getCause.getMessage
+          m should fullyMatch regex causeMessage
+        }
       }
     }
   }
