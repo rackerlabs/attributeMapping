@@ -145,6 +145,9 @@ object ValidateXPathFunction {
   private final val DOC_AVAILABLE_FUNCTION_NAME = "doc-available"
   private final val DOCUMENT_FUNCTION_NAME = "document"
   private final val ENVIRONMENT_VARIABLE_FUNCTION_NAME = "environment-variable"
+  private final val FUNCTION_LOOKUP_FUNCTION_NAME = "function-lookup"
+  private final val LOAD_XQUERY_MODULE_FUNCTION_NAME = "load-xquery-module"
+  private final val TRANSFORM_FUNCTION_NAME = "transform"
   private final val UNPARSED_TEXT_AVAILABLE_FUNCTION_NAME = "unparsed-text-available"
   private final val UNPARSED_TEXT_FUNCTION_NAME = "unparsed-text"
   private final val UNPARSED_TEXT_LINES_FUNCTION_NAME = "unparsed-text-lines"
@@ -156,6 +159,9 @@ object ValidateXPathFunction {
     DOC_AVAILABLE_FUNCTION_NAME,
     DOCUMENT_FUNCTION_NAME,
     ENVIRONMENT_VARIABLE_FUNCTION_NAME,
+    FUNCTION_LOOKUP_FUNCTION_NAME,
+    LOAD_XQUERY_MODULE_FUNCTION_NAME,
+    TRANSFORM_FUNCTION_NAME,
     UNPARSED_TEXT_AVAILABLE_FUNCTION_NAME,
     UNPARSED_TEXT_FUNCTION_NAME,
     UNPARSED_TEXT_LINES_FUNCTION_NAME,

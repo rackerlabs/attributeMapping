@@ -1,0 +1,15 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "transform(map {\n\"stylesheet-location\": \"example.xsl\",\n\"source-node\": ()\n})"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1"
+  }
+}

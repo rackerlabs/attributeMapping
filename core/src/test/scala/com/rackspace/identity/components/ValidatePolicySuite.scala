@@ -30,12 +30,16 @@ class ValidatePolicySuite extends AttributeMapperBase with Matchers {
   val validTestDir: File = new File(testDir, "valid")
   val invalidTestDir: File = new File(testDir, "invalid")
 
-  // todo: add -s variants to invalid tests
-  // todo: need license for HOF?
   val validPolicies: Array[File] = validTestDir.listFiles
   val blacklistedPolicies: Array[File] = new File(invalidTestDir, "blacklisted").listFiles
-  val blacklistedHofPolicies: Array[File] = new File(invalidTestDir, "blacklisted-hof").listFiles
+  val blacklistedInlineFunctionPolicies: Array[File] = new File(invalidTestDir, "blacklisted-inline-function").listFiles
   val unsupportedPolicies: Array[File] = new File(invalidTestDir, "unsupported").listFiles
+
+  // TODO: "Higher-order functions" are not currently supported by Saxon's XPathParser.
+  // TODO: When they are, this category should be merged into the blacklisted category.
+  // TODO: Additionally, "safe" higher-order functions (i.e., those duplicated in the "valid/hof" directory) should be
+  // TODO: removed from the invalid test category.
+  val blacklistedHofPolicies: Array[File] = new File(invalidTestDir, "blacklisted-hof").listFiles
 
   def filterXmlFiles(files: Array[File]): Array[File] = {
     files.filter(f => f.getName.endsWith("xml"))
@@ -72,7 +76,8 @@ class ValidatePolicySuite extends AttributeMapperBase with Matchers {
 
     Seq(
       blacklistedPolicies -> ".+ function in the .+ namespace is not allowed in a policy path",
-      blacklistedHofPolicies -> "Inline functions are not allowed in a policy path",
+      blacklistedHofPolicies -> ".* Higher-order functions are not available in this Configuration",
+      blacklistedInlineFunctionPolicies -> "Inline functions are not allowed in a policy path",
       unsupportedPolicies -> "Cannot find a \\d+-argument function .*"
     ) foreach { case (policies, causeMessage) =>
       filterXmlFiles(policies) foreach { policy =>
