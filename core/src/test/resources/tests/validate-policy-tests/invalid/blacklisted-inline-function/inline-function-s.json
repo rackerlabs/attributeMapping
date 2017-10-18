@@ -1,0 +1,18 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "local": {
+          "user": {
+            "domain":"{D}",
+            "name":"{Pt(let $addOne := function($i as xs:int) as xs:int { $i + 1 }\nreturn $addOne(1))}",
+            "email":"{D}",
+            "expire" : "{D}",
+            "roles" : "{D}"
+          }
+        }
+      }
+    ],
+    "version":"RAX-1"
+  }
+}
