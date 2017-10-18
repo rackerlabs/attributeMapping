@@ -15,14 +15,14 @@
   */
 package com.rackspace.identity.components
 
-import com.rackspace.identity.components.AttributeMapper.{FN_NS_URI, MAPPING_NS_PREFIX, MAPPING_NS_URI, XQUERY_VERSION}
+import com.rackspace.identity.components.AttributeMapper.{MAPPING_NS_PREFIX, MAPPING_NS_URI, XQUERY_VERSION}
 import com.saxonica.expr.HofParserExtension
 import com.saxonica.functions.hof.UserFunctionReference
 import net.sf.saxon.expr.instruct.UserFunctionParameter
 import net.sf.saxon.expr.parser.XPathParser
 import net.sf.saxon.expr.{Expression, FunctionCall, StaticContext}
 import net.sf.saxon.functions.FunctionLibraryList
-import net.sf.saxon.lib.NamespaceConstant
+import net.sf.saxon.lib.NamespaceConstant._
 import net.sf.saxon.om.StructuredQName
 import net.sf.saxon.query.{XQueryFunction, XQueryFunctionLibrary}
 import net.sf.saxon.s9api._
@@ -162,15 +162,15 @@ object ValidateXPathFunction {
     URI_COLLECTION_FUNCTION_NAME
   )
   private final val LEGAL_FUNCTION_NAMESPACE_SET = Set(
-    FN_NS_URI,
-    s"$FN_NS_URI/math",
-    s"$FN_NS_URI/map",
-    s"$FN_NS_URI/array",
+    FN,
+    MATH,
+    MAP_FUNCTIONS,
+    ARRAY_FUNCTIONS,
     MAPPING_NS_URI
   )
   private final val EXCEPTION_FUNCTION_MAP = Map(
     // Enables dynamic function application
-    NamespaceConstant.SAXON -> APPLY_FUNCTION_NAME
+    SAXON -> APPLY_FUNCTION_NAME
   )
   private final val COMMON_NS_MAP = Map(
     MAPPING_NS_PREFIX -> MAPPING_NS_URI,
