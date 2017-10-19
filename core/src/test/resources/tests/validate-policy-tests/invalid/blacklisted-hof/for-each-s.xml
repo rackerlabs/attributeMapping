@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         version="RAX-1">
+    <rules>
+        <rule>
+            <local>
+                <user>
+                    <name value="{Pt(for-each(1 to 5, function($i) { $i * $i }))}"/>
+                    <email value="{D}"/>
+                    <expire value="{D}"/>
+                    <domain value="{D}"/>
+                    <roles value="{D}"/>
+                </user>
+            </local>
+        </rule>
+    </rules>
+</mapping>

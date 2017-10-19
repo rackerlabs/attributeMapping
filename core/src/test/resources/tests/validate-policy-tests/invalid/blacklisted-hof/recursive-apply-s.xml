@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         version="RAX-1">
+    <rules>
+        <rule>
+            <local>
+                <user>
+                    <name value="{Pt(
+                        let $addSome := function($i as xs:int, $f as function(xs:int, function(*)) as xs:int) as xs:int
+                        {
+                          if ($i > 3) then $i
+                          else $f($i + 1, $f)
+                        }
+                        return apply($addSome, [1, $addSome]))}"/>
+                    <email value="{D}"/>
+                    <expire value="{D}"/>
+                    <domain value="{D}"/>
+                    <roles value="{D}"/>
+                </user>
+            </local>
+        </rule>
+    </rules>
+</mapping>
