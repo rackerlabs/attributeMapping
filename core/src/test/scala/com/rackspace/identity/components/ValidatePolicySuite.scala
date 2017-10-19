@@ -35,10 +35,13 @@ class ValidatePolicySuite extends AttributeMapperBase with Matchers {
   val blacklistedInlineFunctionPolicies: Array[File] = new File(invalidTestDir, "blacklisted-inline-function").listFiles
   val unsupportedPolicies: Array[File] = new File(invalidTestDir, "unsupported").listFiles
 
-  // TODO: "Higher-order functions" are not currently supported by Saxon's XPathParser.
-  // TODO: When they are, this category should be merged into the blacklisted category.
-  // TODO: Additionally, "safe" higher-order functions (i.e., those duplicated in the "valid/hof" directory) should be
-  // TODO: removed from the invalid test category.
+  //
+  // "Higher-order functions" are not currently supported by Saxon's XPathParser.
+  // When they are, the tests in this category should fail, and this category
+  // should be merged into the blacklisted category.
+  // Additionally, "safe" higher-order functions (i.e., those duplicated in the "valid/hof" directory) should be
+  // removed from the invalid test category.
+  //
   val blacklistedHofPolicies: Array[File] = new File(invalidTestDir, "blacklisted-hof").listFiles
 
   def filterXmlFiles(files: Array[File]): Array[File] = {
