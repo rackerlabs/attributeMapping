@@ -8,12 +8,14 @@ mapping:
     - name: domain
     - name: roles
       multiValue: true
-      blacklist: nova:admin
+      blacklist:
+        - nova:admin
     local:
       user:
         domain: "{3}"
         name: "{0}"
         email: "{1}"
-        roles: "{4}"
+        roles:
+          - "{4}"
         expire: "{2}"
   version: RAX-1

@@ -20,14 +20,14 @@
             "name":"{D}",
             "email":"{D}",
             "roles": {
-              "value":"{D}",
+              "value": ["{D}"],
               "multiValue":true
              },
             "expire":"{D}"
            },
           "faws": {
             "policy": {
-              "value":"{1}",
+              "value": ["{1}"],
               "multiValue":true
              }
            }

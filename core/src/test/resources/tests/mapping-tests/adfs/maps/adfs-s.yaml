@@ -1,0 +1,17 @@
+---
+mapping:
+  rules:
+  - remote:
+    - name: http://schemas.xmlsoap.org/claims/Group
+      multiValue: true
+    - name: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+    local:
+      user:
+        domain: '5821006'
+        name: "{D}"
+        email: "{1}"
+        roles:
+          value: "{0}"
+          multiValue: true
+        expire: "{D}"
+  version: RAX-1

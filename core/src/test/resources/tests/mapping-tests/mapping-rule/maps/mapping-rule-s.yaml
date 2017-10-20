@@ -6,6 +6,7 @@ mapping:
         domain: "{At(domain)}"
         name: "{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:NameID)}"
         email: "{At(email)}"
-        roles: "{Ats(roles)}"
+        roles:
+          - "{Ats(roles)}"
         expire: "{Pt(/saml2p:Response/saml2:Assertion/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter)}"
   version: RAX-1

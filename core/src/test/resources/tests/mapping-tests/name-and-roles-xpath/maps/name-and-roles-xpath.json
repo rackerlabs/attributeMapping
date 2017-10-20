@@ -13,7 +13,7 @@
             "domain":"78334",
             "name":"{D}",
             "email":"{D}",
-            "roles":"{0}",
+            "roles": ["{0}"],
             "expire":"{D}"
            }
          }

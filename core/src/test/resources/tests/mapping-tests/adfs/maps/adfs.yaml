@@ -11,7 +11,8 @@ mapping:
         name: "{D}"
         email: "{1}"
         roles:
-          value: "{0}"
+          value:
+            - "{0}"
           multiValue: true
         expire: "{D}"
   version: RAX-1

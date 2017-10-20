@@ -23,7 +23,7 @@
              },
             "name":"{D}",
             "email":"{D}",
-            "roles":"{D}",
+            "roles": ["{D}"],
             "expire":"{D}"
            },
           "faws": {

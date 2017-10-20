@@ -16,7 +16,8 @@ mapping:
           type: xs:dateTime
         name: "{D}"
         email: "{D}"
-        roles: "{D}"
+        roles:
+          - "{D}"
         expire: "{D}"
       faws:
         policy: "{1}"

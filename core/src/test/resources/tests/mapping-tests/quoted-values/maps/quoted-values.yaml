@@ -6,6 +6,7 @@ mapping:
         domain: "{D}"
         name: John 'The Boss' Doe
         email: "{D}"
-        roles: '"BossMan"'
+        roles:
+          - '"BossMan"'
         expire: "{D}"
   version: RAX-1

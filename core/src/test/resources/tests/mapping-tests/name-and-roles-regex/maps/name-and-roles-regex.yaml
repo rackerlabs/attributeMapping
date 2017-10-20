@@ -10,7 +10,8 @@ mapping:
   - remote:
     - regex: true
       name: roles
-      notAnyOf: C.*
+      notAnyOf:
+       - C.*
     local:
       user:
         roles:
@@ -19,7 +20,8 @@ mapping:
   - remote:
     - regex: true
       name: roles
-      anyOneOf: U.*
+      anyOneOf:
+       - U.*
     local:
       user:
         roles:

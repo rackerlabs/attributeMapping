@@ -1,0 +1,11 @@
+---
+mapping:
+  rules:
+  - local:
+      user:
+        domain: '5821006'
+        name: "{D}"
+        email: "{At(http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress)}"
+        roles: "{Ats(http://schemas.xmlsoap.org/claims/Group)}"
+        expire: "{D}"
+  version: RAX-1
