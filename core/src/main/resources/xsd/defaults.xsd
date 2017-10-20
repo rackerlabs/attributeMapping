@@ -13,9 +13,9 @@
             <xs:element name="attribute" type="mapping:AttributeDefaultDef" minOccurs="1"
                 maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:assert test="every $att in ('name','email','domain','expire', 'roles') satisfies mapping:attribute[@name=$att]"
-                   saxon:message="Every standard attribute (name, email, domain, expire, and roles) must have a default"
-                   xerces:message="Every standard attribute (name, email, domain, expire, and roles) must have a default"
+        <xs:assert test="every $att in ('name','email','domain','expire', 'roles', 'groups') satisfies mapping:attribute[@name=$att]"
+                   saxon:message="Every standard attribute (name, email, domain, expire, roles, and groups) must have a default"
+                   xerces:message="Every standard attribute (name, email, domain, expire, roles, and groups) must have a default"
                    />
         <xs:assert test="count(mapping:attribute/@name) = count(distinct-values(mapping:attribute/@name))"
                    saxon:message="Attributes should not be listed more than once"
@@ -70,6 +70,7 @@
             <xs:enumeration value="email"/>
             <xs:enumeration value="domain"/>
             <xs:enumeration value="roles"/>
+            <xs:enumeration value="groups"/>
         </xs:restriction>
     </xs:simpleType>
 

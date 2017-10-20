@@ -9,6 +9,7 @@
 <?include ../../../include/defaults-asserts.xml#domain?>
 <?include ../../../include/defaults-asserts.xml#expire?>
 <?include ../../../include/defaults-asserts.xml#roles?>
+<?include ../../../include/defaults-asserts.xml#groups?>
 
 <!-- If naimeId is missing prefer claim name over urn:oid:1.3.6.1.4.1.5923.1.1.1.6 -->
 <?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:NameID =  'no-foo-2@rackspace.com'?>

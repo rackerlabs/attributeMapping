@@ -9,6 +9,7 @@
 <?include ../../../include/defaults-asserts.xml#expire?>
 <?include ../../../include/defaults-asserts.xml#domain?>
 <?include ../../../include/defaults-asserts.xml#roles?>
+<?include ../../../include/defaults-asserts.xml#groups?>
 
 <!-- The email should be no-reply@rackspace.com -->
 <?assert mapping:get-attribute('email') = 'john.doe@rackspace.com'?>

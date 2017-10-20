@@ -1,0 +1,20 @@
+---
+mapping:
+  rules:
+  - remote:
+    - name: groups
+      regex: true
+      multiValue: true
+      whitelist:
+      - rackspace-.*
+    local:
+      user:
+        domain: "{D}"
+        name: "{D}"
+        email: "{D}"
+        roles:
+          - "{D}"
+        expire: "{D}"
+        groups:
+          - "{0}"
+  version: RAX-1

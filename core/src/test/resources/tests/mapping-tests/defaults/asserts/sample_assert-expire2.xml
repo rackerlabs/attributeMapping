@@ -9,6 +9,7 @@
 <?include ../../../include/defaults-asserts.xml#domain?>
 <?include ../../../include/defaults-asserts.xml#email?>
 <?include ../../../include/defaults-asserts.xml#roles?>
+<?include ../../../include/defaults-asserts.xml#groups?>
 
 <!-- Expire should pick date from AuthNStatement -->
 <?assert /saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter = '2013-11-17T16:17:06.298Z'?>

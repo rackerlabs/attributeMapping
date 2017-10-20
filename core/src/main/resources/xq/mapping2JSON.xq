@@ -12,6 +12,7 @@ declare option output:indent "yes";
 
 declare variable $matchMarker as xs:string := "{Pts((:-))}";
 declare variable $knownPrefixes as xs:string* := ('saml2p','saml2','xs','xsi','mapping','xml','');
+declare variable $multiValueDefaultAttributes as xs:string* := ('roles', 'groups');
 
 declare function mapping:convertAttributeValue($name as xs:string, $in as xs:string, $flags as xs:string*) as xs:anyAtomicType? {
   let $retValue := if ($in = '') then () else replace($in,'&#xA0;',' ')
@@ -55,7 +56,7 @@ declare function mapping:convertLocalGroup($local as element()) as map(*) {
   let $elems := $local/element()
   return map:merge(for $elem in $elems return map:entry(mapping:local-name($elem),
   let $multiAttribs := (
-    if ((mapping:local-name($elem) = 'roles') and (mapping:local-name($elem/..) = 'user')) then "value" else (),
+    if ((mapping:local-name($elem) = $multiValueDefaultAttributes) and (mapping:local-name($elem/..) = 'user')) then "value" else (),
       if (exists($elem/@multiValue) and xs:boolean($elem/@multiValue)) then "value" else ())
         return if ($elem/@*[name(.) = ('type','multiValue')]) then mapping:convertAttributeMap($elem, $multiAttribs, ('name'), ('multiValue')) else
           if ($multiAttribs) then mapping:convertAttributeList (mapping:local-name($elem), string($elem/@value), ('multiValue')) else

@@ -37,6 +37,18 @@
             <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:type="xs:string">nova:admin</saml2:AttributeValue>
         </saml2:Attribute>
+        <!--
+            This is actually testing that groups should not be copied
+            over, if they are not specified in the policy.
+        -->
+        <saml2:Attribute Name="groups">
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">group1</saml2:AttributeValue>
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">group2</saml2:AttributeValue>
+            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xsi:type="xs:string">other_group</saml2:AttributeValue>
+        </saml2:Attribute>
         <saml2:Attribute Name="domain">
             <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:type="xs:string">323676</saml2:AttributeValue>

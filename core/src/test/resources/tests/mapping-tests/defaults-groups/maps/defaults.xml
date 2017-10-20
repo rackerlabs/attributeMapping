@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+         version="RAX-1">
+   <rules>
+      <rule>
+        <local>
+            <user>
+               <name value="{D}"/>
+               <email value="{D}"/>
+               <expire value="{D}"/>
+               <domain value="{D}"/>
+               <roles value="{D}"/>
+               <groups value="{D}"/>
+            </user>
+         </local>
+      </rule>
+   </rules>
+</mapping>
