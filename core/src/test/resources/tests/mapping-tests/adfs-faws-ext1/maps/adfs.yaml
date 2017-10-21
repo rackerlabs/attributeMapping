@@ -14,16 +14,19 @@ mapping:
         name: "{D}"
         email: "{1}"
         roles:
-          value: "{0}"
+          value:
+            - "{0}"
           multiValue: true
         expire: "{D}"
   - remote:
     - regex: false
       name: http://schemas.xmlsoap.org/claims/Group
-      anyOneOf: Admin
+      anyOneOf:
+        - Admin
     - regex: false
       name: http://schemas.xmlsoap.org/claims/Group
-      notAnyOf: Contractor
+      notAnyOf:
+        - Contractor
     local:
       faws:
         admins:
@@ -34,7 +37,8 @@ mapping:
   - remote:
     - regex: false
       name: http://schemas.xmlsoap.org/claims/Group
-      notAnyOf: Contractor
+      notAnyOf:
+        - Contractor
     local:
       faws:
         observers:
@@ -45,7 +49,8 @@ mapping:
   - remote:
     - regex: false
       name: http://schemas.xmlsoap.org/claims/Group
-      anyOneOf: Contractor
+      anyOneOf:
+        - Contractor
     local:
       faws:
         nones:

@@ -16,7 +16,8 @@ mapping:
           multiValue: false
           type: xs:string
         roles:
-          value: "{Ats(roles)}"
+          value:
+            - "{Ats(roles)}"
           multiValue: true
           type: xs:string
         expire:

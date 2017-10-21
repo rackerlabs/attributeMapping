@@ -7,7 +7,7 @@
             "domain":"{D}",
             "name":"{D}",
             "email":"{D(name)} <{D(name)}@{D(domain)}.rackspace.com>",
-            "roles":"{D}",
+            "roles": ["{D}"],
             "expire":"{D}"
            }
          }
