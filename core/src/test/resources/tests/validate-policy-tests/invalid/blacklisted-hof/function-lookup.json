@@ -1,0 +1,18 @@
+{
+  "mapping": {
+    "rules": [
+      {
+        "remote": [
+          {
+            "path": "function-lookup(xs:QName('fn:substring'), 2)('foo', 2)"
+          }
+        ],
+        "local": {}
+      }
+    ],
+    "version": "RAX-1",
+    "namespaces": {
+      "xs": "http://www.w3.org/2001/XMLSchema"
+    }
+  }
+}

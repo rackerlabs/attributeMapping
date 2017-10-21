@@ -127,7 +127,7 @@ object AttributeMapper {
           Analyze the local values, our regex puts the xpath in a capture group.
           We store the result of analyze-string, which should give us all the capture groups!
       :)
-      $localXPathMatches := for $value in $localValuesWithXPaths return analyze-string($value, '\{Pts?\((.*?)\)\}'),
+      $localXPathMatches := for $value in $localValuesWithXPaths return analyze-string($value, '\{Pts?\((.*?)\)\}', 'ms'),
 
       (:
           Run Validate XPath on every capture group.

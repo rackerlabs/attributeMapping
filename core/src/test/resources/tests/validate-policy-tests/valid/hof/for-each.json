@@ -1,0 +1,15 @@
+{
+    "mapping": {
+        "rules": [
+            {
+                "remote": [
+                    {
+                        "path": "for-each(1 to 5, function($i) { $i * $i })"
+                    }
+                ],
+                "local": {}
+            }
+        ],
+        "version": "RAX-1"
+    }
+}

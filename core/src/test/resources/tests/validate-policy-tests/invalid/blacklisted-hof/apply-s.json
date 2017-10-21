@@ -1,0 +1,18 @@
+{
+    "mapping": {
+        "rules": [
+            {
+                "local": {
+                    "user": {
+                        "domain":"{D}",
+                        "name":"{Pt(apply(concat#3, [\"a\", \"b\", \"c\"]))}",
+                        "email":"{D}",
+                        "expire" : "{D}",
+                        "roles" : "{D}"
+                    }
+                }
+            }
+        ],
+        "version":"RAX-1"
+    }
+}

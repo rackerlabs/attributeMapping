@@ -1,0 +1,15 @@
+{
+    "mapping": {
+        "rules": [
+            {
+                "remote": [
+                    {
+                        "path": "filter(1 to 10, function($i) {$i mod 2 = 0})"
+                    }
+                ],
+                "local": {}
+            }
+        ],
+        "version": "RAX-1"
+    }
+}

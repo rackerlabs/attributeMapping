@@ -1,0 +1,15 @@
+{
+    "mapping": {
+        "rules": [
+            {
+                "remote": [
+                    {
+                        "path": "apply(concat#3, [\"a\", \"b\", \"c\"])"
+                    }
+                ],
+                "local": {}
+            }
+        ],
+        "version": "RAX-1"
+    }
+}

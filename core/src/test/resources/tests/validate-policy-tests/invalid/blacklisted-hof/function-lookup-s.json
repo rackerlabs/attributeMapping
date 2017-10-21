@@ -1,0 +1,21 @@
+{
+    "mapping": {
+        "rules": [
+            {
+                "local": {
+                    "user": {
+                        "domain":"{D}",
+                        "name":"{Pt(function-lookup(xs:QName('fn:substring'), 2)('foo', 2))}",
+                        "email":"{D}",
+                        "expire" : "{D}",
+                        "roles" : "{D}"
+                    }
+                }
+            }
+        ],
+        "version":"RAX-1",
+        "namespaces": {
+            "xs": "http://www.w3.org/2001/XMLSchema"
+        }
+    }
+}

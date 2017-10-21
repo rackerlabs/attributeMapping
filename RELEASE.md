@@ -1,5 +1,6 @@
 # Releases #
 ## In Progress Work ##
+1. Disallowing inline functions in policy path expressions.
 1. Fixed a bug where multi-value attributes were not always returned as an array when generating JSON output.
 
 ## Release 2.0.1 (2017-09-28) ##

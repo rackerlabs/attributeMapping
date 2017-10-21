@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         version="RAX-1">
+    <rules>
+        <rule>
+            <local/>
+            <remote>
+                <attribute path="transform(map {
+                    &quot;stylesheet-location&quot;: &quot;example.xsl&quot;,
+                    &quot;source-node&quot;: ()})"/>
+            </remote>
+        </rule>
+    </rules>
+</mapping>
