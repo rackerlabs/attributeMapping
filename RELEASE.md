@@ -4,6 +4,8 @@
 1. Fixed a bug where multi-value attributes were not always returned as an array when generating JSON output.
 1. We now support `groups` as a standard attribute, which supports default value with {D}
    1. As a result of the change, standard attributes will no longer be set in the SAML assertion if they are not specified in the mapping policy.
+1. We now set `mapping:multiValue` in a SAML attribute to denote whether the attribute may hold several values.
+   1. Setting `mapping:multiValue` helps in conversion to JSON when setting extended attributes via the `RAX-AUTH:extendedAttributes`.
 
 ## Release 2.0.1 (2017-09-28) ##
 1. Fixed a number of parsing bugs when using {(P|A)ts?()} in a template that spans multiple lines.

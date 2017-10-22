@@ -2,7 +2,7 @@
 
 <!-- defualt extn sssertions apply -->
 
-<?include ../include/defaults-extn.xml?>
+<?include ../include/single-faws-extn.xml?>
 
 <saml2p:Response xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol"
                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -45,20 +45,14 @@
             <saml2:AttributeValue xsi:type="xs:string">nova:admin</saml2:AttributeValue>
          </saml2:Attribute>
          <saml2:Attribute Name="user/foo" mapping:multiValue="true">
-            <saml2:AttributeValue xsi:type="xs:dateTime">2017-01-04T14:41:42.206-06:00</saml2:AttributeValue>
+             <saml2:AttributeValue xsi:type="xs:dateTime">2017-01-04T14:41:42.206-06:00</saml2:AttributeValue>
+             <saml2:AttributeValue xsi:type="xs:dateTime">2018-01-04T14:41:42.206-06:00</saml2:AttributeValue>
          </saml2:Attribute>
-         <saml2:Attribute Name="user/foo" mapping:multiValue="true">
-              <saml2:AttributeValue xsi:type="xs:dateTime">2018-01-04T14:41:42.206-06:00</saml2:AttributeValue>
-          </saml2:Attribute>
           <saml2:Attribute Name="user/bar">
               <saml2:AttributeValue>bar</saml2:AttributeValue>
           </saml2:Attribute>
          <saml2:Attribute Name="faws/policy" mapping:multiValue="true">
             <saml2:AttributeValue xsi:type="xs:string">AWSPolicy</saml2:AttributeValue>
-            <saml2:AttributeValue xsi:type="xs:string">AWSPolicy2</saml2:AttributeValue>
-            <saml2:AttributeValue xsi:type="xs:string">AWSPolicy YEA!</saml2:AttributeValue>
-            <saml2:AttributeValue xsi:type="xs:string">AWSPolicy3</saml2:AttributeValue>
-            <saml2:AttributeValue xsi:type="xs:string">AWSPolicy YEA!!</saml2:AttributeValue>
          </saml2:Attribute>
           <saml2:Attribute Name="faws/policy2" mapping:multiValue="true">
               <saml2:AttributeValue xsi:type="xs:string">AWSPolicy</saml2:AttributeValue>

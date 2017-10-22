@@ -12,6 +12,10 @@
 <!-- Ensure that faws/nones is setup correctly -->
 <?assert every $r in /saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='faws/nones']/saml2:AttributeValue satisfies $r=('12285/AWSPolicy','38839/AWSPolicy')?>
 
+<!-- Ensure that faws/admins is set to multivalue -->
+<?assert /saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='faws/nones']/@mapping:multiValue = 'true'?>
+
+
 <!-- Ensure that faws/observers is not set -->
 <?assert empty(/saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='faws/observers'])?>
 

@@ -29,8 +29,9 @@ declare option output:method "json";
 declare option output:indent "yes";
 
 declare function auth:addAttributeValues ($a as element()) as item() {
-  let $values := for $v in $a/auth:value return string($v)
-    return if (count($values) = 1) then $values[1] else array {$values}
+  let $values := for $v in $a/auth:value return string($v),
+      $multiValue := if (exists($a/@multiValue)) then xs:boolean($a/@multiValue) else false()
+    return if ($multiValue) then array {$values} else $values[1]
 };
 
 declare function auth:addAttributes ($g as element()) as map(*) {

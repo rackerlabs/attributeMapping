@@ -12,11 +12,24 @@
 <!-- faws/canAddAWSAccount should be true-->
 <?assert mapping:get-attributes('faws/canAddAWSAccount') = 'true'?>
 
+<!-- ensure faws/canAddAWSAccount is not multiValue -->
+<?assert empty(/saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='faws/canAddAWSAccount']/@mapping:multiValue) or
+         /saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='faws/canAddAWSAccount']/@mapping:multiValue='false'
+?>
+
 <!-- faws/991049284483 should contain correct values -->
 <?assert every $r in ('fanatical_aws:admin','AdminstratorAccess') satisfies $r=mapping:get-attributes('faws/991049284483')?>
 
+<!-- Ensure that faws/991049284483 is set to multivalue -->
+<?assert /saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='faws/991049284483']/@mapping:multiValue = 'true'?>
+
+
 <!-- faws/042423532529 should contain correct values  -->
 <?assert every $r in ('fanatical_aws:observer','RackspaceReadOnly') satisfies $r=mapping:get-attributes('faws/042423532529')?>
+
+<!-- Ensure that faws/042423532529 is set to multivalue -->
+<?assert /saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='faws/042423532529']/@mapping:multiValue = 'true'?>
+
 
 <samlp:Response Consent="urn:oasis:names:tc:SAML:2.0:consent:unspecified"
     Destination="https://astra-pysaml-staging2.astra.rackspace.com/v2/acs"
