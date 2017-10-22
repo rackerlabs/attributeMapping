@@ -108,6 +108,7 @@
                     <xslout:otherwise>
                         <saml2:Attribute>
                             <xslout:attribute name="Name" select="$attribName"/>
+                            <xslout:attribute name="mapping:multiValue" select="$isMultiValue"/>
                             <xslout:for-each select="$attribValues">
                                 <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                                     <xslout:choose>
