@@ -1,5 +1,5 @@
 # Releases #
-## In Progress Work ##
+## Release 2.1.0 (2017-10-23) ##
 1. Disallow inline functions in policy path expressions.
 1. Fixed a bug where multi-value attributes were not always returned as an array when generating JSON output.
 1. We now support `groups` as a standard attribute, which supports default value with {D}
