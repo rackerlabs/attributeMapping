@@ -68,6 +68,7 @@
                     <xs:element name="domain" type="mapping:DefaultSingleLocalString" minOccurs="0"/>
                     <xs:element name="expire" type="mapping:DefaultSingleLocalDateTime" minOccurs="0"/>
                     <xs:element name="roles" type="mapping:DefaultSingleLocalStrings" minOccurs="0"/>
+                    <xs:element name="groups" type="mapping:DefaultSingleLocalStrings" minOccurs="0"/>
                 </xs:all>
             </xs:extension>
         </xs:complexContent>

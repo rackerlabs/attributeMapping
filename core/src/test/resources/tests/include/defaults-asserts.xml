@@ -28,6 +28,11 @@
             There should be a single nova:admin attribute
         </assert>
     </assert-group>
+    <assert-group name="groups">
+        <assert test="empty(mapping:get-attributes('groups'))">
+            There should not be any groups assigned.
+        </assert>
+    </assert-group>
     <assert-group name="email">
         <assert test="mapping:get-attribute('email') = 'no-reply@rackspace.com'">
             The email should be no-reply@rackspace.com

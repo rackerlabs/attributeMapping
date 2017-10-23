@@ -88,4 +88,8 @@
     <attribute name="roles" multiValue="true">
         <location saml-attribute="roles"/>
     </attribute>
+
+    <attribute name="groups" multiValue="true">
+        <location saml-attribute="groups"/>
+    </attribute>
 </attribute-defaults>

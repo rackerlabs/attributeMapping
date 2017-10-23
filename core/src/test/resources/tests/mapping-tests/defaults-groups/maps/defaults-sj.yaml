@@ -1,0 +1,12 @@
+---
+mapping:
+  rules:
+  - local:
+      user:
+        domain: "{D}"
+        name: "{D}"
+        email: "{D}"
+        roles: "{D}"
+        groups: "{D}"
+        expire: "{D}"
+  version: RAX-1

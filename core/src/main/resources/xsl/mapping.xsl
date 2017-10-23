@@ -19,6 +19,8 @@
     <xsl:param name="defaults-config" as="xs:string">defaults.xml</xsl:param>
 
     <xsl:variable name="defaults" as="node()" select="doc($defaults-config)"/>
+    <xsl:variable name="singleValueAttributes" as="xs:string*" select="('name','email','expire','domain')"/>
+    <xsl:variable name="multiValueAttributes" as="xs:string*" select="('roles', 'groups')"/>
 
     <xsl:template match="/">
         <xsl:comment>
@@ -43,7 +45,9 @@
                 </xsl:for-each>
             </xslout:variable>
             <xslout:variable name="assert" as="node()" select="/"/>
-            <xslout:variable name="specialAttributes" as="xs:string*" select="('email', 'domain', 'roles')"/>
+            <xslout:variable name="singleValueAttributes" as="xs:string*" select="{mapping:copyValues($singleValueAttributes)}"/>
+            <xslout:variable name="multiValueAttributes" as="xs:string*" select="{mapping:copyValues($multiValueAttributes)}"/>
+            <xslout:variable name="specialAttributes" as="xs:string*" select="('email', 'domain', $multiValueAttributes)"/>
             <xslout:variable name="skipAttributes" as="xs:string*" select="('name','expire')"/>
             <xslout:template match="/">
                 <xslout:choose>
@@ -96,7 +100,7 @@
             
             <xslout:template match="element()[@value]" mode="samlout">
                 <xslout:variable name="groupName" as="xs:string" select="../mapping:local-name(.)"/>
-                <xslout:variable name="isMultiValue" select="if ($groupName = 'user' and mapping:local-name(.) = 'roles') then true() else
+                <xslout:variable name="isMultiValue" select="if ($groupName = 'user' and mapping:local-name(.) = $multiValueAttributes) then true() else
                                                              if (exists(@multiValue)) then xs:boolean(@multiValue) else false()" as="xs:boolean"/>
                 <xslout:variable name="attribName" as="xs:string"
                     select="if (mapping:local-name(.) = $specialAttributes and $groupName='user') then mapping:local-name(.) else concat($groupName,'/',mapping:local-name(.))"/>
@@ -130,21 +134,22 @@
                 <local>
                     <xslout:if test="not(empty($locals))">
                         <user>
-                            <name>
-                                <xslout:attribute name="value" select="($locals//mapping:user/mapping:name)[1]/@value"/>
-                            </name>
-                            <email>
-                                <xslout:attribute name="value" select="($locals//mapping:user/mapping:email)[1]/@value"/>
-                            </email>
-                            <expire>
-                                <xslout:attribute name="value" select="($locals//mapping:user/mapping:expire)[1]/@value"/>
-                            </expire>
-                            <domain>
-                                <xslout:attribute name="value" select="($locals//mapping:user/mapping:domain)[1]/@value"/>
-                            </domain>
-                            <roles>
-                                <xslout:attribute name="value" select="string-join($locals//mapping:user/mapping:roles/@value,' ')"/>
-                            </roles>
+                            <xsl:for-each select="$singleValueAttributes">
+                                <xsl:variable name="path" as="xs:string" select="'($locals//mapping:user/mapping:' || . || ')[1]/@value'"/>
+                                <xslout:if test="exists({$path})">
+                                    <xsl:element name="{.}">
+                                        <xslout:attribute name="value" select="{$path}"/>
+                                    </xsl:element>
+                                </xslout:if>
+                            </xsl:for-each>
+                            <xsl:for-each select="$multiValueAttributes">
+                                <xsl:variable name="path" as="xs:string" select="'($locals//mapping:user/mapping:' || . || ')/@value'"/>
+                                <xslout:if test="exists({$path})">
+                                    <xsl:element name="{.}">
+                                        <xslout:attribute name="value" select="string-join({$path},' ')"/>
+                                    </xsl:element>
+                                </xslout:if>
+                            </xsl:for-each>
                             <xslout:call-template name="mapping:outLocalExt">
                                 <xslout:with-param name="groups" select="$locals//mapping:user"/>
                                 <xslout:with-param name="exclude" select="($specialAttributes, $skipAttributes)"/>
@@ -596,6 +601,17 @@
     <xsl:function name="mapping:attributes" as="xs:string">
         <xsl:param name="name" as="xs:string"/>
         <xsl:value-of select="concat('/saml2p:Response/saml2:Assertion/saml2:AttributeStatement/saml2:Attribute[@Name=',mapping:quote($name),']/saml2:AttributeValue')"/>
+    </xsl:function>
+
+    <xsl:function name="mapping:copyValues" as="xs:string">
+        <xsl:param name="values" as="xs:string*"/>
+        <xsl:variable name="start" as="xs:string" select="'('"/>
+        <xsl:variable name="quoted" as="xs:string*" select="for $v in $values return '''' || $v || ''''"/>
+        <xsl:variable name="commaDelim" as="xs:string">
+            <xsl:value-of select="$quoted" separator=", "/>
+        </xsl:variable>
+        <xsl:variable name="end" as="xs:string" select="')'"/>
+        <xsl:value-of select="$start || $commaDelim || $end"/>
     </xsl:function>
     
     <!-- fireConditions mode these templates create conditions for notAnyOf and anyOneOf -->

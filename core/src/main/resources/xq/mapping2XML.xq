@@ -16,7 +16,8 @@ declare option output:indent "yes";
 (: declare variable $__JSON__ external; :)
 declare variable $__JSON__ external;
 declare variable $policyJSON := parse-json($__JSON__);
-declare variable $defaultAttributes as xs:string* := ('name','email','expire','domain','roles');
+declare variable $multiValueDefaultAttributes as xs:string* := ('roles', 'groups');
+declare variable $defaultAttributes as xs:string* := ('name','email','expire','domain', $multiValueDefaultAttributes);
 declare variable $remoteMultiValues as xs:string* := ('whitelist','blacklist','notAnyOf','anyOneOf');
 
 declare function mapping:convertMatchValue($in as xs:string) as xs:string {
@@ -72,7 +73,7 @@ declare function mapping:convertLocalGroup($localGroupName as xs:string, $localG
 declare function mapping:convertLocalAttribute($attribName as xs:string, $attribValue as item(), $userGroup as xs:boolean) as element() {
   let $multiValues as xs:string* :=
     (
-    if ($userGroup and ($attribName="roles")) then "value" else (),
+    if ($userGroup and ($attribName=$multiValueDefaultAttributes)) then "value" else (),
       typeswitch ($attribValue)
         case $o as map(*) return if (map:contains($o, "multiValue") and $o?multiValue) then "value" else ()
         case $a as array(*) return "value"

@@ -9,6 +9,7 @@
 <?include ../../../include/defaults-asserts.xml#domain?>
 <?include ../../../include/defaults-asserts.xml#email?>
 <?include ../../../include/defaults-asserts.xml#roles?>
+<?include ../../../include/defaults-asserts.xml#groups?>
 
 <!-- If no dates are given the expire should be no longer than 15 mins in the future  -->
 <?assert (mapping:get-expire() - current-dateTime()) <= xs:dayTimeDuration('PT15M')?>
