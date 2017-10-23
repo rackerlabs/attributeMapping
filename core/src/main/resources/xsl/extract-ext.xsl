@@ -12,6 +12,9 @@
    2. They contain an attribute name with the following pattern
    "group/name" where "group" is the name of the extended attribute
    name and "name" is the name of the attribute.
+   3. They may contain a boolean attribute mapping:multiValue that
+   denotes that they are multiValue attributes eventhough they contain
+   a single value - this helps in JSON conversion.
 
    Copyright 2017 Rackspace US, Inc.
 
@@ -33,6 +36,7 @@
     xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:attribEX="http://openrepose.org/attribExtractor"
     xmlns:RAX-AUTH="http://docs.rackspace.com/identity/api/ext/RAX-AUTH/v1.0"
+    xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
     exclude-result-prefixes="xs saml2p saml2 attribEX"
     version="2.0">
 
@@ -49,6 +53,12 @@
                 <group name="{current-group()[1]/@name}">
                     <xsl:for-each-group select="current-group()//attribEX:variable" group-by="@name">
                         <attribute name="{@name}">
+                            <!--
+                                Multivalue is only set if it is true.
+                            -->
+                            <xsl:if test="current-group()//@multiValue">
+                                <xsl:attribute name="multiValue">true</xsl:attribute>
+                            </xsl:if>
                             <xsl:for-each select="current-group()//attribEX:value">
                                 <value><xsl:value-of select="."/></value>
                             </xsl:for-each>
@@ -61,8 +71,16 @@
 
     <xsl:template match="/saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[count(tokenize(@Name,'/')) = 2]">
         <xsl:variable name="tokens" as="xs:string*" select="tokenize(@Name,'/')"/>
+        <xsl:variable name="multiValue" as="xs:boolean"
+                      select="if (exists (@mapping:multiValue)) then xs:boolean(@mapping:multiValue) else false()"/>
         <attribEX:group name="{$tokens[1]}">
             <attribEX:variable name="{$tokens[2]}">
+                <!--
+                    Only set multiValue if it's a multiValue variable.
+                -->
+                <xsl:if test="$multiValue">
+                    <xsl:attribute name="multiValue">true</xsl:attribute>
+                </xsl:if>
                 <xsl:for-each select="saml2:AttributeValue">
                     <attribEX:value><xsl:value-of select="."/></attribEX:value>
                 </xsl:for-each>

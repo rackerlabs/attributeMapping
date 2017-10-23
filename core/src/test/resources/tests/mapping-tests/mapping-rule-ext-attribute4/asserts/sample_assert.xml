@@ -10,6 +10,11 @@
 <!-- The extended attribute foo should contain a date no longer than 2 hours in the future -->
 <?assert (xs:dateTime(mapping:get-attribute('user/foo')) - current-dateTime()) <= xs:dayTimeDuration('PT2H')?>
 
+<!-- Ensure that faws/policy is not multiValue -->
+<?assert empty(/saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='user/foo']/@mapping:multiValue) or
+         /saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='user/foo']/@mapping:multiValue='false'
+?>
+
 <!-- There should exist 0 FAWS policies -->
 <?assert count(mapping:get-attributes('faws/policy')) = 0 ?>
 
