@@ -1,4 +1,8 @@
 # Releases #
+## Release 2.1.1 (2017-10-24) ##
+1. Updated Dependency
+    1. checker-util: 2.4.1 → 2.5.1
+
 ## Release 2.1.0 (2017-10-23) ##
 1. Disallow inline functions in policy path expressions.
 1. Fixed a bug where multi-value attributes were not always returned as an array when generating JSON output.
