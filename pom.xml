@@ -58,7 +58,7 @@
         <json-schema-validator.version>2.1.7</json-schema-validator.version>
         <junit.version>4.10</junit.version>
         <mockito.version>1.9.0</mockito.version>
-        <checker-util.version>2.4.1</checker-util.version>
+        <checker-util.version>2.5.1</checker-util.version>
     </properties>
 
     <dependencies>
