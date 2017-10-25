@@ -37,7 +37,7 @@
     xmlns:attribEX="http://openrepose.org/attribExtractor"
     xmlns:RAX-AUTH="http://docs.rackspace.com/identity/api/ext/RAX-AUTH/v1.0"
     xmlns:mapping="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    exclude-result-prefixes="xs saml2p saml2 attribEX"
+    exclude-result-prefixes="xs saml2p saml2 attribEX mapping"
     version="2.0">
 
     <xsl:output indent="yes"/>

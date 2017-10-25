@@ -4,6 +4,15 @@
 
 <common-assertions xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
     <assert-group name="xml">
+        <assert test="every $p in in-scope-prefixes(/auth:extendedAttributes)
+                      satisfies not(namespace-uri-for-prefix($p,/auth:extendedAttributes) =
+                      (xs:anyURI('http://docs.rackspace.com/identity/api/ext/MappingRules'),
+                       xs:anyURI('urn:oasis:names:tc:SAML:2.0:assertion'),
+                       xs:anyURI('urn:oasis:names:tc:SAML:2.0:protocol'),
+                       xs:anyURI('http://openrepose.org/attribExtractor')
+                       ))">
+            SAML and internal namespaces should not leak into the auth:extendedAttributes result.
+        </assert>
         <assert test="/auth:extendedAttributes/auth:group[@name='user']/auth:attribute[@name='foo']">
             There should be a user group with foo attribute.
         </assert>
