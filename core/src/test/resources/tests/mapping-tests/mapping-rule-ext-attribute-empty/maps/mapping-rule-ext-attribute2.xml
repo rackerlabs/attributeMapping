@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         version="RAX-1">
+   <rules>
+      <rule>
+         <local>
+            <user>
+               <domain value="{D}"/>
+               <foo value="{0}"  xsi:type="LocalAttribute"/>
+               <bar value="{1}"  multiValue="true" xsi:type="LocalAttribute"/>
+               <name value="{D}"/>
+               <email value="{0}"/>
+               <roles value="{1}" multiValue="true"/>
+               <expire value="{D}"/>
+            </user>
+            <faws xsi:type="LocalAttributeGroup">
+               <spolicy value="{0}" xsi:type="LocalAttribute"/>
+               <policy value="{1}" multiValue="true" xsi:type="LocalAttribute"/>
+            </faws>
+         </local>
+         <remote>
+             <attribute path="()"/>
+             <attribute path="()" multiValue="true"/>
+         </remote>
+      </rule>
+   </rules>
+</mapping>

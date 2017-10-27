@@ -114,17 +114,19 @@
                             <xslout:attribute name="Name" select="$attribName"/>
                             <xslout:attribute name="mapping:multiValue" select="$isMultiValue"/>
                             <xslout:for-each select="$attribValues">
-                                <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                                    <xslout:choose>
-                                        <xslout:when test="exists($type)">
-                                            <xslout:attribute name="xsi:type" select="$type"/>
-                                        </xslout:when>
-                                        <xslout:otherwise>
-                                            <xslout:attribute name="xsi:type">xs:string</xslout:attribute>
-                                        </xslout:otherwise>
-                                    </xslout:choose>
-                                    <xslout:value-of select="mapping:transformNBSP(.)"/>
-                                </saml2:AttributeValue>
+                                <xslout:if test=". != ''">
+                                    <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                                        <xslout:choose>
+                                            <xslout:when test="exists($type)">
+                                                <xslout:attribute name="xsi:type" select="$type"/>
+                                            </xslout:when>
+                                            <xslout:otherwise>
+                                                <xslout:attribute name="xsi:type">xs:string</xslout:attribute>
+                                            </xslout:otherwise>
+                                        </xslout:choose>
+                                        <xslout:value-of select="mapping:transformNBSP(.)"/>
+                                    </saml2:AttributeValue>
+                                </xslout:if>
                             </xslout:for-each>
                         </saml2:Attribute>
                     </xslout:otherwise>
@@ -182,25 +184,23 @@
                     <xslout:variable name="multiValueAttrib" as="attribute()?" select="($groups/element()[local-name(.)=$extName]/@multiValue)[1]"/>
                     <xslout:variable name="isMultiValue" select="if (exists($multiValueAttrib)) then xs:boolean($multiValueAttrib) else false()" as="xs:boolean"/>
                     <xslout:variable name="values" as="xs:string*" select="if ($isMultiValue) then for $v in $groups/element()[mapping:local-name(.)=$extName]/@value return tokenize($v,' ') else ($groups/element()[mapping:local-name(.)=$extName])[1]/@value"/>
-                    <xslout:if test="not(empty($values)) and not($values='')">
-                        <xslout:element name="attribute">
-                            <xslout:attribute name="name"><xslout:value-of select="$extName"/></xslout:attribute>
-                            <xslout:choose>
-                                <xslout:when test="$isMultiValue">
-                                    <xslout:attribute name="value" select="string-join($values,' ')"/>
-                                </xslout:when>
-                                <xslout:otherwise>
-                                    <xslout:attribute name="value" select="$values"/>
-                                </xslout:otherwise>
-                            </xslout:choose>
-                            <xslout:for-each select="($groups/element()[mapping:local-name(.)=$extName])[1]/@*[not(local-name(.) = ('value','type'))]">
-                                <xslout:attribute>
-                                    <xsl:attribute name="name">{name(.)}</xsl:attribute>
-                                    <xslout:value-of select="."/>
-                                </xslout:attribute>
-                            </xslout:for-each>
-                        </xslout:element>
-                    </xslout:if>
+                    <xslout:element name="attribute">
+                        <xslout:attribute name="name"><xslout:value-of select="$extName"/></xslout:attribute>
+                        <xslout:choose>
+                            <xslout:when test="$isMultiValue">
+                                <xslout:attribute name="value" select="string-join($values,' ')"/>
+                            </xslout:when>
+                            <xslout:otherwise>
+                                <xslout:attribute name="value" select="$values"/>
+                            </xslout:otherwise>
+                        </xslout:choose>
+                        <xslout:for-each select="($groups/element()[mapping:local-name(.)=$extName])[1]/@*[not(local-name(.) = ('value','type'))]">
+                            <xslout:attribute>
+                                <xsl:attribute name="name">{name(.)}</xsl:attribute>
+                                <xslout:value-of select="."/>
+                            </xslout:attribute>
+                        </xslout:for-each>
+                    </xslout:element>
                 </xslout:for-each>
             </xslout:template>
             <xslout:function name="mapping:get-attributes" as="xs:string*">

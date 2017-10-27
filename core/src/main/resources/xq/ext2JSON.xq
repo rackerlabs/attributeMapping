@@ -28,7 +28,7 @@ declare namespace auth = "http://docs.rackspace.com/identity/api/ext/RAX-AUTH/v1
 declare option output:method "json";
 declare option output:indent "yes";
 
-declare function auth:addAttributeValues ($a as element()) as item() {
+declare function auth:addAttributeValues ($a as element()) as item()? {
   let $values := for $v in $a/auth:value return string($v),
       $multiValue := if (exists($a/@multiValue)) then xs:boolean($a/@multiValue) else false()
     return if ($multiValue) then array {$values} else $values[1]

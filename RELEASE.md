@@ -3,6 +3,8 @@
 1. Clean up: Improve extended attributes in XML.
    1. Denote that `multiValue` attribute is `false` if not specifed.
    1. Ensure that SAML and internal namespaces don't leak into the `RAX-AUTH:extendedAttributes` element.
+1. An empty extended attribute is now represented as having a `null` value (or an empty array) in `RAX-AUTH:extendedAttributes` in JSON.
+   1. The previous behavior was to not output an extended attribute at all if it was empty.
 
 ## Release 2.1.1 (2017-10-24) ##
 1. Updated Dependency
