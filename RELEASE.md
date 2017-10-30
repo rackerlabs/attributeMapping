@@ -1,5 +1,5 @@
 # Releases #
-## In Progress Work ##
+## Release 2.2.0 (2017-10-30) ##
 1. Clean up: Improve extended attributes in XML.
    1. Denote that `multiValue` attribute is `false` if not specifed.
    1. Ensure that SAML and internal namespaces don't leak into the `RAX-AUTH:extendedAttributes` element.
