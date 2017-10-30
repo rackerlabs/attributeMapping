@@ -20,7 +20,7 @@
 
     <xs:complexType name="Attribute">
         <xs:sequence>
-            <xs:element name="value" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="multiValue" type="xs:boolean"

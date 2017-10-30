@@ -23,7 +23,7 @@
 
 
 <!-- Ensure that faws/nones is not set -->
-<?assert empty(/saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='faws/nones'])?>
+<?assert empty(/saml2p:Response/saml2:Assertion[1]/saml2:AttributeStatement/saml2:Attribute[@Name='faws/nones']/saml2:AttributeValue)?>
 
 <samlp:Response Consent="urn:oasis:names:tc:SAML:2.0:consent:unspecified"
     Destination="https://astra-pysaml-staging2.astra.rackspace.com/v2/acs"

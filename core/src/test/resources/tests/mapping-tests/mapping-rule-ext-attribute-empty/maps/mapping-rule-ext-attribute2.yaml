@@ -1,0 +1,29 @@
+---
+mapping:
+  version: RAX-1
+  rules:
+  - remote:
+    - path: "()"
+    - path: "()"
+      multiValue: true
+    local:
+      user:
+        domain: "{D}"
+        foo: "{0}"
+        bar:
+          value:
+            - "{1}"
+          multiValue: true
+        name: "{D}"
+        email: "{0}"
+        roles:
+          value:
+            - "{1}"
+          multiValue: true
+        expire: "{D}"
+      faws:
+        spolicy: "{0}"
+        policy:
+          value:
+          - "{1}"
+          multiValue: true
