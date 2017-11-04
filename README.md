@@ -44,7 +44,9 @@ mvn install
 You'll need to have Maven and Java in the system path.  Next add the
 ```bin``` directory to your system path. 
 
-## The docker way
+## The Docker way
+
+### Using the built image
 
 ````shell
 docker run -ti --rm dadean/attribmap --help
@@ -82,6 +84,13 @@ policy     Attribute mapping policy
 assertion  The assertion to translate based on policy
 
 output     Output file. If not specified, stdout will be used.
+````
+
+### Building locally
+
+````shell
+docker build -t attribmap .
+docker run -ti --rm attribmap --help
 ````
 
 ## CLI utilities
