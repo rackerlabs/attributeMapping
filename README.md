@@ -44,6 +44,46 @@ mvn install
 You'll need to have Maven and Java in the system path.  Next add the
 ```bin``` directory to your system path. 
 
+## The docker way
+
+````shell
+docker run -ti --rm dadean/attribmap --help
+Starting nailgun server...
+connect: Connection refused
+Nailgun not available...or just starting up...running attribmap directly
+Missing parameter(s): policy, assertion
+
+Attribute Mapper CLI (attribmap) v2.0.1
+
+Usage: attribmap [OPTIONS] policy assertion [output]
+
+OPTIONS
+
+-D
+--dont-validate          Disable Validation (Validation will be enabled by
+                         default)
+
+-h
+--help                   Display usage.
+
+-s
+--saml                   Output in SAML format
+
+--version                Display version.
+
+-x xsd-engine
+--xsd-engine xsd-engine  XSD Engine to use. Valid values are auto, saxon,
+                         xerces (default is auto)
+
+PARAMETERS
+
+policy     Attribute mapping policy
+
+assertion  The assertion to translate based on policy
+
+output     Output file. If not specified, stdout will be used.
+````
+
 ## CLI utilities
 
 1. attribmap : given a Mapping Policy and a SAML Request -- displays
