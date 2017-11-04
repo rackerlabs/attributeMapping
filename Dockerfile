@@ -23,6 +23,8 @@ WORKDIR /opt/attr
 
 RUN mvn clean install -Dmaven.test.skip=true
 
+RUN rm -rf /root/.m2
+
 ENV PATH="/opt/attr/bin:$PATH"
 
-ENTRYPOINT /opt/attr/bin/attribmap
+ENTRYPOINT ["/opt/attr/bin/attribmap"]

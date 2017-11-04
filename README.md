@@ -48,14 +48,14 @@ You'll need to have Maven and Java in the system path.  Next add the
 
 ### Using the built image
 
+Check the version of attribmap
+
 ````shell
-docker run -ti --rm dadean/attribmap --help
+docker run -ti  -v $(pwd):/opt/dima -w=/opt/dima dadean/attribmap --help
 Starting nailgun server...
-connect: Connection refused
-Nailgun not available...or just starting up...running attribmap directly
 Missing parameter(s): policy, assertion
 
-Attribute Mapper CLI (attribmap) v2.0.1
+Attribute Mapper Nailgun Server v2.2.1-SNAPSHOT
 
 Usage: attribmap [OPTIONS] policy assertion [output]
 
@@ -85,6 +85,34 @@ assertion  The assertion to translate based on policy
 
 output     Output file. If not specified, stdout will be used.
 ````
+
+Create a policy.yaml with a mapping policy and assert.xml with a SAML response
+
+````shell
+docker run -ti  -v $(pwd):/opt/dima -w=/opt/dima dadean/attribmap policy.yaml assert.xml
+Starting nailgun server...
+Xerces validation
+ {
+  "local": {
+    "user": {
+      "domain":"domain123",
+      "name":"Userb4b9c279-7981-40d5-a778-c423872ab733",
+      "email":"",
+      "expire":"2017-11-03T22:36:33.060Z"
+     },
+    "faws": {
+      "groups": {
+        "value": [
+          
+         ],
+        "multiValue":true
+       }
+     }
+   }
+ }
+ ````
+
+ You can also run a specific version by specifying the tag (currently only supports 2.2.1)
 
 ### Building locally
 
