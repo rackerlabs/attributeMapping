@@ -82,13 +82,18 @@ object AttributeMapper {
   final val FN_NS_PREFIX = "fn"
   final val FN_NS_URI = "http://www.w3.org/2005/xpath-functions"
 
-  val processor = {
+  def newProcessor : Processor = {
     val p = new Processor(true)
     val dynLoader = p.getUnderlyingConfiguration.getDynamicLoader
     dynLoader.setClassLoader(getClass.getClassLoader)
     p
   }
-  private val internalProcessor = {
+
+  def newCompiler : XsltCompiler = newProcessor.newXsltCompiler
+
+  val processor = newProcessor
+
+  private def internalProcessor : Processor = {
     val p = new Processor(processor.getUnderlyingConfiguration)
     p.registerExtensionFunction(new ValidateXPathFunction(p.getUnderlyingConfiguration))
     p
@@ -99,7 +104,7 @@ object AttributeMapper {
     val c = processor.newXQueryCompiler
     c
   }
-  private val internalXPathCompiler = {
+  private def internalXPathCompiler : XPathCompiler = {
     val c = internalProcessor.newXPathCompiler()
     c.setLanguageVersion(XQUERY_VERSION_STRING)
     c.declareNamespace(MAPPING_NS_PREFIX, MAPPING_NS_URI)
@@ -110,7 +115,7 @@ object AttributeMapper {
   private val mapperXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/mapping.xsl").toString))
   private lazy val mapper2JSONExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2JSON.xq"))
   private lazy val mapper2XMLExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2XML.xq"))
-  private lazy val validateXPathExec = internalXPathCompiler.compile(
+  private def validateXPathExec : XPathExecutable = internalXPathCompiler.compile(
     """
       (:
           These are easy XPath remotes, we simply check all of these XPaths.
@@ -309,7 +314,7 @@ object AttributeMapper {
     val outXSL = new XdmDestination
 
     generateXSL (policy, outXSL, validate, xsdEngine)
-    compiler.compile(outXSL.getXdmNode.asSource)
+    newCompiler.compile(outXSL.getXdmNode.asSource)
   }
 
   def generateXSLExec (policy : Document, validate : Boolean, xsdEngine : String) : XsltExecutable = {
