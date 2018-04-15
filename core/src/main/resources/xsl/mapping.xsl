@@ -13,6 +13,15 @@
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
     <!--
+        Import xpathRules as defixed by xpath-31-rules.xml.
+
+        We need this to get the list of common namespaces available
+        in XPaths by default.
+    -->
+    <xsl:import href="xpath-31-rules.xsl"/>
+
+
+    <!--
         Don't expect the location of defaults to change, but
         specifying as a param will be useful for testing.
     -->
@@ -31,6 +40,9 @@
         <xslout:transform version="3.0" xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
             <xsl:copy-of select="/mapping:mapping/namespace::*"/>
             <xsl:copy-of select="$defaults/mapping:attribute-defaults/namespace::*"/>
+            <xsl:for-each select="map:keys($commonNS)">
+                <xsl:namespace name="{.}" select="$commonNS(.)"/>
+            </xsl:for-each>
             <xslout:param name="outputSAML" as="xs:boolean" select="false()"/>
             <xslout:param name="params" as="map(xs:string, xs:string)">
                 <xslout:map/>

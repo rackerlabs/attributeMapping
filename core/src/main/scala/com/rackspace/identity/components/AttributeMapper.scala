@@ -32,6 +32,8 @@ import com.rackspace.com.papi.components.checker.util.XMLParserPool
 import net.sf.saxon.Configuration.LicenseFeature._
 import net.sf.saxon.s9api._
 import net.sf.saxon.serialize.MessageWarner
+import net.sf.saxon.trans.XPathException
+import net.sf.saxon.lib.FeatureKeys
 import org.w3c.dom.Document
 
 import scala.util.Try
@@ -77,10 +79,10 @@ object AttributeMapper {
   final val MAPPING_NS_URI = "http://docs.rackspace.com/identity/api/ext/MappingRules"
 
   //
-  //  THe namespaces components for the "fn" namespace.
+  //  THe namespaces components for the "map" namespace.
   //
-  final val FN_NS_PREFIX = "fn"
-  final val FN_NS_URI = "http://www.w3.org/2005/xpath-functions"
+  final val MAP_NS_PREFIX = "map"
+  final val MAP_NS_URI = "http://www.w3.org/2005/xpath-functions/map"
 
   def newProcessor : Processor = {
     val p = new Processor(true)
@@ -91,11 +93,21 @@ object AttributeMapper {
 
   def newCompiler : XsltCompiler = newProcessor.newXsltCompiler
 
-  val processor = newProcessor
+  val processor = {
+    val p = newProcessor
 
-  private def internalProcessor : Processor = {
-    val p = new Processor(processor.getUnderlyingConfiguration)
-    p.registerExtensionFunction(new ValidateXPathFunction(p.getUnderlyingConfiguration))
+    //
+    // Suppress the XSLT warning.  We have stylesheets that extract
+    // things in namespaces outside of the namespace of the root
+    // document (in SAML).
+    //
+    p.setConfigurationProperty(FeatureKeys.SUPPRESS_XSLT_NAMESPACE_CHECK, true)
+
+    //
+    //  Register the XPath parser as an extension function.
+    //
+    p.registerExtensionFunction(new XPath31Parse.SaxonDefinition_XPath())
+
     p
   }
 
@@ -104,46 +116,30 @@ object AttributeMapper {
     val c = processor.newXQueryCompiler
     c
   }
-  private def internalXPathCompiler : XPathCompiler = {
-    val c = internalProcessor.newXPathCompiler()
+  val xpathCompiler = {
+    val c = processor.newXPathCompiler()
     c.setLanguageVersion(XQUERY_VERSION_STRING)
     c.declareNamespace(MAPPING_NS_PREFIX, MAPPING_NS_URI)
-    c.declareNamespace(FN_NS_PREFIX, FN_NS_URI)
+    c.declareNamespace(MAP_NS_PREFIX, MAP_NS_URI)
     c
   }
 
   private val mapperXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/mapping.xsl").toString))
+  private val xpathValXsltExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/xpath-31-validate.xsl").toString))
+  private val getErrorsXPathExec = xpathCompiler.compile(
+    """
+       (:
+           Taking a very simple approach for now. We are returning the first
+           error only as a map with the error attributes.
+        :)
+       let $firstError := /mapping:errors/mapping:error[1]
+           return if ($firstError) then map:merge(
+             for $attr in $firstError/@* return
+                map:entry(local-name($attr), string($attr))
+           ) else ()
+    """)
   private lazy val mapper2JSONExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2JSON.xq"))
   private lazy val mapper2XMLExec = xqueryCompiler.compile(getClass.getResourceAsStream("/xq/mapping2XML.xq"))
-  private def validateXPathExec : XPathExecutable = internalXPathCompiler.compile(
-    """
-      (:
-          These are easy XPath remotes, we simply check all of these XPaths.
-      :)
-      let $paths := for $path in //mapping:remote/mapping:attribute[@path]/@path
-                    return mapping:validate-xpath(/mapping:mapping, $path),
-
-      (:
-          Get all of the local values that have the string '{Pt' somewhere in the template.
-      :)
-      $localValuesWithXPaths := //mapping:local//mapping:*[@value and matches(@value,'\{Pt')]/@value,
-
-      (:
-          Analyze the local values, our regex puts the xpath in a capture group.
-          We store the result of analyze-string, which should give us all the capture groups!
-      :)
-      $localXPathMatches := for $value in $localValuesWithXPaths return analyze-string($value, '\{Pts?\((.*?)\)\}', 'ms'),
-
-      (:
-          Run Validate XPath on every capture group.
-      :)
-      $localXPaths := for $path in $localXPathMatches//fn:group
-                          return mapping:validate-xpath(/mapping:mapping, string($path))
-
-      return ($paths, $localXPaths)
-    """
-  )
-
   private lazy val mappingXSDSource = new StreamSource(getClass.getResource("/xsd/mapping.xsd").toString)
 
   private lazy val extractExtExec = compiler.compile(new StreamSource(getClass.getResource("/xsl/extract-ext.xsl").toString))
@@ -240,15 +236,37 @@ object AttributeMapper {
   def validatePolicy (policy : Source, engineStr : String) : Source = {
     val docBuilder = processor.newDocumentBuilder
     val xdmPolicy = docBuilder.build(policy)
+    val outXPathErrors = new XdmDestination
 
     //
-    // Pre-parse the source to verify that XPath expressions are acceptable.
+    //  Validate policy against schema first.
     //
-    val xpathSelector = validateXPathExec.load()
-    xpathSelector.setContextItem(xdmPolicy)
-    xpathSelector.evaluate()
+    val goodPolicy = validate(xdmPolicy.asSource, engineStr, mappingSchema, mappingSchemaManager)
 
-    validate(xdmPolicy.asSource, engineStr, mappingSchema, mappingSchemaManager)
+    //
+    //  Then check XPath rules.
+    //
+    val validateXPathTrans = getXsltTransformer(xpathValXsltExec)
+    validateXPathTrans.setSource(goodPolicy)
+    validateXPathTrans.setDestination(outXPathErrors)
+    validateXPathTrans.transform()
+
+    val errorSelector = getErrorsXPathExec.load
+    errorSelector.setContextItem(outXPathErrors.getXdmNode)
+    val error = errorSelector.evaluateSingle
+
+    //
+    //  If we have an error throw an XPathException!
+    //
+    if (error != null) {
+      val errorMap = error.asMap
+      val msg      = errorMap.get(new XdmAtomicValue("msg"))
+      val inXPath  = errorMap.get(new XdmAtomicValue("inXPath"))
+
+      throw new XPathException(s"$msg in XPath: $inXPath")
+    }
+
+    goodPolicy
   }
 
   def validatePolicy (policy : JsonNode, engineStr : String) : JsonNode = {

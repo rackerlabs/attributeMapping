@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified"
+           targetNamespace="http://docs.rackspace.com/identity/api/ext/MappingRules"
+           xmlns:saxon="http://saxon.sf.net/"
+           xmlns:xerces="http://xerces.apache.org"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:mapping='http://docs.rackspace.com/identity/api/ext/MappingRules'>
+
+    <xs:element name="xpath-validate-rules" type="mapping:ValidateRules"/>
+
+    <!-- Complex Types -->
+    <xs:complexType name="ValidateRules">
+        <xs:all>
+            <xs:element name="common"  type="mapping:NS">
+                <xs:annotation>
+                    <xs:documentation>
+                        These are the common namespaces that will be
+                        predefind in XPaths.  This means that they
+                        do not need to be declared in mapping
+                        policies.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allowed" type="mapping:NS">
+                <xs:annotation>
+                    <xs:documentation>
+                        Only functions in these namespaces will be allowed. Any
+                        function in a different namespace will be rejected.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="blocked" type="mapping:Funs">
+                <xs:annotation>
+                    <xs:documentation>
+                        The following functions will be blocked. If the function
+                        is encountered anywhere in an XPath the mapping policy
+                        will not validate.
+
+                        Please note that functions must be specified with an
+                        appropriate namespace prefix.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="NS">
+        <xs:attribute name="ns" use="required" type="mapping:NSList"/>
+        <xs:assert test="every $ns in data(@ns) satisfies $ns = in-scope-prefixes(.)"
+             saxon:message="All items in ns must be in scope prefixes"
+             xerces:message="All items in ns must be in scope prefixes"/>
+    </xs:complexType>
+
+    <xs:complexType name="Funs">
+        <xs:attribute name="funs" use="required" type="mapping:FunList"/>
+        <xs:assert test="every $f in data(@funs) satisfies contains(string($f),':')"
+          saxon:message="Function names must be prefixed"
+          xerces:message="Function names must be prefixed"/>
+    </xs:complexType>
+
+    <!-- Simple Types -->
+    <xs:simpleType name="NSList">
+        <xs:list itemType="xs:NCName"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="FunList">
+        <xs:list itemType="xs:QName"/>
+    </xs:simpleType>
+
+</xs:schema>

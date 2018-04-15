@@ -16,8 +16,9 @@
   if a param exists the value will be used, if not, the next location
   will be tried.
 
-  For now, namespaces available to XPaths must be defined in the root
-  element of this file.
+  Namespaces available to XPaths must be <common /> namespaces as
+  defined in xpath-31-rules.xml. In additon, custom namespaces may
+  also be defined on the root element of this file.
 
   For now, you are allowed to set defaults only for standard
   attributes.  Setting defaults for extended attributes is not
@@ -48,10 +49,7 @@
     <location saml-attribute="0.9.2342.19200300100.1.3"/>
   '>
 ]>
-<attribute-defaults
-    xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
-    xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol">
+<attribute-defaults xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
 
     <attribute name="name">
         <!--

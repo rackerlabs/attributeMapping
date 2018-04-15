@@ -17,7 +17,7 @@ package com.rackspace.identity.components
 
 import java.io.File
 
-import javax.xml.validation.{Schema, SchemaFactory}
+import javax.xml.validation.Schema
 
 import javax.xml.transform.stream.StreamSource
 
@@ -43,16 +43,6 @@ import AttributeMapperBase._
 
 @RunWith(classOf[JUnitRunner])
 class ValidateDefaultsSuite extends AttributeMapperBase {
-
-  private lazy val schemaFactory = {
-    val sf = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1", "org.apache.xerces.jaxp.validation.XMLSchema11Factory",
-                              this.getClass.getClassLoader)
-    //
-    //  Enable CTA full XPath2.0 checking in XSD 1.1
-    //
-    sf.setFeature ("http://apache.org/xml/features/validation/cta-full-xpath-checking", true)
-    sf
-  }
 
   private lazy val defaultsSchema = schemaFactory.newSchema(new StreamSource(getClass.getResource("/xsd/defaults.xsd").toString))
 
