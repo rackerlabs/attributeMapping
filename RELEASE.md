@@ -1,5 +1,5 @@
 # Releases #
-## In Progress Work ##
+## Release 2.2.1 (2018-04-16) ##
 1. Fixed a memory leak when compiling and validating policies.
 
 ## Release 2.2.0 (2017-10-30) ##
