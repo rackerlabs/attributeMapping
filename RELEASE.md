@@ -1,4 +1,7 @@
 # Releases #
+## In Progress Work ##
+1. Fixed a memory leak when compiling and validating policies.
+
 ## Release 2.2.0 (2017-10-30) ##
 1. Clean up: Improve extended attributes in XML.
    1. Denote that `multiValue` attribute is `false` if not specifed.
