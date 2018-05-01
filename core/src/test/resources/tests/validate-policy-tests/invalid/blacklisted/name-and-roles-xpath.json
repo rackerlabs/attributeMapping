@@ -1,0 +1,26 @@
+ {
+  "mapping": {
+    "rules": [
+       {
+        "remote": [
+           {
+            "path":"json-doc('\/tmp\/doc.json')?foo",
+            "multiValue":true
+           }
+         ],
+        "local": {
+          "user": {
+            "domain":"78334",
+            "name":"{D}",
+            "email":"{D}",
+            "roles": [
+              "{0}"
+             ],
+            "expire":"{D}"
+           }
+         }
+       }
+     ],
+    "version":"RAX-1"
+   }
+ }

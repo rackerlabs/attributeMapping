@@ -1,4 +1,9 @@
 # Releases #
+## In Progress Work ##
+1. Block new XPath 3.1 functions such as json-doc.
+   1. We now use a REx based XPath 3.1 parser as the Saxon parser does not produce a clean parse tree.
+1. Clean up: Include log4j2 config files in CLI utils and tests so that messages are not lost.
+
 ## Release 2.2.1 (2018-04-16) ##
 1. Fixed a memory leak when compiling and validating policies.
 

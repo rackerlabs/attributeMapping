@@ -24,6 +24,8 @@ import java.io.ByteArrayInputStream
 import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
 
+import javax.xml.validation.SchemaFactory
+
 import javax.xml.xpath.XPathExpression
 import javax.xml.xpath.XPathConstants
 
@@ -55,6 +57,24 @@ object AttributeMapperBase {
 import AttributeMapperBase._
 
 class AttributeMapperBase extends FunSuite {
+
+  lazy val schemaFactory = {
+    if (validators.contains("saxon")) {
+      val sf = new com.saxonica.ee.jaxp.SchemaFactoryImpl()
+
+      sf.setProperty("http://saxon.sf.net/feature/xsd-version","1.1")
+      sf
+    } else {
+      val sf = SchemaFactory.newInstance("http://www.w3.org/XML/XMLSchema/v1.1", "org.apache.xerces.jaxp.validation.XMLSchema11Factory",
+                              this.getClass.getClassLoader)
+      //
+      //  Enable CTA full XPath2.0 checking in XSD 1.1
+      //
+      sf.setFeature ("http://apache.org/xml/features/validation/cta-full-xpath-checking", true)
+      sf
+    }
+  }
+
   val testerXSLExec = AttributeMapper.compiler.compile (new StreamSource(new File("src/test/resources/xsl/mapping-tests.xsl")))
   val testerJsonXSLExec = AttributeMapper.compiler.compile (new StreamSource(new File("src/test/resources/xsl/mapping-tests-json.xsl")))
 
