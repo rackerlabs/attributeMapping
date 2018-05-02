@@ -91,8 +91,6 @@ object AttributeMapper {
     p
   }
 
-  def newCompiler : XsltCompiler = newProcessor.newXsltCompiler
-
   val processor = {
     val p = newProcessor
 
@@ -332,7 +330,7 @@ object AttributeMapper {
     val outXSL = new XdmDestination
 
     generateXSL (policy, outXSL, validate, xsdEngine)
-    newCompiler.compile(outXSL.getXdmNode.asSource)
+    compiler.compile(outXSL.getXdmNode.asSource)
   }
 
   def generateXSLExec (policy : Document, validate : Boolean, xsdEngine : String) : XsltExecutable = {
