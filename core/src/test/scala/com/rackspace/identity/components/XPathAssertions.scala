@@ -23,7 +23,6 @@ import javax.xml.namespace.QName
 
 import javax.xml.xpath.XPathExpression
 import javax.xml.xpath.XPathConstants
-import javax.xml.xpath.XPathException
 
 import org.scalatest.exceptions.TestFailedException
 
@@ -68,7 +67,7 @@ trait XPathAssertions {
         throw new TestFailedException (s"XPath expression does not evaluate to true(): $xpathString", 4) // scalastyle:ignore
       }
     } catch {
-      case xpe : XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, 4) // scalastyle:ignore
+      case xpe : javax.xml.xpath.XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, 4) // scalastyle:ignore
       case tf : TestFailedException => throw tf
       case unknown : Throwable => throw new TestFailedException(s"Unknown error in XPath $xpathString", 4) // scalastyle:ignore
     } finally {
@@ -87,7 +86,7 @@ trait XPathAssertions {
         throw new TestFailedException (s"XPath expression does not evaluate to true(): $xpathString", 4) // scalastyle:ignore
       }
     } catch {
-      case xpe : XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, 4) // scalastyle:ignore
+      case xpe : javax.xml.xpath.XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, 4) // scalastyle:ignore
       case tf : TestFailedException => throw tf
       case unknown : Throwable => throw new TestFailedException(s"Unknown error in XPath $xpathString", 4) // scalastyle:ignore
     } finally {

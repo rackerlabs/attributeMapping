@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         version="RAX-1">
+   <rules>
+      <rule>
+         <local>
+            <user>
+               <domain value="5821006"/>
+               <name value="{D}"/>
+               <email value="{1}"/>
+               <roles value="{0}" multiValue="55"/>
+               <expire value="{D}"/>
+            </user>
+         </local>
+         <remote>
+            <attribute name="http://schemas.xmlsoap.org/claims/Group" multiValue="true"/>
+            <attribute name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"/>
+         </remote>
+      </rule>
+   </rules>
+</mapping>

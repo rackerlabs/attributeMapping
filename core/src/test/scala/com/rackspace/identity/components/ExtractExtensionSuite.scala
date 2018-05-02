@@ -20,7 +20,6 @@ import java.io.File
 
 import javax.xml.xpath.XPathExpression
 import javax.xml.xpath.XPathConstants
-import javax.xml.xpath.XPathException
 
 import javax.xml.transform.Source
 import javax.xml.transform.stream.StreamSource
@@ -204,7 +203,7 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
       exp = borrowExpression(xpathString,nsContext, XPATH_VERSION)
       exp.evaluate (assert, XPathConstants.BOOLEAN).asInstanceOf[Boolean]
     } catch {
-      case xpe : XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, 4) // scalastyle:ignore
+      case xpe : javax.xml.xpath.XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, 4) // scalastyle:ignore
       case tf : TestFailedException => throw tf
       case unknown : Throwable => throw new TestFailedException(s"Unknown error in XPath $xpathString", 4) // scalastyle:ignore
     } finally {

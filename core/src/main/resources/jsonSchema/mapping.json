@@ -1,0 +1,170 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "JSON schema for mapping policy",
+    "description" : "A schema for a mapping policy in JSON and YAML. Only captures basic structure, enough to ensure XML translation is successful. Better validation and default value insertion takes place in XML land via the mapping.xsd.",
+    "type": "object",
+    "properties" : {
+        "mapping" : {
+            "$ref" : "#/definitions/mapping"
+        }
+    },
+    "additionalProperties" : false,
+    "required" : ["mapping"],
+    "definitions" : {
+        "mapping" : {
+            "type" : "object",
+            "properties" : {
+                "version" : {
+                    "type" : "string"
+                },
+                "description" : {
+                    "type" : "string"
+                },
+                "rules" : {
+                    "$ref" : "#/definitions/rules"
+                },
+                "namespaces" : {
+                    "$ref" : "#/definitions/namespaces"
+                }
+            },
+            "required" : ["rules"],
+            "additionalProperties" : false
+        },
+        "namespaces" : {
+            "type" : "object",
+            "description" : "Prefix to URL. The prefix should be a valid NCName.",
+            "patternProperties" : {
+                "^[a-zA-Z_][a-zA-Z0-9._-]*$" : {
+                    "type" : "string"
+                }
+            },
+            "additionalProperties" : false
+        },
+        "rules" : {
+            "type" : "array",
+            "minItems" : 1,
+            "items" : {
+                "$ref" : "#/definitions/rule"
+            },
+            "additionalItems" : false
+        },
+        "rule" : {
+            "type" : "object",
+            "properties" : {
+                "local" : {
+                    "$ref" : "#/definitions/localPart"
+                },
+                "remote" : {
+                    "$ref" : "#/definitions/remotePart"
+                }
+            },
+            "required" : ["local"],
+            "additionalProperties" : false
+        },
+        "localPart" : {
+            "type" : "object",
+            "patternProperties" : {
+                "^[a-zA-Z_][a-zA-Z0-9._-]*$" : {
+                    "$ref" : "#/definitions/localGroup"
+                }
+            },
+            "additionalProperties" : false
+        },
+        "localGroup" : {
+            "type" : "object",
+            "patternProperties" : {
+                ".*" : {
+                  "$ref" : "#/definitions/localAttribute"
+                }
+            },
+            "additionalProperties" : false
+        },
+        "remotePart" : {
+            "type" : "array",
+            "items" : {
+                "type" : "object",
+                "properties" : {
+                    "notAnyOf" : {
+                        "$ref" : "#/definitions/attributeValueList"
+                    },
+                    "anyOneOf" : {
+                        "$ref" : "#/definitions/attributeValueList"
+                    },
+                    "blacklist" : {
+                        "$ref" : "#/definitions/attributeValueList"
+                    },
+                    "whitelist" : {
+                        "$ref" : "#/definitions/attributeValueList"
+                    },
+                    "regex" : {
+                        "type" : "boolean"
+                    },
+                    "name" : {
+                        "type" : "string"
+                    },
+                    "path" : {
+                        "type" : "string"
+                    },
+                    "multiValue" : {
+                        "type" : "boolean"
+                    }
+                },
+                "additionalProperties" : false
+            },
+            "additionalItems" : false
+        },
+        "attributeValueList" : {
+            "description" : "A list of attribute values. Single items list can be represented as a single value, multi-items as an array.",
+            "oneOf" : [
+                {
+                    "$ref" : "#/definitions/attributeValue"
+                },
+                {   "type" : "array",
+                    "items" : {
+                        "$ref" : "#/definitions/attributeValue"
+                    }
+                }
+            ]
+        },
+        "attributeValue" : {
+            "description" : "An attribute value may be any datatype except a null",
+            "oneOf" : [
+                {
+                    "type" : "string"
+                },
+                {
+                    "type" : "boolean"
+                },
+                {
+                    "type" : "number"
+                }
+            ]
+        },
+        "localAttribute" : {
+            "description" : "A local attribute can be a string or an attribute object",
+            "oneOf" : [
+                {
+                    "$ref" : "#/definitions/attributeValueList"
+                },
+                {
+                    "$ref" : "#/definitions/localAttributeObject"
+                }
+            ]
+        },
+        "localAttributeObject" : {
+            "type" : "object",
+            "properties" : {
+                "value" : {
+                    "$ref" : "#/definitions/attributeValueList"
+                },
+                "multiValue" : {
+                    "type" : "boolean"
+                },
+                "type" : {
+                    "type" : "string"
+                }
+            },
+            "additionalProperties" : false
+        }
+    }
+}

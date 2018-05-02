@@ -1,0 +1,4 @@
+<error-message xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <contains>fo::</contains>
+    <contains>not allowed</contains>
+</error-message>

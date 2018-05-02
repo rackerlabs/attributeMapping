@@ -22,7 +22,7 @@ import javax.xml.transform.stream.StreamSource
 
 import com.martiansoftware.nailgun.NGContext
 import com.rackspace.com.papi.components.checker.util.URLResolver
-import com.rackspace.identity.components.{AttributeMapper, PolicyFormat}
+import com.rackspace.identity.components.{AttributeMapper, PolicyFormat, KnownAttributeMapperException}
 import net.sf.saxon.s9api.Destination
 import org.clapper.argot.ArgotConverters._
 import org.clapper.argot.{ArgotParser, ArgotUsageException}
@@ -101,12 +101,16 @@ object AttribMap2XSL {
   // Local run...
   //
   def main(args : Array[String]): Unit = {
-    parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
-               System.in, System.out, System.err) match {
-      case Some((policy : Source, policyFormat : PolicyFormat.Value, dest : Destination,
-                 validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.generateXSL (policy, policyFormat, dest, validate, xsdEngine)
-      case None => /* Bad args, Ignore */
+    try {
+      parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
+        System.in, System.out, System.err) match {
+        case Some((policy : Source, policyFormat : PolicyFormat.Value, dest : Destination,
+          validate : Boolean, xsdEngine : String)) =>
+          AttributeMapper.generateXSL (policy, policyFormat, dest, validate, xsdEngine)
+        case None => /* Bad args, Ignore */
+      }
+    } catch {
+      case e : KnownAttributeMapperException => System.err.println(e.getMessage) // scalastyle:ignore
     }
   }
 
@@ -114,12 +118,16 @@ object AttribMap2XSL {
   // Nailgun run...
   //
   def nailMain(context : NGContext): Unit = {
-    parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
-               context.in, context.out, context.err) match {
-      case Some((policy : Source, policyFormat : PolicyFormat.Value, dest : Destination,
-      validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.generateXSL (policy, policyFormat, dest, validate, xsdEngine)
-      case None => /* Bad args, Ignore */
+    try {
+      parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
+        context.in, context.out, context.err) match {
+        case Some((policy : Source, policyFormat : PolicyFormat.Value, dest : Destination,
+          validate : Boolean, xsdEngine : String)) =>
+          AttributeMapper.generateXSL (policy, policyFormat, dest, validate, xsdEngine)
+        case None => /* Bad args, Ignore */
+      }
+    } catch {
+      case e : KnownAttributeMapperException => context.err.println(e.getMessage) // scalastyle:ignore
     }
   }
 }
