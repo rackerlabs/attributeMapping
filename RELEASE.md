@@ -1,5 +1,5 @@
 # Releases #
-## In Progress Work ##
+## Release 2.3.0 (2018-05-08) ##
 1. Block new XPath 3.1 functions such as json-doc.
    1. We now use a REx based XPath 3.1 parser as the Saxon parser does not produce a clean parse tree.
 1. Clean up: Include log4j2 config files in CLI utils and tests so that messages are not lost.
