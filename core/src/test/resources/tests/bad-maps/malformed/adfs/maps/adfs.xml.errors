@@ -1,0 +1,5 @@
+<error-message xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <contains>attribute</contains>
+    <contains>"&gt;" or "/&gt;"</contains>
+    <contains>lineNumber: 19</contains>
+</error-message>

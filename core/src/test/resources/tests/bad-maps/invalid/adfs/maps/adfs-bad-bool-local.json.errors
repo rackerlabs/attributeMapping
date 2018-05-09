@@ -1,0 +1,5 @@
+<error-message xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <contains>integer</contains>
+    <contains>does not match</contains>
+    <contains>boolean</contains>
+</error-message>

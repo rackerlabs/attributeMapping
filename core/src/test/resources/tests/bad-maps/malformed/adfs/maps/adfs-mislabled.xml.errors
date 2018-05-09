@@ -1,0 +1,4 @@
+<error-message xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <contains>Content is not allowed in prolog</contains>
+    <contains>lineNumber: 1</contains>
+</error-message>

@@ -35,6 +35,7 @@ import net.sf.saxon.s9api.Destination
 import com.rackspace.com.papi.components.checker.util.URLResolver
 
 import com.rackspace.identity.components.AttributeMapper
+import com.rackspace.identity.components.KnownAttributeMapperException
 
 object SAML2Ext {
   val title = getClass.getPackage.getImplementationTitle
@@ -114,11 +115,15 @@ object SAML2Ext {
   // Local run...
   //
   def main(args : Array[String]): Unit = {
-    parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
-               System.in, System.out, System.err) match {
-      case Some((saml : Source,  dest : Destination, validate : Boolean, xsdEngine : String, asJSON : Boolean)) =>
-        AttributeMapper.extractExtendedAttributes (saml,  dest, asJSON, validate, xsdEngine)
-      case None => /* Bad args, Ignore */
+    try {
+      parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
+        System.in, System.out, System.err) match {
+        case Some((saml : Source,  dest : Destination, validate : Boolean, xsdEngine : String, asJSON : Boolean)) =>
+          AttributeMapper.extractExtendedAttributes (saml,  dest, asJSON, validate, xsdEngine)
+        case None => /* Bad args, Ignore */
+      }
+    } catch {
+      case e : KnownAttributeMapperException => System.err.println(e.getMessage) // scalastyle:ignore
     }
   }
 
@@ -126,11 +131,15 @@ object SAML2Ext {
   // Nailgun run...
   //
   def nailMain(context : NGContext): Unit = {
-    parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
-               context.in, context.out, context.err) match {
-      case Some((saml : Source,  dest : Destination, validate : Boolean, xsdEngine : String, asJSON : Boolean)) =>
-        AttributeMapper.extractExtendedAttributes (saml,  dest, asJSON, validate, xsdEngine)
-      case None => /* Bad args, Ignore */
+    try {
+      parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
+        context.in, context.out, context.err) match {
+        case Some((saml : Source,  dest : Destination, validate : Boolean, xsdEngine : String, asJSON : Boolean)) =>
+          AttributeMapper.extractExtendedAttributes (saml,  dest, asJSON, validate, xsdEngine)
+        case None => /* Bad args, Ignore */
+      }
+    } catch {
+      case e : KnownAttributeMapperException => context.err.println(e.getMessage) // scalastyle:ignore
     }
   }
 }

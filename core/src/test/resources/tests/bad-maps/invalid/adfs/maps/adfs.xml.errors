@@ -1,0 +1,5 @@
+<error-message xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <contains>booga</contains>
+    <contains>is not allowed</contains>
+    <contains>roles</contains>
+</error-message>

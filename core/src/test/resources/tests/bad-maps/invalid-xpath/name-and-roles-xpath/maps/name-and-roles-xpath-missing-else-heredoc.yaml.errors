@@ -1,0 +1,6 @@
+<error-message xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <contains>syntax error</contains>
+    <contains>expecting</contains>
+    <contains>else</contains>
+    <contains>in XPath</contains>
+</error-message>
