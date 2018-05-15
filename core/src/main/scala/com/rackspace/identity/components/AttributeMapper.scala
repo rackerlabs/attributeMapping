@@ -561,7 +561,7 @@ object AttributeMapper {
     generateXSLExec (new DOMSource(policy), PolicyFormat.XML, validate, xsdEngine)
   }
 
-  def parseJsonNode (source : StreamSource) : JsonNode = {
+  def parseJsonNode (source : StreamSource) : JsonNode = handleExceptions[JsonNode] {
     val om = new ObjectMapper()
 
     if (source.getInputStream != null) {
@@ -573,7 +573,7 @@ object AttributeMapper {
     }
   }
 
-  def parseYamlNode (source : StreamSource) : JsonNode = {
+  def parseYamlNode (source : StreamSource) : JsonNode = handleExceptions[JsonNode] {
     val om = new ObjectMapper(new YAMLFactory())
 
     if (source.getInputStream != null) {
