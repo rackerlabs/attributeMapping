@@ -15,26 +15,18 @@
  */
 package com.rackspace.identity.components
 
-import scala.collection.mutable.Map
-import scala.collection.mutable.HashMap
-
-import javax.xml.transform.Source
-import javax.xml.namespace.QName
-
-import javax.xml.xpath.XPathExpression
-import javax.xml.xpath.XPathConstants
-
-import org.scalatest.exceptions.TestFailedException
-
 import com.fasterxml.jackson.databind.JsonNode
-
-import com.rackspace.com.papi.components.checker.util.ImmutableNamespaceContext
-import com.rackspace.com.papi.components.checker.util.XPathExpressionPool._
-import com.rackspace.com.papi.components.checker.util.XMLParserPool._
 import com.rackspace.com.papi.components.checker.util.JSONConverter._
-import com.rackspace.com.papi.components.checker.util.VarXPathExpression
-
+import com.rackspace.com.papi.components.checker.util.XMLParserPool._
+import com.rackspace.com.papi.components.checker.util.XPathExpressionPool._
+import com.rackspace.com.papi.components.checker.util.{ImmutableNamespaceContext, VarXPathExpression}
+import com.rackspace.identity.components.TestConstants.FAILED_TEST_STACK_DEPTH
+import javax.xml.namespace.QName
+import javax.xml.xpath.{XPathConstants, XPathExpression}
+import org.scalatest.exceptions.TestFailedException
 import org.w3c.dom.Document
+
+import scala.collection.mutable.{HashMap, Map}
 
 object XPathAssertions {
   val XPATH_VERSION = 31
@@ -64,12 +56,12 @@ trait XPathAssertions {
     try {
       exp = borrowExpression(xpathString, nsContext, XPATH_VERSION)
       if (!exp.evaluate(src, XPathConstants.BOOLEAN).asInstanceOf[Boolean]) {
-        throw new TestFailedException (s"XPath expression does not evaluate to true(): $xpathString", 4) // scalastyle:ignore
+        throw new TestFailedException (s"XPath expression does not evaluate to true(): $xpathString", FAILED_TEST_STACK_DEPTH)
       }
     } catch {
-      case xpe : javax.xml.xpath.XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, 4) // scalastyle:ignore
+      case xpe : javax.xml.xpath.XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, FAILED_TEST_STACK_DEPTH)
       case tf : TestFailedException => throw tf
-      case unknown : Throwable => throw new TestFailedException(s"Unknown error in XPath $xpathString", 4) // scalastyle:ignore
+      case unknown : Throwable => throw new TestFailedException(s"Unknown error in XPath $xpathString", FAILED_TEST_STACK_DEPTH)
     } finally {
       if (exp != null) returnExpression (xpathString, nsContext, XPATH_VERSION, exp)
     }
@@ -83,12 +75,12 @@ trait XPathAssertions {
     try {
       exp = borrowExpression(xpathString, nsContext, XPATH_VERSION).asInstanceOf[VarXPathExpression]
       if (!exp.evaluate(inDoc, XPathConstants.BOOLEAN, vars).asInstanceOf[Boolean]) {
-        throw new TestFailedException (s"XPath expression does not evaluate to true(): $xpathString", 4) // scalastyle:ignore
+        throw new TestFailedException (s"XPath expression does not evaluate to true(): $xpathString", FAILED_TEST_STACK_DEPTH)
       }
     } catch {
-      case xpe : javax.xml.xpath.XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, 4) // scalastyle:ignore
+      case xpe : javax.xml.xpath.XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, FAILED_TEST_STACK_DEPTH)
       case tf : TestFailedException => throw tf
-      case unknown : Throwable => throw new TestFailedException(s"Unknown error in XPath $xpathString", 4) // scalastyle:ignore
+      case unknown : Throwable => throw new TestFailedException(s"Unknown error in XPath $xpathString", FAILED_TEST_STACK_DEPTH)
     } finally {
       if (exp != null) returnExpression (xpathString, nsContext, XPATH_VERSION, exp)
     }
