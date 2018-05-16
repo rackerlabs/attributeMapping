@@ -1,0 +1,6 @@
+<error-message xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <contains>Cannot</contains>
+    <contains>declaration</contains>
+    <contains>element</contains>
+    <contains>wooga</contains>
+</error-message>

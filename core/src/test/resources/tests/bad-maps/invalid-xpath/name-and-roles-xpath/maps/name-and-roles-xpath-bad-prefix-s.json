@@ -1,0 +1,18 @@
+ {
+  "mapping": {
+    "rules": [
+       {
+        "local": {
+          "user": {
+            "domain":"78334",
+            "name":"{D}",
+            "email":"{D}",
+            "roles": ["{Pts(if ((xs:integer(seconds-from-time(current-time())) mod 2) = 0) then ('nova:admin', 'lbaas:admin')  else foo:other() )}"],
+            "expire":"{D}"
+           }
+         }
+       }
+     ],
+    "version":"RAX-1"
+   }
+ }

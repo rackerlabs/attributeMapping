@@ -1,0 +1,5 @@
+<error-message xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules">
+    <contains>not</contains>
+    <contains>allowed</contains>
+    <contains>extra</contains>
+</error-message>

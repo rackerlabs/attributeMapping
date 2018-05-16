@@ -15,34 +15,21 @@
  */
 package com.rackspace.identity.components
 
-import java.io.ByteArrayOutputStream
-import java.io.File
+import java.io.{ByteArrayOutputStream, File}
 
-import javax.xml.xpath.XPathExpression
-import javax.xml.xpath.XPathConstants
-import javax.xml.xpath.XPathException
-
-import javax.xml.transform.Source
-import javax.xml.transform.stream.StreamSource
-import javax.xml.transform.dom.DOMSource
-
-import com.rackspace.com.papi.components.checker.util.XMLParserPool._
+import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
 import com.rackspace.com.papi.components.checker.util.ImmutableNamespaceContext
+import com.rackspace.com.papi.components.checker.util.XMLParserPool._
 import com.rackspace.com.papi.components.checker.util.XPathExpressionPool._
-
-
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FunSuite
-
+import com.rackspace.identity.components.TestConstants.FAILED_TEST_STACK_DEPTH
+import javax.xml.transform.Source
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamSource
+import javax.xml.xpath.{XPathConstants, XPathExpression}
 import net.sf.saxon.s9api._
-import net.sf.saxon.Configuration.LicenseFeature._
-
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-
+import org.junit.runner.RunWith
 import org.scalatest.exceptions.TestFailedException
-
+import org.scalatest.junit.JUnitRunner
 import org.w3c.dom.Document
 
 @RunWith(classOf[JUnitRunner])
@@ -204,9 +191,9 @@ class ExtractExtensionSuite extends AttributeMapperBase with XPathAssertions {
       exp = borrowExpression(xpathString,nsContext, XPATH_VERSION)
       exp.evaluate (assert, XPathConstants.BOOLEAN).asInstanceOf[Boolean]
     } catch {
-      case xpe : XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, 4) // scalastyle:ignore
+      case xpe : javax.xml.xpath.XPathException => throw new TestFailedException (s"Error in XPath $xpathString", xpe, FAILED_TEST_STACK_DEPTH)
       case tf : TestFailedException => throw tf
-      case unknown : Throwable => throw new TestFailedException(s"Unknown error in XPath $xpathString", 4) // scalastyle:ignore
+      case unknown : Throwable => throw new TestFailedException(s"Unknown error in XPath $xpathString", FAILED_TEST_STACK_DEPTH)
     } finally {
       if (exp != null) returnExpression (xpathString, nsContext, XPATH_VERSION, exp)
     }

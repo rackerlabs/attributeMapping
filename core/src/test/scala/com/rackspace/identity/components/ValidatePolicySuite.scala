@@ -18,7 +18,6 @@ package com.rackspace.identity.components
 import java.io.File
 import javax.xml.transform.stream.StreamSource
 
-import net.sf.saxon.trans.XPathException
 import net.sf.saxon.s9api.XdmDestination
 import org.junit.runner.RunWith
 import org.scalatest.Matchers

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Missing namespace!  This error can't be replicated in YAML or JSON,
+  because namespaces there only come into play in XPath validation
+  instead of the defination of the policy itself.
+ -->
+<mapping version="RAX-1">
+   <rules>
+      <rule>
+         <local>
+            <user>
+               <domain value="5821006"/>
+               <name value="{D}"/>
+               <email value="{1}"/>
+               <roles value="{0}" multiValue="true"/>
+               <expire value="{D}"/>
+            </user>
+         </local>
+         <remote>
+            <attribute name="http://schemas.xmlsoap.org/claims/Group" multiValue="true"/>
+            <attribute name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"/>
+         </remote>
+      </rule>
+   </rules>
+</mapping>

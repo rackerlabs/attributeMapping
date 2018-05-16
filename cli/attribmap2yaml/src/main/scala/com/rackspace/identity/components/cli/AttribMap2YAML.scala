@@ -21,6 +21,7 @@ import javax.xml.transform.stream.StreamSource
 import com.martiansoftware.nailgun.NGContext
 import com.rackspace.com.papi.components.checker.util.URLResolver
 import com.rackspace.identity.components.AttributeMapper
+import com.rackspace.identity.components.KnownAttributeMapperException
 import org.clapper.argot.ArgotConverters._
 import org.clapper.argot.{ArgotParser, ArgotUsageException}
 
@@ -98,12 +99,16 @@ object AttribMap2YAML {
   // Local run...
   //
   def main(args : Array[String]): Unit = {
-    parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
-               System.in, System.out, System.err) match {
-      case Some((policy : StreamSource, dest : OutputStream,
-                 validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.policy2YAML (policy, dest, validate, xsdEngine)
-      case None => /* Bad args, Ignore */
+    try {
+      parseArgs (args, getBaseFromWorkingDir(System.getProperty("user.dir")),
+        System.in, System.out, System.err) match {
+        case Some((policy : StreamSource, dest : OutputStream,
+          validate : Boolean, xsdEngine : String)) =>
+          AttributeMapper.policy2YAML (policy, dest, validate, xsdEngine)
+        case None => /* Bad args, Ignore */
+      }
+    } catch {
+      case e : KnownAttributeMapperException => System.err.println(e.getMessage) // scalastyle:ignore
     }
   }
 
@@ -111,12 +116,16 @@ object AttribMap2YAML {
   // Nailgun run...
   //
   def nailMain(context : NGContext): Unit = {
-    parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
-               context.in, context.out, context.err) match {
-      case Some((policy : StreamSource, dest : OutputStream,
-                 validate : Boolean, xsdEngine : String)) =>
-        AttributeMapper.policy2YAML (policy, dest, validate, xsdEngine)
-      case None => /* Bad args, Ignore */
+    try {
+      parseArgs (context.getArgs, getBaseFromWorkingDir(context.getWorkingDirectory),
+        context.in, context.out, context.err) match {
+        case Some((policy : StreamSource, dest : OutputStream,
+          validate : Boolean, xsdEngine : String)) =>
+          AttributeMapper.policy2YAML (policy, dest, validate, xsdEngine)
+        case None => /* Bad args, Ignore */
+      }
+    } catch {
+      case e : KnownAttributeMapperException => context.err.println(e.getMessage) // scalastyle:ignore
     }
   }
 }
