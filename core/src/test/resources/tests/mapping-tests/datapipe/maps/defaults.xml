@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+         version="RAX-1">
+   <rules>
+      <rule>
+        <local>
+            <user>
+               <name value="{At(username)}"/>
+               <email value="{D}"/>
+               <expire value="{D}"/>
+               <domain value="{Pt(
+
+                              (: It's weird but || means string concat in XPath :)
+
+                              let $domainPrefix := 'DP:'
+                              return $domainPrefix || mapping:get-attribute('account')
+
+                              )}"/>
+               <roles value="{Pts(
+
+                               let $productAccountPrefix := 'DP:',
+                                   $billingAccountPrefix := 'billing:030-'
+                               return
+                                 for $r in mapping:get-attributes('roles') return
+                                     let $customer := substring-before($r,'/'),
+                                         $role := substring-after($r,'/') return
+                                     ( $role || '/' || $productAccountPrefix || $customer,
+                                       $role || '/' || $billingAccountPrefix || $customer)
+                             )}"/>
+            </user>
+         </local>
+      </rule>
+   </rules>
+</mapping>

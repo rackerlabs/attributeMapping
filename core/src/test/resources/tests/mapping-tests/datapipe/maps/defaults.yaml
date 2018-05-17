@@ -1,0 +1,29 @@
+---
+mapping:
+  rules:
+  - local:
+      user:
+        domain: >-
+          {Pt(
+
+            (: It's weird but || means string concat in XPath :)
+
+            let $domainPrefix := 'DP:'
+                return $domainPrefix || mapping:get-attribute('account')
+
+           )}
+        roles: >-
+              {Pts(
+                    let $productAccountPrefix := 'DP:',
+                        $billingAccountPrefix := 'billing:030-'
+                    return
+                        for $r in mapping:get-attributes('roles') return
+                            let $customer := substring-before($r,'/'),
+                                $role := substring-after($r,'/') return
+                            ( $role || '/' || $productAccountPrefix || $customer,
+                              $role || '/' || $billingAccountPrefix || $customer)
+
+              )}
+        expire: "{D}"
+        email: "{D}"
+  version: "RAX-1"
