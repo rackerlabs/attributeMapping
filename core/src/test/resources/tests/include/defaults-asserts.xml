@@ -9,8 +9,8 @@
         </assert>
     </assert-group>
     <assert-group name="expire">
-        <assert test="/saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter = '2013-11-17T16:19:06.298Z'">
-            The message should expire at 2013-11-17T16:19:06.298Z
+        <assert test="/saml2p:Response/saml2:Assertion[1]/saml2:Subject/saml2:SubjectConfirmation/saml2:SubjectConfirmationData/@NotOnOrAfter = '2017-11-17T16:19:06.298Z'">
+            The message should expire at 2017-11-17T16:19:06.298Z
         </assert>
     </assert-group>
     <assert-group name="name">

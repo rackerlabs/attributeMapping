@@ -2,7 +2,6 @@
 <mapping xmlns:xs="http://www.w3.org/2001/XMLSchema"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://docs.rackspace.com/identity/api/ext/MappingRules"
-         xmlns:foo="bar"
          version="RAX-1">
    <rules>
       <rule>

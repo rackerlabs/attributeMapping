@@ -5,6 +5,7 @@
 1. Clean up: Include log4j2 config files in CLI utils and tests so that messages are not lost.
 1. Clean up: No longer create a new XSLT Compiler on every request.
 1. Clean up: Provide consistent exception handling with new Exception types based off of `AttributeMapperException`.
+1. Added reference manual in docs.
 
 ## Release 2.2.1 (2018-04-16) ##
 1. Fixed a memory leak when compiling and validating policies.

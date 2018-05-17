@@ -1,0 +1,48 @@
+---
+mapping:
+  version: RAX-1
+  description: |-
+    The following is an attribute mapping for Widgets.com.   
+  rules:
+  - local:
+      user:
+        domain: "{D}"
+        name: "{D}"
+        email: "{At(mail)}"
+        roles: "{0}"
+        expire: "{D}"
+    remote:
+      - multiValue: true
+        path: |-
+             (:
+                The following describes the rules for assigning roles to
+                users.
+             :)
+              for $group in mapping:get-attributes('groups') return
+                  (:
+                    If a user is a manager they get ticketing:admin,
+                    If they are not a contractor then they also get billing:observer
+                    Managers become admin based on the project that they are working
+                    on
+                  :)
+                if ($group = 'managers') then
+                     (
+                      'ticketing:admin',
+                      if (not(mapping:get-attributes('groups')='contractors')) then 'billing:observer' else
+                      (),
+                      for $project in mapping:get-attributes('manager_projects') return
+                      (
+                         if ($project = 'widgets_ui')       then 'admin/777654' else
+                         if ($project = 'widgets_mobile')   then 'admin/887655' else
+                         if ($project = 'widgets_platform') then 'admin/779956' else
+                         ()
+                      )
+                     ) else
+                (:
+                   If a user is a member of the linux_user group they get the
+                   nova:observer role.
+                :)
+                if ($group = 'linux_user') then 'nova:observer' else
+                ()
+
+

@@ -1,0 +1,14 @@
+---
+mapping:
+  version: RAX-1
+  description: |-
+    The default policy.  All attributes are in the expected location
+    in the SAML assertion.
+  rules:
+  - local:
+      user:
+        domain: "{D}"
+        name:   "{D}"
+        email:  "{D}"
+        roles:  "{D}"
+        expire: "{D}"

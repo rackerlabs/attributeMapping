@@ -29,9 +29,17 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class AttributeMapperSuite extends AttributeMapperBase {
-
+  val paramMap = Map("domain"->"foo:999-882") // default parameters used in tests.
   val testDir = new File("src/test/resources/tests/mapping-tests")
   val tests : List[File] = testDir.listFiles.toList.filter(f=>f.isDirectory)
+
+  val mapResultsDir = { val d = new File("target/map-results")
+    d.mkdir
+    d
+  }
+
+  val cleanupSAMLXSLExec = AttributeMapper.compiler.compile (new StreamSource(new File("src/test/resources/xsl/cleanup-saml.xsl")))
+
 
   def getMapsFromTest (test : File) : List[File] = new File(test, "maps").listFiles().toList.filter(f => {
     f.toString.endsWith("xml") || f.toString.endsWith("json") || f.toString.endsWith("yaml")})
@@ -82,7 +90,53 @@ class AttributeMapperSuite extends AttributeMapperBase {
       dest,
       true,
       true,
-      v, Map("domain"->"foo:999-882"))
+      v,
+      paramMap)
+
+    //
+    //  Output a result of the map format.  This will be use for
+    //  documentation and to generate reports.
+    //
+    val mapExec = AttributeMapper.generateXSLExec(new StreamSource(map),
+      PolicyFormat.withName(mapFormat), true, v)
+
+    val resultTestDir = {
+      val rt = new File (mapResultsDir, map.getParentFile.getParentFile.getName)
+      rt.mkdir
+      rt
+    }
+
+    val assertTestDir = {
+      val at = new File(resultTestDir, assertFile.getName)
+      at.mkdir
+      at
+    }
+
+    val resultFile = new File(assertTestDir, {
+      if (!map.getName.endsWith(".xml")) map.getName + ".xml" else map.getName
+    })
+
+    val resultSerializer = AttributeMapper.processor.newSerializer(resultFile)
+
+    AttributeMapper.convertAssertion (
+      mapExec,
+      new StreamSource(assertFile),
+      resultSerializer,
+      false,
+      false,
+      paramMap)
+
+    //
+    // Create a clean up version of the SAML assertion or docs as well
+    //
+    val cleanAssertFile = new File(assertTestDir, assertFile.getName)
+    val assertSerializer = AttributeMapper.processor.newSerializer(cleanAssertFile)
+    val cleanAssertTrans = AttributeMapper.getXsltTransformer (cleanupSAMLXSLExec)
+
+    cleanAssertTrans.setSource(new StreamSource(assertFile))
+    cleanAssertTrans.setDestination(assertSerializer)
+    cleanAssertTrans.transform()
+
     dest.getXdmNode.asSource
   })
 
@@ -110,7 +164,7 @@ class AttributeMapperSuite extends AttributeMapperBase {
           AttributeMapper.generateXSLExec (docBuilder.parse(map), true, v)
       }
 
-      val resultDoc = AttributeMapper.convertAssertion (policyExec, docBuilder.parse(assertFile), Map("domain"->"foo:999-882"))
+      val resultDoc = AttributeMapper.convertAssertion (policyExec, docBuilder.parse(assertFile), paramMap)
       new DOMSource(resultDoc)
     } finally {
       if (docBuilder != null) returnParser(docBuilder)
