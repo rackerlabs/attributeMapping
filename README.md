@@ -44,6 +44,83 @@ mvn install
 You'll need to have Maven and Java in the system path.  Next add the
 ```bin``` directory to your system path. 
 
+## The Docker way
+
+### Using the built image
+
+Check the version of attribmap
+
+````shell
+docker run -ti  -v $(pwd):/opt/dima -w=/opt/dima dadean/attribmap --help
+Starting nailgun server...
+Missing parameter(s): policy, assertion
+
+Attribute Mapper Nailgun Server v2.2.1-SNAPSHOT
+
+Usage: attribmap [OPTIONS] policy assertion [output]
+
+OPTIONS
+
+-D
+--dont-validate          Disable Validation (Validation will be enabled by
+                         default)
+
+-h
+--help                   Display usage.
+
+-s
+--saml                   Output in SAML format
+
+--version                Display version.
+
+-x xsd-engine
+--xsd-engine xsd-engine  XSD Engine to use. Valid values are auto, saxon,
+                         xerces (default is auto)
+
+PARAMETERS
+
+policy     Attribute mapping policy
+
+assertion  The assertion to translate based on policy
+
+output     Output file. If not specified, stdout will be used.
+````
+
+Create a policy.yaml with a mapping policy and assert.xml with a SAML response
+
+````shell
+docker run -ti  -v $(pwd):/opt/dima -w=/opt/dima dadean/attribmap policy.yaml assert.xml
+Starting nailgun server...
+Xerces validation
+ {
+  "local": {
+    "user": {
+      "domain":"domain123",
+      "name":"Userb4b9c279-7981-40d5-a778-c423872ab733",
+      "email":"",
+      "expire":"2017-11-03T22:36:33.060Z"
+     },
+    "faws": {
+      "groups": {
+        "value": [
+          
+         ],
+        "multiValue":true
+       }
+     }
+   }
+ }
+ ````
+
+ You can also run a specific version by specifying the tag (currently only supports 2.2.1)
+
+### Building locally
+
+````shell
+docker build -t attribmap .
+docker run -ti --rm attribmap --help
+````
+
 ## CLI utilities
 
 1. attribmap : given a Mapping Policy and a SAML Request -- displays
